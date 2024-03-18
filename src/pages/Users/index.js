@@ -1,19 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import BreadCrumb from '../../Components/Common/BreadCrumb';
-import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-//Import Flatepicker
-import Flatpickr from "react-flatpickr";
 
-// Import Images
-
-import avatar1 from "../../assets/images/users/avatar-1.jpg";
-import avatar2 from "../../assets/images/users/avatar-2.jpg";
-import avatar3 from "../../assets/images/users/avatar-3.jpg";
-import avatar4 from "../../assets/images/users/avatar-4.jpg";
-import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 const Users = () => {
     const [modal_list, setmodal_list] = useState(false);
@@ -26,60 +15,7 @@ const Users = () => {
         setmodal_delete(!modal_delete);
     }
 
-    // useEffect(() => {
-
-    //     const attroptions = {
-    //         valueNames: [
-    //             'name',
-    //             'born',
-    //             {
-    //                 data: ['id']
-    //             },
-    //             {
-    //                 attr: 'src',
-    //                 name: 'image'
-    //             },
-    //             {
-    //                 attr: 'href',
-    //                 name: 'link'
-    //             },
-    //             {
-    //                 attr: 'data-timestamp',
-    //                 name: 'timestamp'
-    //             }
-    //         ]
-    //     };
-    //     const attrList = new List('users', attroptions);
-    //     attrList.add({
-    //         name: 'Leia',
-    //         born: '1954',
-    //         image: avatar5,
-    //         id: 5,
-    //         timestamp: '67893'
-    //     });
-
-    //     // Existing List
-
-    //     const existOptionsList = {
-    //         valueNames: ['contact-name', 'contact-message']
-    //     };
-
-    //     new List('contact-existing-list', existOptionsList);
-
-    //     // Fuzzy Search list
-    //     new List('fuzzysearch-list', {
-    //         valueNames: ['name']
-    //     });
-
-    //     // pagination list
-
-    //     new List('pagination-list', {
-    //         valueNames: ['pagi-list'],
-    //         page: 3,
-    //         pagination: true
-    //     });
-    // });
-    document.title = "Listjs | Velzon - React Admin & Dashboard Template";
+    document.title = "Users";
     return (
         <React.Fragment>
             <div className="page-content">

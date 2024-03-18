@@ -182,8 +182,9 @@ const Navdata = () => {
           id: "users",
           label: "Users",
           link: "/users",
-          parentId: "dashboard",
+          parentId: "systemConfiguration",
         },
+        
         {
           id: "analytics",
           label: "Analytics",

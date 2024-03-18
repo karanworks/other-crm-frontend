@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Col, Container, Input, Label, Row, Button, Form, FormFeedback, Alert, Spinner } from 'reactstrap';
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 import webwersLogo  from "../../assets/images/webwersLogo.jpg"
+import axios from "axios";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -64,7 +65,18 @@ const Login = (props) => {
             password: Yup.string().required("Please Enter Your Password"),
         }),
         onSubmit: (values) => {
-            dispatch(loginUser(values, props.router.navigate));
+            // this code works for default login feature
+            // dispatch(loginUser(values, props.router.navigate));
+
+
+            // below code is working just commented 
+            axios.post("http://localhost:3001/login", values, {withCredentials: true}).then((result) => {
+
+            console.log("login result ->", result);
+
+            }).catch((error) => {
+                console.log("Error while logging in ->", error);
+            })
         }
     });
 
