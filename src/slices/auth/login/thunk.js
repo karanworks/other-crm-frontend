@@ -31,21 +31,30 @@ export const loginUser = (user, history) => async (dispatch) => {
       });
     }
     
-    var data = await response;
+    
+    var data = await response
+    // var loginResponse = await response;
+    // let data = await loginResponse.data
 
     if (data) {
+     
       sessionStorage.setItem("authUser", JSON.stringify(data));
       if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
+        
         var finallogin = JSON.stringify(data);
         finallogin = JSON.parse(finallogin)
+        console.log("data after login success", finallogin);
         data = finallogin.data;
         if (finallogin.status === "success") {
+    
+
           dispatch(loginSuccess(data));
           history('/home')
         } else {
           dispatch(apiError(finallogin));
         }
       }else{
+        
         dispatch(loginSuccess(data));
         history('/home')
       }

@@ -57,8 +57,10 @@ const Login = (props) => {
         enableReinitialize: true,
 
         initialValues: {
-            email: userLogin.email || "admin@themesbrand.com" || '',
-            password: userLogin.password || "123456" || '',
+            // email: userLogin.email || "admin@themesbrand.com" || '',
+            // password: userLogin.password || "123456" || '',
+            email: userLogin.email || '',
+            password: userLogin.password || '',
         },
         validationSchema: Yup.object({
             email: Yup.string().required("Please Enter Your Email"),
@@ -66,17 +68,17 @@ const Login = (props) => {
         }),
         onSubmit: (values) => {
             // this code works for default login feature
-            // dispatch(loginUser(values, props.router.navigate));
+            dispatch(loginUser(values, props.router.navigate));
 
 
             // below code is working just commented 
-            axios.post("http://localhost:3001/login", values, {withCredentials: true}).then((result) => {
+            // axios.post("http://localhost:3001/login", values, {withCredentials: true}).then((result) => {
 
-            console.log("login result ->", result);
+            // console.log("login result ->", result);
 
-            }).catch((error) => {
-                console.log("Error while logging in ->", error);
-            })
+            // }).catch((error) => {
+            //     console.log("Error while logging in ->", error);
+            // })
         }
     });
 
