@@ -52,14 +52,19 @@ const UserProfile = () => {
   useEffect(() => {
     if (sessionStorage.getItem("authUser")) {
       const obj = JSON.parse(sessionStorage.getItem("authUser"));
+      
+      console.log("user is not empty", obj);
 
       if (!isEmpty(user)) {
+        
         obj.data.first_name = user.first_name;
         sessionStorage.removeItem("authUser");
         sessionStorage.setItem("authUser", JSON.stringify(obj));
       }
 
-      setUserName(obj.data.first_name);
+      // default code
+      // setUserName(obj.data.first_name);
+      setUserName(obj.data.username);
       setemail(obj.data.email);
       setidx(obj.data._id || "1");
 
