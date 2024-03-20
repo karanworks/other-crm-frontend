@@ -198,51 +198,6 @@ const Users = () => {
                               </td>
                             </tr>
                           ))}
-
-                          <tr>
-                            <th scope="row">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  name="checkAll"
-                                  value="option1"
-                                />
-                              </div>
-                            </th>
-                            <td className="id" style={{ display: "none" }}>
-                              <Link to="#" className="fw-medium link-primary">
-                                #VZ2101
-                              </Link>
-                            </td>
-                            <td className="customer_name">Mary Cousar</td>
-                            <td className="email">marycousar@velzon.com</td>
-                            <td className="phone">580-464-4694</td>
-                            <td className="date">06 Apr, 2021</td>
-                            <td>
-                              <div className="d-flex gap-2">
-                                <div className="edit">
-                                  <button
-                                    className="btn btn-sm btn-primary edit-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#showModal"
-                                  >
-                                    Edit
-                                  </button>
-                                </div>
-                                <div className="remove">
-                                  <button
-                                    className="btn btn-sm btn-success remove-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteRecordModal"
-                                    onClick={() => tog_delete()}
-                                  >
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>

@@ -16,6 +16,7 @@ import {
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 import webwersLogo from "../../assets/images/webwersLogo.jpg";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -31,10 +32,12 @@ import { loginUser, socialLogin, resetLoginFlag } from "../../slices/thunks";
 
 import logoLight from "../../assets/images/logo-light.png";
 import { createSelector } from "reselect";
+import { loginSuccess } from "../../slices/auth/login/reducer";
 //import images
 
 const Login = (props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectLayoutState = (state) => state;
   const loginpageData = createSelector(selectLayoutState, (state) => ({
     user: state.Account.user,
@@ -64,6 +67,19 @@ const Login = (props) => {
       });
     }
   }, [user]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/login", { withCredentials: true })
+      .then((res) => {
+        const { data } = res;
+        dispatch(loginSuccess(data));
+        navigate("/home");
+      })
+      .catch((err) => {
+        console.log("error in logging get request ->", err);
+      });
+  }, []);
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
