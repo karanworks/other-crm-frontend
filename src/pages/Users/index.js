@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import {
@@ -30,7 +30,9 @@ import { useSelector } from "react-redux";
 const Users = () => {
   // const adminData = JSON.parse(sessionStorage.getItem("authUser"));
 
-  const adminData = useSelector((state) => state.Login);
+  // const adminData = useSelector((state) => state.Login);
+  // let adminUsersData = adminData?.user?.users;
+  const [adminUsersData, setAdminUseraData] = useState([]);
 
   const [modal_list, setmodal_list] = useState(false);
   function tog_list() {
@@ -41,6 +43,26 @@ const Users = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
+
+  useEffect(() => {
+    // const noUserData = Object.keys(adminData.user).length === 0;
+
+    // if (!noUserData) {
+    //   setAdminUserData(adminData);
+    // } else {
+
+    // }
+
+    axios
+      .get("http://localhost:3001/users", { withCredentials: true })
+      .then((res) => {
+        console.log("user data on user page ->", res.data);
+        setAdminUseraData(res.data);
+      })
+      .catch((err) => {
+        console.log("error while fetching users on user page ->", err);
+      });
+  }, []);
 
   const validation = useFormik({
     initialValues: {
@@ -62,6 +84,7 @@ const Users = () => {
     onSubmit: (values) => {
       // this code works for default login feature
       console.log(values);
+
       axios
         .post(`http://localhost:3001/${adminData.user.id}/register`, values, {
           withCredentials: true,
@@ -153,8 +176,8 @@ const Users = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {adminData.user?.users?.map((user) => (
-                            <tr>
+                          {adminUsersData?.users?.map((user) => (
+                            <tr key={user?.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
