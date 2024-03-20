@@ -79,7 +79,7 @@ document.title="Reset Password | Velzon - React Admin & Dashboard Template";
                 <CardBody className="p-4">
                   <div className="text-center mt-2">
                     <h5 className="text-primary">Forgot Password?</h5>
-                    <p className="text-muted">Reset you password.</p>
+                    <p className="text-muted">Reset your password.</p>
 
                     <lord-icon
                       src="https://cdn.lordicon.com/rhvddzym.json"

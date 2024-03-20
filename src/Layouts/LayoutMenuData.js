@@ -9,6 +9,8 @@ const Navdata = () => {
   //state data
   const [isHome, setIsHome] = useState(false)
   const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
+  const [isOperationalConfiguration, setIsOperationalConfiguration] = useState(false);
+  const [isCampaignManagement, setIsCampaignManagement] = useState(false);
   const [isApps, setIsApps] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isPages, setIsPages] = useState(false);
@@ -85,6 +87,12 @@ const Navdata = () => {
     }
     if (iscurrentState !== "SystemConfiguration") {
       setIsSystemConfiguration(false);
+    }
+    if (iscurrentState !== "OperationalConfiguration") {
+      setIsOperationalConfiguration(false);
+    }
+    if (iscurrentState !== "CampaignManagement") {
+      setIsCampaignManagement(false);
     }
     if (iscurrentState !== "Apps") {
       setIsApps(false);
@@ -229,6 +237,47 @@ const Navdata = () => {
           badgeColor: "success",
           badgeName: "New",
         },
+      ],
+    },
+    {
+      id: "operationalConfiguration",
+      label: "Operational Configuration",
+      icon: <FeatherIcon icon="home" className="icon-dual" />,
+      link: "/#",
+      stateVariables: isOperationalConfiguration,
+      click: function (e) {
+        e.preventDefault();
+        setIsOperationalConfiguration(!isOperationalConfiguration);
+        setIscurrentState("OperationalConfiguration");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "campaignManagement",
+          label: "Campaign Management",
+           icon: <FeatherIcon icon="home" className="icon-dual" />,
+          link: "/campaign-management",
+          parentId: "Operational Configuration",
+          click: function (e) {
+            e.preventDefault();
+            setIsCampaignManagement(!isCampaignManagement);
+            setIscurrentState("CampaignManagement");
+            updateIconSidebar(e);
+          },
+          subItems: [
+            {
+              id: "users",
+              label: "Users",
+              link: "/users",
+              parentId: "systemConfiguration",
+            },
+          ]
+        },
+        
+        
+       
+       
+       
       ],
     },
     {
