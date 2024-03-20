@@ -19,10 +19,10 @@ const loginSlice = createSlice({
       state.errorMsg = true;
     },
     loginSuccess(state, action) {
+      console.log("action payload here after log in ->", action.payload);
       state.user = action.payload;
       state.loading = false;
       state.errorMsg = false;
-      console.log("state.user here after log in ->", state.user);
     },
     logoutUserSuccess(state, action) {
       state.isUserLogout = true;

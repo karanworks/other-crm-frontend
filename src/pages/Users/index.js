@@ -31,7 +31,6 @@ const Users = () => {
   // const adminData = JSON.parse(sessionStorage.getItem("authUser"));
 
   const adminData = useSelector((state) => state.Login);
-  console.log("admin data on user page ->", adminData);
 
   const [modal_list, setmodal_list] = useState(false);
   function tog_list() {
@@ -154,7 +153,7 @@ const Users = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {/* {adminData.user.users.map((user) => (
+                          {adminData.user?.users?.map((user) => (
                             <tr>
                               <th scope="row">
                                 <div className="form-check">
@@ -198,7 +197,7 @@ const Users = () => {
                                 </div>
                               </td>
                             </tr>
-                          ))} */}
+                          ))}
 
                           <tr>
                             <th scope="row">
