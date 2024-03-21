@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Card,
@@ -24,7 +26,6 @@ import { Link } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
 import UserFormModal from "./UserFormModal";
 
 const Users = () => {
@@ -33,6 +34,28 @@ const Users = () => {
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [modal_delete, setmodal_delete] = useState(false);
   const [listUserId, setListUserId] = useState(null);
+
+  const notifyAddedUser = () => {
+    toast.success("User has been added !", {
+      position: "bottom-center",
+      autoClose: 3000,
+      theme: "colored",
+    });
+  };
+  const notifyDeletedUser = () => {
+    toast.error("User has been removed !", {
+      position: "bottom-center",
+      autoClose: 3000,
+      theme: "colored",
+    });
+  };
+  const notifyUpdatedUser = () => {
+    toast.success("User details updated !", {
+      position: "bottom-center",
+      autoClose: 3000,
+      theme: "colored",
+    });
+  };
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -72,11 +95,11 @@ const Users = () => {
       agentMobile: Yup.string().required("Please enter Agent Mobile"),
     }),
     onSubmit: (values) => {
-      // getting values from form so that I can update new user's list instantly rather than waiting for api call
-
       isEditingUser
         ? handleUserUpdate(adminUsersData.id)
         : handleAddUser(values);
+
+      !isEditingUser && notifyAddedUser();
     },
   });
 
@@ -149,6 +172,7 @@ const Users = () => {
           users: [...updatedUsers],
         }));
         setmodal_list(!modal_list);
+        notifyUpdatedUser();
       })
       .catch((err) => {
         console.log("error while updating", err);
@@ -172,6 +196,7 @@ const Users = () => {
           users: filteredUsers,
         }));
         setmodal_delete(false);
+        notifyDeletedUser();
       })
       .catch((err) => {
         console.log("error while deleting user", err);
@@ -346,6 +371,7 @@ const Users = () => {
             </Col>
           </Row>
         </Container>
+        <ToastContainer />
       </div>
 
       {/* Add Modal */}
@@ -363,7 +389,7 @@ const Users = () => {
         toggle={() => {
           tog_delete();
         }}
-        className="modal zoomIn"
+        className="modal zoomIn mt-0 mb-0"
         id="deleteRecordModal"
         centered
       >
@@ -385,8 +411,8 @@ const Users = () => {
             ></lord-icon>
             <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
               <h4>Are you Sure ?</h4>
-              <p className="text-muted mx-4 mb-0">
-                Are you Sure You want to Remove this Record ?
+              <p className="mx-4 mb-0">
+                Do you really want to Remove this Record ?
               </p>
             </div>
           </div>

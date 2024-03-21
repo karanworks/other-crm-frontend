@@ -19,6 +19,8 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function UserFormModal({
   modal_list,
@@ -28,6 +30,8 @@ function UserFormModal({
   isEditingUser,
   handleUserUpdate,
 }) {
+  const notify = () => toast("Wow so easy!");
+
   return (
     <Modal
       isOpen={modal_list}
