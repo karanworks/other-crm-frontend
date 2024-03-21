@@ -74,15 +74,17 @@ const Users = () => {
     }),
     onSubmit: (values) => {
       // getting values from form so that I can update new user's list instantly rather than waiting for api call
+
+      isEditingUser
+        ? handleUserUpdate(adminUsersData.id)
+        : handleAddUser(values);
     },
   });
 
-  function formHandleSubmit(e, userId) {
+  function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
-    isEditingUser
-      ? handleUserUpdate(adminUsersData.id, userId)
-      : handleAddUser(values);
+
     console.log("added user and updated user");
     return false;
   }
@@ -139,6 +141,20 @@ const Users = () => {
       )
       .then((res) => {
         console.log("response while updating user", res);
+        // filtering users so that updated user details can be updated instantly
+        const updatedUsers = adminUsersData.users.map((user) => {
+          if (user.id === editUserId) {
+            return res.data;
+          } else {
+            return user;
+          }
+        });
+
+        setAdminUsersData((prevState) => ({
+          ...prevState,
+          users: [...updatedUsers],
+        }));
+        setmodal_list(!modal_list);
       })
       .catch((err) => {
         console.log("error while updating", err);
