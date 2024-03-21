@@ -31,40 +31,14 @@ import UserFormModal from "./UserFormModal";
 const Users = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [isEditingUser, setIsEditingUser] = useState(false);
-
-  function handleEditUser() {
-    setIsEditingUser(!isEditingUser);
-    setmodal_list(!modal_list);
-  }
-
-  function handleDeleteUser(adminId, userId) {
-    axios
-      .delete(`http://localhost:3001/${adminId}/${userId}/delete`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        // filtering users so that deleted user can be updated instantly
-        const filteredUsers = adminUsersData.users.filter(
-          (user) => user.id !== userId
-        );
-
-        console.log("deleted user", res.data);
-        setAdminUseraData((prevState) => ({
-          ...prevState,
-          users: filteredUsers,
-        }));
-      })
-      .catch((err) => {
-        console.log("error while deleting user", err);
-      });
-  }
+  const [adminUsersData, setAdminUsersData] = useState([]);
+  const [modal_delete, setmodal_delete] = useState(false);
+  const [editUserId, setEditUserId] = useState(null);
 
   function tog_list() {
     setmodal_list(!modal_list);
+    setIsEditingUser(false);
   }
-  const [adminUsersData, setAdminUseraData] = useState([]);
-
-  const [modal_delete, setmodal_delete] = useState(false);
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
@@ -74,7 +48,7 @@ const Users = () => {
       .get("http://localhost:3001/users", { withCredentials: true })
       .then((res) => {
         console.log("user data on user page ->", res.data);
-        setAdminUseraData(res.data);
+        setAdminUsersData(res.data);
       })
       .catch((err) => {
         console.log("error while fetching users on user page ->", err);
@@ -100,38 +74,97 @@ const Users = () => {
     }),
     onSubmit: (values) => {
       // getting values from form so that I can update new user's list instantly rather than waiting for api call
-      const { userId, name, agentMobile } = values;
-      const newUser = {
-        id: userId,
-        username: name,
-        agentMobile,
-      };
-
-      // update the new user in the users list
-      setAdminUseraData((prevState) => ({
-        ...prevState,
-        users: [...prevState.users, newUser],
-      }));
-
-      setmodal_list(false);
-
-      axios
-        .post(`http://localhost:3001/${adminUsersData.id}/register`, values, {
-          withCredentials: true,
-        })
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log("error while registering user ->", error);
-        });
     },
   });
 
-  function formHandleSubmit(e) {
+  function formHandleSubmit(e, userId) {
     e.preventDefault();
     validation.handleSubmit();
+    isEditingUser
+      ? handleUserUpdate(adminUsersData.id, userId)
+      : handleAddUser(values);
+    console.log("added user and updated user");
     return false;
+  }
+
+  function handleAddUser(values) {
+    const { userId, name, agentMobile } = values;
+    const newUser = {
+      id: userId,
+      username: name,
+      agentMobile,
+    };
+
+    // update the new user in the users list
+    setAdminUsersData((prevState) => ({
+      ...prevState,
+      users: [...prevState.users, newUser],
+    }));
+
+    setmodal_list(false);
+
+    axios
+      .post(`http://localhost:3001/${adminUsersData.id}/register`, values, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log("error while registering user ->", error);
+      });
+  }
+
+  function handleEditUser(userData) {
+    setIsEditingUser(true);
+    setmodal_list(!modal_list);
+    setEditUserId(userData.id);
+    console.log("edit user id while editing ->", userData.id);
+
+    validation.values.userId = userData.id;
+    validation.values.name = userData.username;
+    validation.values.password = userData.password;
+    validation.values.crmEmail = userData.crmEmail;
+    validation.values.crmPassword = userData.crmPassword;
+    validation.values.agentMobile = userData.agentMobile;
+  }
+
+  function handleUserUpdate(adminId) {
+    console.log("id while updating ->", editUserId);
+    axios
+      .patch(
+        `http://localhost:3001/${adminId}/${editUserId}/edit`,
+        validation.values,
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log("response while updating user", res);
+      })
+      .catch((err) => {
+        console.log("error while updating", err);
+      });
+  }
+
+  function handleDeleteUser(adminId, userId) {
+    axios
+      .delete(`http://localhost:3001/${adminId}/${userId}/delete`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        // filtering users so that deleted user can be updated instantly
+        const filteredUsers = adminUsersData.users.filter(
+          (user) => user.id !== userId
+        );
+
+        console.log("deleted user", res.data);
+        setAdminUsersData((prevState) => ({
+          ...prevState,
+          users: filteredUsers,
+        }));
+      })
+      .catch((err) => {
+        console.log("error while deleting user", err);
+      });
   }
 
   document.title = "Users";
@@ -239,7 +272,7 @@ const Users = () => {
                                       className="btn btn-sm btn-primary edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={handleEditUser}
+                                      onClick={() => handleEditUser(user)}
                                     >
                                       Edit
                                     </button>

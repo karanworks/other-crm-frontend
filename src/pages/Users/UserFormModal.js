@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import {
   Button,
@@ -25,6 +26,7 @@ function UserFormModal({
   formHandleSubmit,
   validation,
   isEditingUser,
+  handleUserUpdate,
 }) {
   return (
     <Modal
@@ -43,7 +45,10 @@ function UserFormModal({
         {" "}
         Add User{" "}
       </ModalHeader>
-      <Form className="tablelist-form" onSubmit={formHandleSubmit}>
+      <Form
+        className="tablelist-form"
+        onSubmit={(e) => formHandleSubmit(e, validation.userId)}
+      >
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
             <Label htmlFor="userId" className="form-label">
