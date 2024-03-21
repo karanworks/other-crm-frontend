@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 import {
   Button,
   Card,
@@ -33,7 +32,7 @@ const Users = () => {
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [modal_delete, setmodal_delete] = useState(false);
-  const [editUserId, setEditUserId] = useState(null);
+  const [listUserId, setListUserId] = useState(null);
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -116,7 +115,7 @@ const Users = () => {
   function handleEditUser(userData) {
     setIsEditingUser(true);
     setmodal_list(!modal_list);
-    setEditUserId(userData.id);
+    setListUserId(userData.id);
     console.log("edit user id while editing ->", userData.id);
 
     validation.values.userId = userData.id;
@@ -128,10 +127,9 @@ const Users = () => {
   }
 
   function handleUserUpdate(adminId) {
-    console.log("id while updating ->", editUserId);
     axios
       .patch(
-        `http://localhost:3001/${adminId}/${editUserId}/edit`,
+        `http://localhost:3001/${adminId}/${listUserId}/edit`,
         validation.values,
         { withCredentials: true }
       )
@@ -139,7 +137,7 @@ const Users = () => {
         console.log("response while updating user", res);
         // filtering users so that updated user details can be updated instantly
         const updatedUsers = adminUsersData.users.map((user) => {
-          if (user.id === editUserId) {
+          if (user.id === listUserId) {
             return res.data;
           } else {
             return user;
@@ -173,6 +171,7 @@ const Users = () => {
           ...prevState,
           users: filteredUsers,
         }));
+        setmodal_delete(false);
       })
       .catch((err) => {
         console.log("error while deleting user", err);
@@ -284,7 +283,9 @@ const Users = () => {
                                       className="btn btn-sm btn-primary edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => handleEditUser(user)}
+                                      onClick={() => {
+                                        handleEditUser(user);
+                                      }}
                                     >
                                       Edit
                                     </button>
@@ -294,9 +295,10 @@ const Users = () => {
                                       className="btn btn-sm btn-success remove-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
-                                      onClick={() =>
-                                        handleDeleteUser(user.adminId, user.id)
-                                      }
+                                      onClick={() => {
+                                        setListUserId(user.id);
+                                        setmodal_delete(true);
+                                      }}
                                     >
                                       Remove
                                     </button>
@@ -361,7 +363,7 @@ const Users = () => {
         toggle={() => {
           tog_delete();
         }}
-        className="modal fade zoomIn"
+        className="modal zoomIn"
         id="deleteRecordModal"
         centered
       >
@@ -371,9 +373,7 @@ const Users = () => {
             onClick={() => setmodal_delete(false)}
             className="btn-close"
             aria-label="Close"
-          >
-            {" "}
-          </Button>
+          ></Button>
         </div>
         <ModalBody>
           <div className="mt-2 text-center">
@@ -402,6 +402,7 @@ const Users = () => {
               type="button"
               className="btn w-sm btn-primary"
               id="delete-record"
+              onClick={() => handleDeleteUser(adminUsersData, listUserId)}
             >
               Yes, Delete It!
             </button>
