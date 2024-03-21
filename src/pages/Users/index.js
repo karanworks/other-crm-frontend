@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
@@ -9,16 +10,6 @@ import {
   CardHeader,
   Col,
   Container,
-  Input,
-  Label,
-  Form,
-  FormFeedback,
-  ListGroup,
-  ListGroupItem,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
   Row,
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
@@ -27,6 +18,12 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import UserFormModal from "./UserFormModal";
+import UserRemoveModal from "./UserRemoveModal";
+import {
+  notifyAddedUser,
+  notifyDeletedUser,
+  notifyUpdatedUser,
+} from "./toasts";
 
 const Users = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -34,28 +31,6 @@ const Users = () => {
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [modal_delete, setmodal_delete] = useState(false);
   const [listUserId, setListUserId] = useState(null);
-
-  const notifyAddedUser = () => {
-    toast.success("User has been added !", {
-      position: "bottom-center",
-      autoClose: 3000,
-      theme: "colored",
-    });
-  };
-  const notifyDeletedUser = () => {
-    toast.error("User has been removed !", {
-      position: "bottom-center",
-      autoClose: 3000,
-      theme: "colored",
-    });
-  };
-  const notifyUpdatedUser = () => {
-    toast.success("User details updated !", {
-      position: "bottom-center",
-      autoClose: 3000,
-      theme: "colored",
-    });
-  };
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -66,8 +41,11 @@ const Users = () => {
   }
 
   useEffect(() => {
+    console.log("server url ->", process.env.REACT_APP_SERVER_URL);
     axios
-      .get("http://localhost:3001/users", { withCredentials: true })
+      .get(`${process.env.REACT_APP_SERVER_URL}/users`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log("user data on user page ->", res.data);
         setAdminUsersData(res.data);
@@ -124,9 +102,13 @@ const Users = () => {
     setmodal_list(false);
 
     axios
-      .post(`http://localhost:3001/${adminUsersData.id}/register`, values, {
-        withCredentials: true,
-      })
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/register`,
+        values,
+        {
+          withCredentials: true,
+        }
+      )
       .then((result) => {
         console.log(result);
       })
@@ -152,7 +134,7 @@ const Users = () => {
   function handleUserUpdate(adminId) {
     axios
       .patch(
-        `http://localhost:3001/${adminId}/${listUserId}/edit`,
+        `${process.env.REACT_APP_SERVER_URL}/${adminId}/${listUserId}/edit`,
         validation.values,
         { withCredentials: true }
       )
@@ -181,9 +163,12 @@ const Users = () => {
 
   function handleDeleteUser(adminId, userId) {
     axios
-      .delete(`http://localhost:3001/${adminId}/${userId}/delete`, {
-        withCredentials: true,
-      })
+      .delete(
+        `${process.env.REACT_APP_SERVER_URL}/${adminId}/${userId}/delete`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         // filtering users so that deleted user can be updated instantly
         const filteredUsers = adminUsersData.users.filter(
@@ -384,57 +369,12 @@ const Users = () => {
       />
 
       {/* Remove Modal */}
-      <Modal
-        isOpen={modal_delete}
-        toggle={() => {
-          tog_delete();
-        }}
-        className="modal zoomIn mt-0 mb-0"
-        id="deleteRecordModal"
-        centered
-      >
-        <div className="modal-header">
-          <Button
-            type="button"
-            onClick={() => setmodal_delete(false)}
-            className="btn-close"
-            aria-label="Close"
-          ></Button>
-        </div>
-        <ModalBody>
-          <div className="mt-2 text-center">
-            <lord-icon
-              src="https://cdn.lordicon.com/gsqxdxog.json"
-              trigger="loop"
-              colors="primary:#25a0e2,secondary:#00bd9d"
-              style={{ width: "100px", height: "100px" }}
-            ></lord-icon>
-            <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-              <h4>Are you Sure ?</h4>
-              <p className="mx-4 mb-0">
-                Do you really want to Remove this Record ?
-              </p>
-            </div>
-          </div>
-          <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-            <button
-              type="button"
-              className="btn w-sm btn-light"
-              onClick={() => setmodal_delete(false)}
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn w-sm btn-primary"
-              id="delete-record"
-              onClick={() => handleDeleteUser(adminUsersData, listUserId)}
-            >
-              Yes, Delete It!
-            </button>
-          </div>
-        </ModalBody>
-      </Modal>
+      <UserRemoveModal
+        modal_delete={modal_delete}
+        tog_delete={tog_delete}
+        setmodal_delete={setmodal_delete}
+        handleDeleteUser={() => handleDeleteUser(adminUsersData, listUserId)}
+      />
     </React.Fragment>
   );
 };

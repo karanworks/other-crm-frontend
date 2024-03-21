@@ -1,25 +1,12 @@
-import axios from "axios";
-import { useState } from "react";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
   Input,
   Label,
   Form,
   FormFeedback,
-  ListGroup,
-  ListGroupItem,
   Modal,
   ModalBody,
-  ModalFooter,
   ModalHeader,
-  Row,
 } from "reactstrap";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function UserFormModal({
@@ -28,10 +15,7 @@ function UserFormModal({
   formHandleSubmit,
   validation,
   isEditingUser,
-  handleUserUpdate,
 }) {
-  const notify = () => toast("Wow so easy!");
-
   return (
     <Modal
       isOpen={modal_list}
@@ -80,14 +64,6 @@ function UserFormModal({
                 {validation.errors.userId}
               </FormFeedback>
             ) : null}
-
-            {/* 
-              <input
-                type="text"
-                className="form-control"
-                id="userId"
-                placeholder="Enter user id"
-              /> */}
           </div>
           <div className="mb-2">
             <Label htmlFor="name" className="form-label">
@@ -113,13 +89,6 @@ function UserFormModal({
                 {validation.errors.name}
               </FormFeedback>
             ) : null}
-
-            {/* <input
-                type="name"
-                className="form-control"
-                id="name"
-                placeholder="Enter user's name"
-              /> */}
           </div>
 
           <div className="mb-2">
@@ -148,13 +117,6 @@ function UserFormModal({
                 {validation.errors.password}
               </FormFeedback>
             ) : null}
-
-            {/* <input
-                type="password"
-                className="form-control"
-                id="exampleInputPassword1"
-                placeholder="Enter user's password"
-              /> */}
           </div>
 
           <div className="mb-2">
@@ -183,13 +145,6 @@ function UserFormModal({
                 {validation.errors.crmEmail}
               </FormFeedback>
             ) : null}
-
-            {/* <input
-                type="text"
-                className="form-control"
-                id="crmEmail"
-                placeholder="Enter CRM email"
-              /> */}
           </div>
           <div className="mb-2">
             <Label htmlFor="crmPassword" className="form-label">
@@ -217,13 +172,6 @@ function UserFormModal({
                 {validation.errors.crmPassword}
               </FormFeedback>
             ) : null}
-
-            {/* <input
-                type="text"
-                className="form-control"
-                id="crmPassword"
-                placeholder="Enter CRM password"
-              /> */}
           </div>
           <div className="mb-2">
             <Label htmlFor="agentMobile" className="form-label">
@@ -251,14 +199,6 @@ function UserFormModal({
                 {validation.errors.agentMobile}
               </FormFeedback>
             ) : null}
-
-            {/* 
-              <input
-                type="number"
-                className="form-control"
-                id="agentMobile"
-                placeholder="Enter Agent Mobile Number"
-              /> */}
           </div>
 
           <div className="text-end">
