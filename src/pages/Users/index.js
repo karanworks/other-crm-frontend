@@ -90,17 +90,13 @@ const Users = () => {
   }
 
   function handleAddUser(values) {
-    const { userId, name, agentMobile } = values;
-    const newUser = {
-      id: userId,
-      username: name,
-      agentMobile,
-    };
-
     // update the new user in the users list
     setAdminUsersData((prevState) => ({
       ...prevState,
-      users: [...prevState.users, newUser],
+      users: [
+        ...prevState.users,
+        { id: values.userId, username: values.name, ...values },
+      ],
     }));
 
     setmodal_list(false);
