@@ -291,13 +291,13 @@ const Navdata = () => {
             {
               id: "campaign",
               label: "Campaign",
-              link: "/#",
+              link: "/campaign",
               parentId: "campaignManagement",
             },
             {
               id: "crmConfiguration",
               label: "CRM Configuration",
-              link: "/#",
+              link: "/crm-configuration",
               parentId: "campaignManagement",
             },
             {

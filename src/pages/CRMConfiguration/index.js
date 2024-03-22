@@ -17,15 +17,8 @@ import { Link } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import UserFormModal from "./UserFormModal";
-import UserRemoveModal from "./UserRemoveModal";
-import {
-  notifyAddedUser,
-  notifyDeletedUser,
-  notifyUpdatedUser,
-} from "./toasts";
 
-const Users = () => {
+const CRMConfiguration = () => {
   // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
   // this state triggers when editing the user
@@ -47,22 +40,6 @@ const Users = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
-
-  // To get users when /users page renders for the first time
-  useEffect(() => {
-    console.log("server url ->", process.env.REACT_APP_SERVER_URL);
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/users`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log("user data on user page ->", res.data);
-        setAdminUsersData(res.data);
-      })
-      .catch((err) => {
-        console.log("error while fetching users on user page ->", err);
-      });
-  }, []);
 
   // formik setup
   const validation = useFormik({
@@ -110,22 +87,6 @@ const Users = () => {
     }));
 
     setmodal_list(false);
-
-    // user register api call
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/user/register`,
-        values,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log("error while registering user ->", error);
-      });
   }
 
   // to update the values of register form when editing the user
@@ -144,33 +105,32 @@ const Users = () => {
 
   // after making an edit and clicking on update user button this function updates the user details
   function handleUserUpdate(adminId) {
-    axios
-      .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${listUserId}/edit`,
-        validation.values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        console.log("response while updating user", res);
-        // filtering users so that updated user details can be updated instantly
-        const updatedUsers = adminUsersData.users.map((user) => {
-          if (user.id === listUserId) {
-            return res.data;
-          } else {
-            return user;
-          }
-        });
-
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          users: [...updatedUsers],
-        }));
-        setmodal_list(!modal_list);
-        notifyUpdatedUser();
-      })
-      .catch((err) => {
-        console.log("error while updating", err);
-      });
+    // axios
+    //   .patch(
+    //     `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${listUserId}/edit`,
+    //     validation.values,
+    //     { withCredentials: true }
+    //   )
+    //   .then((res) => {
+    //     console.log("response while updating user", res);
+    //     // filtering users so that updated user details can be updated instantly
+    //     const updatedUsers = adminUsersData.users.map((user) => {
+    //       if (user.id === listUserId) {
+    //         return res.data;
+    //       } else {
+    //         return user;
+    //       }
+    //     });
+    //     setAdminUsersData((prevState) => ({
+    //       ...prevState,
+    //       users: [...updatedUsers],
+    //     }));
+    //     setmodal_list(!modal_list);
+    //     notifyUpdatedUser();
+    //   })
+    //   .catch((err) => {
+    //     console.log("error while updating", err);
+    //   });
   }
 
   // to delete a user
@@ -205,12 +165,15 @@ const Users = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Users" pageTitle="System Configuration" />
+          <BreadCrumb
+            title="Campaign Management"
+            pageTitle="Operational Configuration"
+          />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Create a user</h4>
+                  <h4 className="card-title mb-0">CRM Configuration</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -222,27 +185,29 @@ const Users = () => {
                             color="primary"
                             className="add-btn me-1"
                             onClick={() => tog_list()}
-                            id="create-btn"
+                            id="show-btn"
                           >
-                            <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add User
+                            <i className="ri-search-line search-icon"> </i>
+                            Show CRM
                           </Button>
                         </div>
                       </Col>
-
-                      {/* search input for future if needed */}
-                      {/* <Col className="col-sm">
-                        <div className="d-flex justify-content-sm-end">
-                          <div className="search-box ms-2">
-                            <input
-                              type="text"
-                              className="form-control search"
-                              placeholder="Search..."
-                            />
-                            <i className="ri-search-line search-icon"></i>
-                          </div>
+                      <Col
+                        className="col-sm-auto"
+                        style={{ marginLeft: "auto" }}
+                      >
+                        <div>
+                          <Button
+                            color="primary"
+                            className="add-btn me-1"
+                            onClick={() => tog_list()}
+                            id="create-btn"
+                          >
+                            <i className="ri-add-line align-bottom me-1"></i>{" "}
+                            CRM Field
+                          </Button>
                         </div>
-                      </Col> */}
+                      </Col>
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">
@@ -374,25 +339,8 @@ const Users = () => {
         </Container>
         <ToastContainer />
       </div>
-
-      {/* Add Modal */}
-      <UserFormModal
-        modal_list={modal_list}
-        tog_list={tog_list}
-        formHandleSubmit={formHandleSubmit}
-        validation={validation}
-        isEditingUser={isEditingUser}
-      />
-
-      {/* Remove Modal */}
-      <UserRemoveModal
-        modal_delete={modal_delete}
-        tog_delete={tog_delete}
-        setmodal_delete={setmodal_delete}
-        handleDeleteUser={() => handleDeleteUser(adminUsersData, listUserId)}
-      />
     </React.Fragment>
   );
 };
 
-export default Users;
+export default CRMConfiguration;
