@@ -26,20 +26,29 @@ import {
 } from "./toasts";
 
 const Users = () => {
+  // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
+  // this state triggers when editing the user
   const [isEditingUser, setIsEditingUser] = useState(false);
+  // admin details with users that he has added
   const [adminUsersData, setAdminUsersData] = useState([]);
+  // delete user confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
+  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   const [listUserId, setListUserId] = useState(null);
 
+  // toggles register / edit user modal
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingUser(false);
   }
+
+  // toggles delete user confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
 
+  // To get users when /users page renders for the first time
   useEffect(() => {
     console.log("server url ->", process.env.REACT_APP_SERVER_URL);
     axios
@@ -55,6 +64,7 @@ const Users = () => {
       });
   }, []);
 
+  // formik setup
   const validation = useFormik({
     initialValues: {
       userId: "",
@@ -81,16 +91,16 @@ const Users = () => {
     },
   });
 
+  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
 
-    console.log("added user and updated user");
     return false;
   }
 
   function handleAddUser(values) {
-    // update the new user in the users list
+    // update the new user in the users list instantly
     setAdminUsersData((prevState) => ({
       ...prevState,
       users: [
@@ -101,6 +111,7 @@ const Users = () => {
 
     setmodal_list(false);
 
+    // user register api call
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/register`,
@@ -117,11 +128,11 @@ const Users = () => {
       });
   }
 
+  // to update the values of register form when editing the user
   function handleEditUser(userData) {
     setIsEditingUser(true);
     setmodal_list(!modal_list);
     setListUserId(userData.id);
-    console.log("edit user id while editing ->", userData.id);
 
     validation.values.userId = userData.id;
     validation.values.name = userData.username;
@@ -131,6 +142,7 @@ const Users = () => {
     validation.values.agentMobile = userData.agentMobile;
   }
 
+  // after making an edit and clicking on update user button this function updates the user details
   function handleUserUpdate(adminId) {
     axios
       .patch(
@@ -161,6 +173,7 @@ const Users = () => {
       });
   }
 
+  // to delete a user
   function handleDeleteUser(adminId, userId) {
     axios
       .delete(
@@ -175,7 +188,6 @@ const Users = () => {
           (user) => user.id !== userId
         );
 
-        console.log("deleted user", res.data);
         setAdminUsersData((prevState) => ({
           ...prevState,
           users: filteredUsers,

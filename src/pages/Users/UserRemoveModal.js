@@ -1,16 +1,15 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
 function UserRemoveModal({
-  modal_delete,
-  tog_delete,
-  setmodal_delete,
-  handleDeleteUser,
+  modal_delete, // delete user confirmation modal
+  setmodal_delete, // change user confirmation modal state
+  handleDeleteUser, // function to delete a user
 }) {
   return (
     <Modal
       isOpen={modal_delete}
       toggle={() => {
-        tog_delete();
+        setmodal_delete(!modal_delete);
       }}
       className="modal zoomIn mt-0 mb-0"
       id="deleteRecordModal"

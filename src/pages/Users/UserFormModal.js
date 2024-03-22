@@ -10,11 +10,11 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 
 function UserFormModal({
-  modal_list,
-  tog_list,
-  formHandleSubmit,
-  validation,
-  isEditingUser,
+  modal_list, // modal state
+  tog_list, // to change modal state
+  formHandleSubmit, // submit function for form
+  validation, // to get the values from formik
+  isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
 }) {
   return (
     <Modal
