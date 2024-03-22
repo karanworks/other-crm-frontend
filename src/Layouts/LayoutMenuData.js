@@ -14,6 +14,9 @@ const Navdata = () => {
   const [isCampaignManagement, setIsCampaignManagement] = useState(false);
   const [isLeadManagement, setIsLeadManagement] = useState(false);
   const [isOtherManagement, setIsOtherManagement] = useState(false);
+  const [isMonitoring, setIsMonitoring] = useState(false);
+  const [isQuality, setIsQuality] = useState(false);
+  const [isAnalytics, setIsAnalytics] = useState(false);
   const [isApps, setIsApps] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isPages, setIsPages] = useState(false);
@@ -103,6 +106,15 @@ const Navdata = () => {
     if (iscurrentState !== "OtherManagement") {
       setIsOtherManagement(false);
     }
+    if (iscurrentState !== "Monitoring") {
+      setIsMonitoring(false);
+    }
+    if (iscurrentState !== "Quality") {
+      setIsQuality(false);
+    }
+    if (iscurrentState !== "Analytics") {
+      setIsAnalytics(false);
+    }
     if (iscurrentState !== "Apps") {
       setIsApps(false);
     }
@@ -184,7 +196,7 @@ const Navdata = () => {
     {
       id: "systemConfiguration",
       label: "System Configuration",
-      icon: <FeatherIcon icon="home" className="icon-dual" />,
+      icon: <FeatherIcon icon="settings" className="icon-dual" />,
       link: "/#",
       stateVariables: isSystemConfiguration,
       click: function (e) {
@@ -254,7 +266,7 @@ const Navdata = () => {
     {
       id: "operationalConfiguration",
       label: "Operational Configuration",
-      icon: <FeatherIcon icon="home" className="icon-dual" />,
+      icon: <FeatherIcon icon="git-branch" className="icon-dual" />,
       link: "/#",
       click: function (e) {
         e.preventDefault();
@@ -353,6 +365,75 @@ const Navdata = () => {
               parentId: "otherManagement",
             },
           ],
+        },
+      ],
+    },
+    {
+      id: "monitoring",
+      label: "Monitoring",
+      icon: <FeatherIcon icon="video" className="icon-dual" />,
+      link: "/#",
+      stateVariables: isMonitoring,
+      click: function (e) {
+        e.preventDefault();
+        setIsMonitoring(!isMonitoring);
+        setIscurrentState("Monitoring");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "userStatus",
+          label: "User Status",
+          link: "/#",
+          parentId: "monitoring",
+        },
+      ],
+    },
+    {
+      id: "quality",
+      label: "Quality",
+      icon: <FeatherIcon icon="mic" className="icon-dual" />,
+      link: "/#",
+      stateVariables: isQuality,
+      click: function (e) {
+        e.preventDefault();
+        setIsQuality(!isQuality);
+        setIscurrentState("Quality");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "searchRecording",
+          label: "Search Recording",
+          link: "/#",
+          parentId: "quality",
+        },
+      ],
+    },
+    {
+      id: "analytics",
+      label: "Analytics",
+      icon: <FeatherIcon icon="pie-chart" className="icon-dual" />,
+      link: "/#",
+      stateVariables: isAnalytics,
+      click: function (e) {
+        e.preventDefault();
+        setIsAnalytics(!isAnalytics);
+        setIscurrentState("Analytics");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "userSession",
+          label: "User Session",
+          link: "/#",
+          parentId: "analytics",
+        },
+        {
+          id: "dispositionReport",
+          label: "Disposition",
+          link: "/#",
+          parentId: "analytics",
         },
       ],
     },
