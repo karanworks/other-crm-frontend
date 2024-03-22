@@ -109,22 +109,25 @@ function UserFormModal({
               type="select"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.campaignDescription || ""}
+              value={validation.values.campaignType || ""}
               invalid={
-                validation.touched.campaignDescription &&
-                validation.errors.campaignDescription
+                validation.touched.campaignType &&
+                validation.errors.campaignType
                   ? true
                   : false
               }
             >
+              <option value="" disabled>
+                Select Campaign Type
+              </option>
               <option value="outbound">Outbound</option>
               <option value="inbound">Inbound</option>
             </Input>
 
-            {validation.touched.campaignDescription &&
-            validation.errors.campaignDescription ? (
+            {validation.touched.campaignType &&
+            validation.errors.campaignType ? (
               <FormFeedback type="invalid">
-                {validation.errors.campaignDescription}
+                {validation.errors.campaignType}
               </FormFeedback>
             ) : null}
           </div>
