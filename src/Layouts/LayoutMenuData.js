@@ -7,10 +7,13 @@ import FeatherIcon from "feather-icons-react";
 const Navdata = () => {
   const history = useNavigate();
   //state data
-  const [isHome, setIsHome] = useState(false)
+  const [isHome, setIsHome] = useState(false);
   const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
-  const [isOperationalConfiguration, setIsOperationalConfiguration] = useState(false);
+  const [isOperationalConfiguration, setIsOperationalConfiguration] =
+    useState(false);
   const [isCampaignManagement, setIsCampaignManagement] = useState(false);
+  const [isLeadManagement, setIsLeadManagement] = useState(false);
+  const [isOtherManagement, setIsOtherManagement] = useState(false);
   const [isApps, setIsApps] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isPages, setIsPages] = useState(false);
@@ -82,7 +85,7 @@ const Navdata = () => {
 
   useEffect(() => {
     document.body.classList.remove("twocolumn-panel");
-    if(iscurrentState !== "Home"){
+    if (iscurrentState !== "Home") {
       setIsHome(false);
     }
     if (iscurrentState !== "SystemConfiguration") {
@@ -93,6 +96,12 @@ const Navdata = () => {
     }
     if (iscurrentState !== "CampaignManagement") {
       setIsCampaignManagement(false);
+    }
+    if (iscurrentState !== "LeadManagement") {
+      setIsLeadManagement(false);
+    }
+    if (iscurrentState !== "OtherManagement") {
+      setIsOtherManagement(false);
     }
     if (iscurrentState !== "Apps") {
       setIsApps(false);
@@ -163,16 +172,15 @@ const Navdata = () => {
       icon: <FeatherIcon icon="home" className="icon-dual" />,
       link: "/home",
       stateVariables: isHome,
-      click: function(e){
+      click: function (e) {
         e.preventDefault();
-        setIsHome(!isHome)
+        setIsHome(!isHome);
         setIscurrentState("Home");
-        updateIconSidebar(e)
+        updateIconSidebar(e);
       },
       subItems: false,
-
     },
-    
+
     {
       id: "systemConfiguration",
       label: "System Configuration",
@@ -192,50 +200,54 @@ const Navdata = () => {
           link: "/users",
           parentId: "systemConfiguration",
         },
-        
+
         {
-          id: "analytics",
-          label: "Analytics",
-          link: "/dashboard-analytics",
-          parentId: "dashboard",
+          id: "aclRules",
+          label: "ACL Rules",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "crm",
-          label: "CRM",
-          link: "/dashboard-crm",
-          parentId: "dashboard",
+          id: "userModeMaster",
+          label: "User Mode Master",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "ecommerce",
-          label: "Ecommerce",
-          link: "/dashboard",
-          parentId: "dashboard",
+          id: "menuMapping",
+          label: "Menu Mapping",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "crypto",
-          label: "Crypto",
-          link: "/dashboard-crypto",
-          parentId: "dashboard",
+          id: "userStatusColour",
+          label: "User Status Colour",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "projects",
-          label: "Projects",
-          link: "/dashboard-projects",
-          parentId: "dashboard",
+          id: "userModePermission",
+          label: "User Mode Permission",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "nft",
-          label: "NFT",
-          link: "/dashboard-nft",
-          parentId: "dashboard",
+          id: "extensionDetail",
+          label: "Extension Detail",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
         {
-          id: "job",
-          label: "Job",
-          link: "/dashboard-jobs",
-          parentId: "dashboard",
-          badgeColor: "success",
-          badgeName: "New",
+          id: "disposition",
+          label: "Disposition",
+          link: "/#",
+          parentId: "systemConfiguration",
+        },
+        {
+          id: "callbackPolicy",
+          label: "Callback Policy",
+          link: "/#",
+          parentId: "systemConfiguration",
         },
       ],
     },
@@ -244,40 +256,104 @@ const Navdata = () => {
       label: "Operational Configuration",
       icon: <FeatherIcon icon="home" className="icon-dual" />,
       link: "/#",
-      stateVariables: isOperationalConfiguration,
       click: function (e) {
         e.preventDefault();
         setIsOperationalConfiguration(!isOperationalConfiguration);
         setIscurrentState("OperationalConfiguration");
         updateIconSidebar(e);
       },
+      stateVariables: isOperationalConfiguration,
       subItems: [
         {
           id: "campaignManagement",
           label: "Campaign Management",
-           icon: <FeatherIcon icon="home" className="icon-dual" />,
-          link: "/campaign-management",
-          parentId: "Operational Configuration",
+          link: "/#",
+          parentId: "operationalConfiguration",
+          isChildItem: true,
           click: function (e) {
             e.preventDefault();
             setIsCampaignManagement(!isCampaignManagement);
-            setIscurrentState("CampaignManagement");
-            updateIconSidebar(e);
           },
-          subItems: [
+          stateVariables: isCampaignManagement,
+          childItems: [
             {
-              id: "users",
-              label: "Users",
-              link: "/users",
-              parentId: "systemConfiguration",
+              id: "campaign",
+              label: "Campaign",
+              link: "/#",
+              parentId: "campaignManagement",
             },
-          ]
+            {
+              id: "crmConfiguration",
+              label: "CRM Configuration",
+              link: "/#",
+              parentId: "campaignManagement",
+            },
+            {
+              id: "mapping",
+              label: "Mapping",
+              link: "/#",
+              parentId: "campaignManagement",
+            },
+            {
+              id: "campaignTransferMapping ",
+              label: "Campaign Transfer Mapping",
+              link: "/#",
+              parentId: "campaignManagement",
+            },
+          ],
         },
-        
-        
-       
-       
-       
+        {
+          id: "leadManagement",
+          label: "Lead Management",
+          link: "/#",
+          parentId: "operationalConfiguration",
+          isChildItem: true,
+          click: function (e) {
+            e.preventDefault();
+            setIsLeadManagement(!isLeadManagement);
+          },
+          stateVariables: isLeadManagement,
+          childItems: [
+            {
+              id: "importLead",
+              label: "Import Lead",
+              link: "/#",
+              parentId: "leadManagement",
+            },
+            {
+              id: "leadManager",
+              label: "Lead Manager",
+              link: "/#",
+              parentId: "leadManagement",
+            },
+            {
+              id: "crmData",
+              label: "CRM Data",
+              link: "/#",
+              parentId: "leadManagement",
+            },
+          ],
+        },
+        {
+          id: "otherManagement",
+          label: "Other Management",
+          link: "/#",
+          parentId: "operationalConfiguration",
+          isChildItem: true,
+          click: function (e) {
+            e.preventDefault();
+            setIsOtherManagement(!isOtherManagement);
+          },
+          stateVariables: isOtherManagement,
+          childItems: [
+            {
+              id: "freeAgent",
+              label: "Free Agent",
+              link: "/#",
+              parentId: "otherManagement",
+            },
+          ],
+        },
       ],
     },
     {
@@ -489,7 +565,12 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isTasks,
           childItems: [
-            { id: 1, label: "Kanban Board", link: "/apps-tasks-kanban", parentId: "apps", },
+            {
+              id: 1,
+              label: "Kanban Board",
+              link: "/apps-tasks-kanban",
+              parentId: "apps",
+            },
             {
               id: 2,
               label: "List View",
