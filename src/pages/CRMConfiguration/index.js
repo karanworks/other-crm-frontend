@@ -20,10 +20,55 @@ import { Link } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import CRMFieldFormModal from "./CRMFieldFormModal";
 
 const CRMConfiguration = () => {
+  // register / edit user modal state whether modal is open or not
+  const [modal_list, setmodal_list] = useState(false);
+  // this state triggers when editing the user
+  const [isEditingUser, setIsEditingUser] = useState(false);
+  // admin details with users that he has added
+  // const [adminUsersData, setAdminUsersData] = useState([]);
+  // delete user confirmation modal state
+  // const [modal_delete, setmodal_delete] = useState(false);
+  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
+  // const [listUserId, setListUserId] = useState(null);
+
+  function tog_list() {
+    setmodal_list(!modal_list);
+    setIsEditingUser(false);
+  }
+
+  // toggles delete user confirmation modal
+  // function tog_delete() {
+  //   setmodal_delete(!modal_delete);
+  // }
+
   // formik setup
-  const validation = useFormik({
+  const crmFieldValidation = useFormik({
+    initialValues: {
+      caption: "",
+      type: "",
+      required: "",
+      readOnly: "",
+      position: "",
+    },
+    validationSchema: Yup.object({
+      caption: Yup.string().required("Please enter caption"),
+      type: Yup.string().required("Please select type"),
+      required: Yup.string().required(
+        "Please select whether field is required"
+      ),
+      readOnly: Yup.string().required(
+        "Please select whether field is read only"
+      ),
+      position: Yup.string().required("Please enter position"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+  const campaignTypeValidation = useFormik({
     initialValues: {
       campaignName: "",
     },
@@ -34,6 +79,22 @@ const CRMConfiguration = () => {
       console.log(values);
     },
   });
+
+  function showCampaignFormHandleSubmit(e) {
+    e.preventDefault();
+    campaignTypeValidation.handleSubmit();
+
+    console.log("campaign type form called!");
+
+    return false;
+  }
+
+  function crmFieldFormHandleSubmit(e) {
+    e.preventDefault();
+    crmFieldValidation.handleSubmit();
+
+    return false;
+  }
 
   document.title = "Users";
   return (
@@ -55,7 +116,15 @@ const CRMConfiguration = () => {
                   <div className="listjs-table" id="userList">
                     <Row className="g-4 mb-3">
                       <Col className="col-sm-auto">
-                        <Form style={{ display: "flex", gap: "10px" }}>
+                        <Form
+                          style={{ display: "flex", gap: "10px" }}
+                          onSubmit={(e) =>
+                            showCampaignFormHandleSubmit(
+                              e,
+                              campaignTypeValidation.caption
+                            )
+                          }
+                        >
                           <div className="mb-2">
                             <Input
                               id="campaignType"
@@ -63,12 +132,14 @@ const CRMConfiguration = () => {
                               className="form-control"
                               placeholder="Enter Campaign Type"
                               type="select"
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={validation.values.campaignType || ""}
+                              onChange={campaignTypeValidation.handleChange}
+                              onBlur={campaignTypeValidation.handleBlur}
+                              value={
+                                campaignTypeValidation.values.campaignType || ""
+                              }
                               invalid={
-                                validation.touched.campaignType &&
-                                validation.errors.campaignType
+                                campaignTypeValidation.touched.campaignType &&
+                                campaignTypeValidation.errors.campaignType
                                   ? true
                                   : false
                               }
@@ -80,10 +151,10 @@ const CRMConfiguration = () => {
                               <option value="inbound">Inbound</option>
                             </Input>
 
-                            {validation.touched.campaignType &&
-                            validation.errors.campaignType ? (
+                            {campaignTypeValidation.touched.campaignType &&
+                            campaignTypeValidation.errors.campaignType ? (
                               <FormFeedback type="invalid">
-                                {validation.errors.campaignType}
+                                {campaignTypeValidation.errors.campaignType}
                               </FormFeedback>
                             ) : null}
                           </div>
@@ -91,7 +162,7 @@ const CRMConfiguration = () => {
                             <Button
                               color="primary"
                               className="add-btn me-1"
-                              onClick={() => tog_list()}
+                              type="submit"
                               id="show-btn"
                             >
                               <i className="ri-search-line search-icon"> </i>
@@ -238,6 +309,13 @@ const CRMConfiguration = () => {
         </Container>
         <ToastContainer />
       </div>
+      <CRMFieldFormModal
+        modal_list={modal_list}
+        tog_list={tog_list}
+        crmFieldValidation={crmFieldValidation}
+        isEditingUser={isEditingUser}
+        crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
+      />
     </React.Fragment>
   );
 };
