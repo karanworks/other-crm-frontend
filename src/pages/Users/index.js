@@ -36,6 +36,8 @@ const Users = () => {
   const [modal_delete, setmodal_delete] = useState(false);
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   const [listUserId, setListUserId] = useState(null);
+  // user already registered error
+  const [isAlreadyRegisteredError, setIsAlreadyRegisteredError] = useState("");
 
   // toggles register / edit user modal
   function tog_list() {
@@ -50,13 +52,11 @@ const Users = () => {
 
   // To get users when /users page renders for the first time
   useEffect(() => {
-    console.log("server url ->", process.env.REACT_APP_SERVER_URL);
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/users`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("user data on user page ->", res.data);
         setAdminUsersData(res.data);
       })
       .catch((err) => {
@@ -86,8 +86,6 @@ const Users = () => {
       isEditingUser
         ? handleUserUpdate(adminUsersData.id)
         : handleAddUser(values);
-
-      !isEditingUser && notifyAddedUser();
     },
   });
 
@@ -101,15 +99,13 @@ const Users = () => {
 
   function handleAddUser(values) {
     // update the new user in the users list instantly
-    setAdminUsersData((prevState) => ({
-      ...prevState,
-      users: [
-        ...prevState.users,
-        { id: values.userId, username: values.name, ...values },
-      ],
-    }));
-
-    setmodal_list(false);
+    // setAdminUsersData((prevState) => ({
+    //   ...prevState,
+    //   users: [
+    //     ...prevState.users,
+    //     { id: values.userId, username: values.name, ...values },
+    //   ],
+    // }));
 
     // user register api call
     axios
@@ -120,8 +116,24 @@ const Users = () => {
           withCredentials: true,
         }
       )
-      .then((result) => {
-        console.log(result);
+      .then((res) => {
+        console.log("data after adding user ->", res);
+
+        if (res.status === "failure") {
+          console.log("there was an error");
+          setIsAlreadyRegisteredError(res.message);
+          console.log(isAlreadyRegisteredError);
+          return;
+        }
+
+        if (res.data) {
+          setAdminUsersData((prevState) => ({
+            ...prevState,
+            users: [...prevState.users, { ...res.data }],
+          }));
+          setmodal_list(false);
+          !isEditingUser && notifyAddedUser();
+        }
       })
       .catch((error) => {
         console.log("error while registering user ->", error);
@@ -382,6 +394,7 @@ const Users = () => {
         formHandleSubmit={formHandleSubmit}
         validation={validation}
         isEditingUser={isEditingUser}
+        isAlreadyRegisteredError={isAlreadyRegisteredError}
       />
 
       {/* Remove Modal */}
