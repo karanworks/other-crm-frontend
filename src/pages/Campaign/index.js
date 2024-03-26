@@ -68,7 +68,7 @@ const Campaign = () => {
       campaignName: "",
       campaignDescription: "",
       campaignType: "",
-      // have not added callback, dnc, amd field intentionally
+      // have not added callback, dnc, amd field intentionally becuase currently don't have idea what values they are going to hold
     },
     validationSchema: Yup.object({
       campaignName: Yup.string().required("Please enter campaign name"),
@@ -82,12 +82,10 @@ const Campaign = () => {
       isEditingCampaign
         ? handleCampaignUpdate(adminUsersData.id)
         : handleAddCampaign(values);
-
-      !isEditingCampaign && notifyAddedCampaign();
     },
   });
 
-  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
+  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
@@ -96,18 +94,7 @@ const Campaign = () => {
   }
 
   function handleAddCampaign(values) {
-    // update the new user in the users list instantly
-    setAdminUsersData((prevState) => ({
-      ...prevState,
-      campaigns: [
-        ...prevState.campaigns,
-        { ...values, callback: 0, dnc: 0, amd: 0 },
-      ],
-    }));
-
-    setmodal_list(false);
-
-    // user register api call
+    // campaign add api call
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/campaign/create`,
@@ -116,15 +103,22 @@ const Campaign = () => {
           withCredentials: true,
         }
       )
-      .then((result) => {
-        console.log("campaign created ->", result);
+      .then((res) => {
+        // update the new campaign in the list instantly
+        setAdminUsersData((prevState) => ({
+          ...prevState,
+          campaigns: [...prevState.campaigns, { ...res.data }],
+        }));
+
+        setmodal_list(false);
+        !isEditingCampaign && notifyAddedCampaign();
       })
       .catch((error) => {
         console.log("error while registering user ->", error);
       });
   }
 
-  // to update the values of register form when editing the user
+  // to update the values of register form when editing the campaign
   function handleEditCampaign(campaignData) {
     setIsEditingCampaign(true);
     setmodal_list(!modal_list);
@@ -135,7 +129,7 @@ const Campaign = () => {
     validation.values.campaignType = campaignData.campaignType;
   }
 
-  // after making an edit and clicking on update user button this function updates the user details
+  // after making an edit and clicking on update campaign button this function updates the campaign details
   function handleCampaignUpdate(adminId) {
     axios
       .patch(
@@ -144,7 +138,7 @@ const Campaign = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        // filtering users so that updated user details can be updated instantly
+        // filtering campaigns so that updated campaigns details can be updated instantly
         const updatedCampaigns = adminUsersData.campaigns.map((campaign) => {
           if (campaign.id === listCampaignId) {
             return res.data;
@@ -165,7 +159,7 @@ const Campaign = () => {
       });
   }
 
-  // to delete a user
+  // to delete a campaign
   function handleDeleteCampaign(adminId, campaignId) {
     axios
       .delete(
@@ -175,7 +169,7 @@ const Campaign = () => {
         }
       )
       .then((res) => {
-        // filtering users so that deleted user can be updated instantly
+        // filtering campaigns so that deleted campaigns can be updated instantly
         const filteredCampaigns = adminUsersData.campaigns.filter(
           (campaign) => campaign.id !== campaignId
         );

@@ -98,15 +98,6 @@ const Users = () => {
   }
 
   function handleAddUser(values) {
-    // update the new user in the users list instantly
-    // setAdminUsersData((prevState) => ({
-    //   ...prevState,
-    //   users: [
-    //     ...prevState.users,
-    //     { id: values.userId, username: values.name, ...values },
-    //   ],
-    // }));
-
     // user register api call
     axios
       .post(
@@ -120,7 +111,6 @@ const Users = () => {
         console.log("data after adding user ->", res);
 
         if (res.status === "failure") {
-          console.log("there was an error");
           setIsAlreadyRegisteredError(res.message);
           console.log(isAlreadyRegisteredError);
           return;

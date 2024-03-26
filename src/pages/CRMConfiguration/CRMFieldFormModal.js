@@ -15,6 +15,7 @@ function CRMFieldFormModal({
   crmFieldFormHandleSubmit, // submit function for form
   crmFieldValidation, // to get the values from formik
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  currentCampaignId,
 }) {
   return (
     <Modal
@@ -175,31 +176,31 @@ function CRMFieldFormModal({
             ) : null}
           </div>
           <div className="mb-2">
-            <Label htmlFor="caption" className="form-label">
-              Field Position
+            <Label htmlFor="position" className="form-label">
+              Position
             </Label>
 
             <Input
-              id="fieldPosition"
-              name="fieldPosition"
+              id="position"
+              name="position"
               className="form-control"
-              placeholder="Enter field position, i.e - 1, 2, 3"
+              placeholder="Enter field position"
               type="number"
               onChange={crmFieldValidation.handleChange}
               onBlur={crmFieldValidation.handleBlur}
               value={crmFieldValidation.values.position || ""}
               invalid={
-                crmFieldValidation.touched.caption &&
+                crmFieldValidation.touched.position &&
                 crmFieldValidation.errors.position
                   ? true
                   : false
               }
             />
 
-            {crmFieldValidation.touched.position &&
-            crmFieldValidation.errors.position ? (
+            {crmFieldValidation.touched.caption &&
+            crmFieldValidation.errors.caption ? (
               <FormFeedback type="invalid">
-                {crmFieldValidation.errors.position}
+                {crmFieldValidation.errors.caption}
               </FormFeedback>
             ) : null}
           </div>

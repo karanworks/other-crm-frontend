@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -21,18 +19,18 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CRMFieldFormModal from "./CRMFieldFormModal";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const CRMConfiguration = () => {
-  // register / edit user modal state whether modal is open or not
+  const user = useSelector((state) => state.Login.user);
+
   const [modal_list, setmodal_list] = useState(false);
-  // this state triggers when editing the user
   const [isEditingUser, setIsEditingUser] = useState(false);
-  // admin details with users that he has added
-  // const [adminUsersData, setAdminUsersData] = useState([]);
-  // delete user confirmation modal state
-  // const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
-  // const [listUserId, setListUserId] = useState(null);
+  const [selectedCampaignId, setSelectedCampaignId] = useState("");
+  // const [currentCampaignId, setCurrentCampaignId] = useState("");
+  const [adminUsersData, setAdminUsersData] = useState([]);
+  const [crmFields, setCrmFields] = useState([]);
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -43,6 +41,22 @@ const CRMConfiguration = () => {
   // function tog_delete() {
   //   setmodal_delete(!modal_delete);
   // }
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/crm-configuration`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setAdminUsersData(res.data);
+      })
+      .catch((err) => {
+        console.log(
+          "error while fetching crm fields on crm-configuration page ->",
+          err
+        );
+      });
+  }, []);
 
   // formik setup
   const crmFieldValidation = useFormik({
@@ -62,10 +76,10 @@ const CRMConfiguration = () => {
       readOnly: Yup.string().required(
         "Please select whether field is read only"
       ),
-      position: Yup.string().required("Please enter position"),
+      position: Yup.number().required("Please enter position"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      handleAddCrmField(values);
     },
   });
   const campaignTypeValidation = useFormik({
@@ -80,13 +94,77 @@ const CRMConfiguration = () => {
     },
   });
 
+  function handleChange(e) {
+    campaignTypeValidation.setFieldValue("campaignName", e.target.value);
+    const currentCampaignId = adminUsersData?.campaigns?.filter((campaign) => {
+      if (campaign.campaignName === e.target.value) {
+        return campaign;
+      }
+    });
+
+    // made this variable because cannot user new value of state immediately after state updation
+    const updatedCurrentCampaignId = currentCampaignId[0].id;
+    setSelectedCampaignId(updatedCurrentCampaignId);
+
+    // all fields of particular campaign
+    const crmFieldsOfCampaign = adminUsersData?.campaigns?.filter(
+      (campaign) => {
+        if (campaign.id === updatedCurrentCampaignId) {
+          return campaign;
+        }
+      }
+    );
+
+    console.log(
+      "selected campaign with crm fields ->",
+      crmFieldsOfCampaign[0]?.crmFields
+    );
+
+    setCrmFields(crmFieldsOfCampaign[0]?.crmFields);
+  }
+
   function showCampaignFormHandleSubmit(e) {
     e.preventDefault();
     campaignTypeValidation.handleSubmit();
 
-    console.log("campaign type form called!");
-
     return false;
+  }
+  function handleAddCrmField(values) {
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/${user.id}/campaign/${selectedCampaignId}/crm-field/create`,
+        values,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        // Update the campaigns array with the new crmFields data
+        const updatedCampaigns = adminUsersData?.campaigns?.map((campaign) => {
+          if (campaign.id === selectedCampaignId) {
+            // Update the campaign's crmFields array
+            return {
+              ...campaign,
+              crmFields: [...campaign.crmFields, res.data],
+            };
+          }
+          return campaign;
+        });
+
+        setAdminUsersData((prevState) => ({
+          ...prevState,
+          campaigns: updatedCampaigns,
+        }));
+
+        setAmdin;
+        console.log(res.data);
+
+        setmodal_list(false);
+        !isEditingCampaign && notifyAddedCampaign();
+      })
+      .catch((error) => {
+        console.log("error while registering user ->", error);
+      });
   }
 
   function crmFieldFormHandleSubmit(e) {
@@ -132,14 +210,14 @@ const CRMConfiguration = () => {
                               className="form-control"
                               placeholder="Enter Campaign Type"
                               type="select"
-                              onChange={campaignTypeValidation.handleChange}
+                              onChange={handleChange}
                               onBlur={campaignTypeValidation.handleBlur}
                               value={
-                                campaignTypeValidation.values.campaignType || ""
+                                campaignTypeValidation.values.campaignName || ""
                               }
                               invalid={
-                                campaignTypeValidation.touched.campaignType &&
-                                campaignTypeValidation.errors.campaignType
+                                campaignTypeValidation.touched.campaignName &&
+                                campaignTypeValidation.errors.campaignName
                                   ? true
                                   : false
                               }
@@ -147,8 +225,15 @@ const CRMConfiguration = () => {
                               <option value="" disabled>
                                 Select Campaign Type
                               </option>
-                              <option value="outbound">Outbound</option>
-                              <option value="inbound">Inbound</option>
+
+                              {adminUsersData?.campaigns?.map((campaign) => (
+                                <option
+                                  value={campaign?.campaignName}
+                                  key={campaign.id}
+                                >
+                                  {campaign?.campaignName}
+                                </option>
+                              ))}
                             </Input>
 
                             {campaignTypeValidation.touched.campaignType &&
@@ -227,47 +312,49 @@ const CRMConfiguration = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          <tr>
-                            <th scope="row">
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  name="checkAll"
-                                  value="option1"
-                                />
-                              </div>
-                            </th>
-                            <td className="caption">Field caption</td>
-                            <td className="type">text</td>
-                            <td className="required">yes</td>
-                            <td className="readOnly">yes</td>
-                            <td className="position">1</td>
-                            <td>
-                              <div className="d-flex gap-2">
-                                <div className="edit">
-                                  <button
-                                    className="btn btn-sm btn-primary edit-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#showModal"
-                                    onClick={() => {}}
-                                  >
-                                    Edit
-                                  </button>
+                          {crmFields?.map((crmField) => (
+                            <tr key={crmField.id}>
+                              <th scope="row">
+                                <div className="form-check">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    name="checkAll"
+                                    value="option1"
+                                  />
                                 </div>
-                                <div className="remove">
-                                  <button
-                                    className="btn btn-sm btn-success remove-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteRecordModal"
-                                    onClick={() => {}}
-                                  >
-                                    Remove
-                                  </button>
+                              </th>
+                              <td className="caption">{crmField?.caption}</td>
+                              <td className="type">{crmField?.type}</td>
+                              <td className="required">{crmField?.required}</td>
+                              <td className="readOnly">{crmField?.readOnly}</td>
+                              <td className="position">{crmField?.position}</td>
+                              <td>
+                                <div className="d-flex gap-2">
+                                  <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-primary edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => {}}
+                                    >
+                                      Edit
+                                    </button>
+                                  </div>
+                                  <div className="remove">
+                                    <button
+                                      className="btn btn-sm btn-success remove-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#deleteRecordModal"
+                                      onClick={() => {}}
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                          </tr>
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>
@@ -315,6 +402,7 @@ const CRMConfiguration = () => {
         crmFieldValidation={crmFieldValidation}
         isEditingUser={isEditingUser}
         crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
+        selectedCampaignId={selectedCampaignId}
       />
     </React.Fragment>
   );
