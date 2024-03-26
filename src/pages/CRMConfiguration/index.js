@@ -21,6 +21,8 @@ import * as Yup from "yup";
 import CRMFieldFormModal from "./CRMFieldFormModal";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { notifyFieldAdded, notifyFieldRemoved } from "./toast";
+import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
 
 const CRMConfiguration = () => {
   const user = useSelector((state) => state.Login.user);
@@ -31,16 +33,19 @@ const CRMConfiguration = () => {
   // const [currentCampaignId, setCurrentCampaignId] = useState("");
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [crmFields, setCrmFields] = useState([]);
+  // delete crmField confirmation modal state
+  const [modal_delete, setmodal_delete] = useState(false);
+  const [listCrmFieldId, setListCrmFieldId] = useState("");
 
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingUser(false);
   }
 
-  // toggles delete user confirmation modal
-  // function tog_delete() {
-  //   setmodal_delete(!modal_delete);
-  // }
+  // toggles delete crmField confirmation modal
+  function tog_delete() {
+    setmodal_delete(!modal_delete);
+  }
 
   useEffect(() => {
     axios
@@ -94,6 +99,13 @@ const CRMConfiguration = () => {
     },
   });
 
+  function crmFieldFormHandleSubmit(e) {
+    e.preventDefault();
+    crmFieldValidation.handleSubmit();
+
+    return false;
+  }
+
   function handleChange(e) {
     campaignTypeValidation.setFieldValue("campaignName", e.target.value);
     const currentCampaignId = adminUsersData?.campaigns?.filter((campaign) => {
@@ -129,6 +141,7 @@ const CRMConfiguration = () => {
 
     return false;
   }
+
   function handleAddCrmField(values) {
     axios
       .post(
@@ -156,8 +169,9 @@ const CRMConfiguration = () => {
           campaigns: updatedCampaigns,
         }));
 
-        setAmdin;
-        console.log(res.data);
+        // updating crmFields with latest fields
+        setCrmFields((prevState) => [...prevState, res.data]);
+        notifyFieldAdded();
 
         setmodal_list(false);
         !isEditingCampaign && notifyAddedCampaign();
@@ -167,11 +181,28 @@ const CRMConfiguration = () => {
       });
   }
 
-  function crmFieldFormHandleSubmit(e) {
-    e.preventDefault();
-    crmFieldValidation.handleSubmit();
+  function handleDeleteCrmField(adminId, crmFieldId) {
+    console.log("crm field delte id ->", crmFieldId);
+    axios
+      .delete(
+        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${crmFieldId}/delete`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        // filtering crm Fields so that deleted crm field can be updated instantly
+        const filteredCrmFields = crmFields.filter(
+          (crmField) => crmFieldId !== crmField.id
+        );
 
-    return false;
+        setCrmFields(filteredCrmFields);
+        setmodal_delete(false);
+        notifyFieldRemoved();
+      })
+      .catch((err) => {
+        console.log("error while deleting user", err);
+      });
   }
 
   document.title = "Users";
@@ -326,8 +357,12 @@ const CRMConfiguration = () => {
                               </th>
                               <td className="caption">{crmField?.caption}</td>
                               <td className="type">{crmField?.type}</td>
-                              <td className="required">{crmField?.required}</td>
-                              <td className="readOnly">{crmField?.readOnly}</td>
+                              <td className="required">
+                                {crmField?.required ? "yes" : "no"}
+                              </td>
+                              <td className="readOnly">
+                                {crmField?.readOnly ? "yes" : "No"}
+                              </td>
                               <td className="position">{crmField?.position}</td>
                               <td>
                                 <div className="d-flex gap-2">
@@ -346,7 +381,10 @@ const CRMConfiguration = () => {
                                       className="btn btn-sm btn-success remove-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
-                                      onClick={() => {}}
+                                      onClick={() => {
+                                        setListCrmFieldId(crmField.id);
+                                        setmodal_delete(true);
+                                      }}
                                     >
                                       Remove
                                     </button>
@@ -403,6 +441,15 @@ const CRMConfiguration = () => {
         isEditingUser={isEditingUser}
         crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
         selectedCampaignId={selectedCampaignId}
+      />
+      {/* crm field remove modal */}
+      <CRMFieldRemoveModal
+        modal_delete={modal_delete}
+        tog_delete={tog_delete}
+        setmodal_delete={setmodal_delete}
+        handleDeleteCrmField={() =>
+          handleDeleteCrmField(adminUsersData.id, listCrmFieldId)
+        }
       />
     </React.Fragment>
   );
