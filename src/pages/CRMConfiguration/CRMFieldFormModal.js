@@ -14,7 +14,7 @@ function CRMFieldFormModal({
   tog_list, // to change modal state
   crmFieldFormHandleSubmit, // submit function for form
   crmFieldValidation, // to get the values from formik
-  isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  isEditingCrmField, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   currentCampaignId,
 }) {
   return (
@@ -130,7 +130,7 @@ function CRMFieldFormModal({
               <option value="" disabled>
                 Select Field Read Only
               </option>
-              <option value="true">yes</option>
+              <option value="true">Yes</option>
               <option value="false">No</option>
             </Input>
 
@@ -207,7 +207,7 @@ function CRMFieldFormModal({
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
-              {isEditingUser ? "Update Field" : "Create Field"}
+              {isEditingCrmField ? "Update Field" : "Create Field"}
             </button>
           </div>
         </ModalBody>

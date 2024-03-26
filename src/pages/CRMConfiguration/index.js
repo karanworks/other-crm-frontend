@@ -21,25 +21,27 @@ import * as Yup from "yup";
 import CRMFieldFormModal from "./CRMFieldFormModal";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { notifyFieldAdded, notifyFieldRemoved } from "./toast";
+import {
+  notifyFieldAdded,
+  notifyFieldRemoved,
+  notifyFieldUpdated,
+} from "./toast";
 import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
 
 const CRMConfiguration = () => {
   const user = useSelector((state) => state.Login.user);
 
   const [modal_list, setmodal_list] = useState(false);
-  const [isEditingUser, setIsEditingUser] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
-  // const [currentCampaignId, setCurrentCampaignId] = useState("");
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [crmFields, setCrmFields] = useState([]);
-  // delete crmField confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
   const [listCrmFieldId, setListCrmFieldId] = useState("");
+  const [isEditingCrmField, setIsEditingCrmField] = useState(false);
 
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingUser(false);
+    setIsEditingCrmField(false);
   }
 
   // toggles delete crmField confirmation modal
@@ -84,7 +86,9 @@ const CRMConfiguration = () => {
       position: Yup.number().required("Please enter position"),
     }),
     onSubmit: (values) => {
-      handleAddCrmField(values);
+      isEditingCrmField
+        ? handleCrmFieldUpdate(adminUsersData.id)
+        : handleAddCrmField(values);
     },
   });
   const campaignTypeValidation = useFormik({
@@ -178,6 +182,55 @@ const CRMConfiguration = () => {
       })
       .catch((error) => {
         console.log("error while registering user ->", error);
+      });
+  }
+
+  // to update the values of crmField form when editing the crmField
+  function handleEditCrmField(crmFieldData) {
+    setIsEditingCrmField(true);
+    setmodal_list(!modal_list);
+    setListCrmFieldId(crmFieldData.id);
+    console.log("crmFieldData to edit ->", crmFieldData);
+
+    crmFieldValidation.setValues({
+      caption: crmFieldData.caption,
+      type: crmFieldData.type,
+      required: crmFieldData.required ? "Yes" : "No",
+      readOnly: crmFieldData.readOnly ? "Yes" : "No",
+      position: crmFieldData.position,
+    });
+  }
+
+  // after making an edit and clicking on update crm field button this function updates the crm field details
+  function handleCrmFieldUpdate(adminId) {
+    axios
+      .patch(
+        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${listCrmFieldId}/edit`,
+        crmFieldValidation.values,
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log("response after updating field ->", res.data);
+
+        console.log("crm field id while editing ->", listCrmFieldId);
+
+        const updatedField = crmFields.map((crmField) => {
+          if (crmField.id === listCrmFieldId) {
+            return res.data;
+          } else {
+            return crmField;
+          }
+        });
+
+        console.log("updated crm fields ->", updatedField);
+
+        setCrmFields(updatedField);
+
+        setmodal_list(!modal_list);
+        notifyFieldUpdated();
+      })
+      .catch((err) => {
+        console.log("error while updating", err);
       });
   }
 
@@ -371,7 +424,9 @@ const CRMConfiguration = () => {
                                       className="btn btn-sm btn-primary edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => {}}
+                                      onClick={() =>
+                                        handleEditCrmField(crmField)
+                                      }
                                     >
                                       Edit
                                     </button>
@@ -438,7 +493,7 @@ const CRMConfiguration = () => {
         modal_list={modal_list}
         tog_list={tog_list}
         crmFieldValidation={crmFieldValidation}
-        isEditingUser={isEditingUser}
+        isEditingCrmField={isEditingCrmField}
         crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
         selectedCampaignId={selectedCampaignId}
       />
