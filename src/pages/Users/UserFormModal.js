@@ -1,4 +1,5 @@
 import {
+  Alert,
   Input,
   Label,
   Form,
@@ -15,6 +16,7 @@ function UserFormModal({
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  isAlreadyRegisteredError, // gives error if user already registered with same - id, crmEmail, agentMobile
 }) {
   return (
     <Modal
@@ -30,14 +32,18 @@ function UserFormModal({
           tog_list();
         }}
       >
-        {" "}
-        Add User{" "}
+        Add User
       </ModalHeader>
       <Form
         className="tablelist-form"
         onSubmit={(e) => formHandleSubmit(e, validation.userId)}
       >
         <ModalBody style={{ paddingTop: "0px" }}>
+          {isAlreadyRegisteredError && (
+            <Alert color="danger" style={{ marginBlock: "5px" }}>
+              {isAlreadyRegisteredError}
+            </Alert>
+          )}
           <div className="mb-2">
             <Label htmlFor="userId" className="form-label">
               User Id
@@ -90,7 +96,6 @@ function UserFormModal({
               </FormFeedback>
             ) : null}
           </div>
-
           <div className="mb-2">
             <Label htmlFor="exampleInputPassword1" className="form-label">
               Password
@@ -118,7 +123,6 @@ function UserFormModal({
               </FormFeedback>
             ) : null}
           </div>
-
           <div className="mb-2">
             <Label htmlFor="crmEmail" className="form-label">
               CRM Email
@@ -200,7 +204,6 @@ function UserFormModal({
               </FormFeedback>
             ) : null}
           </div>
-
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
               {isEditingUser ? "Update User" : "Save User"}
