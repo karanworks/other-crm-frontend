@@ -18,8 +18,6 @@ function CRMFieldFormModal({
 }) {
   const sortedFields = crmFields.sort((a, b) => a.position - b.position);
 
-  console.log("sorted fields ->", sortedFields);
-
   return (
     <Modal
       isOpen={crmFormModalList}

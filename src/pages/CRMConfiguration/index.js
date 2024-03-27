@@ -105,7 +105,7 @@ const CRMConfiguration = () => {
       campaignName: Yup.string().required("Please select a campaign"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
     },
   });
 
@@ -143,11 +143,6 @@ const CRMConfiguration = () => {
           return campaign;
         }
       }
-    );
-
-    console.log(
-      "selected campaign with crm fields ->",
-      crmFieldsOfCampaign[0]?.crmFields
     );
 
     setCrmFields(crmFieldsOfCampaign[0]?.crmFields);
@@ -219,7 +214,6 @@ const CRMConfiguration = () => {
     setIsEditingCrmField(true);
     setmodal_list(!modal_list);
     setListCrmFieldId(crmFieldData.id);
-    console.log("crmFieldData to edit ->", crmFieldData);
 
     crmFieldValidation.setValues({
       caption: crmFieldData.caption,
@@ -232,6 +226,8 @@ const CRMConfiguration = () => {
 
   // after making an edit and clicking on update crm field button this function updates the crm field details
   function handleCrmFieldUpdate(adminId) {
+    console.log("crm fields on updation submit ->", crmFields);
+
     axios
       .patch(
         `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${listCrmFieldId}/edit`,
@@ -249,6 +245,7 @@ const CRMConfiguration = () => {
           //     return crmField;
           //   }
           // });
+          console.log("data after field updation", res.data);
 
           setCrmFields(res.data);
 
@@ -262,7 +259,6 @@ const CRMConfiguration = () => {
   }
 
   function handleDeleteCrmField(adminId, crmFieldId) {
-    console.log("crm field delte id ->", crmFieldId);
     axios
       .delete(
         `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${crmFieldId}/delete`,
@@ -272,11 +268,11 @@ const CRMConfiguration = () => {
       )
       .then((res) => {
         // filtering crm Fields so that deleted crm field can be updated instantly
-        const filteredCrmFields = crmFields.filter(
-          (crmField) => crmFieldId !== crmField.id
-        );
+        // const filteredCrmFields = crmFields.filter(
+        //   (crmField) => crmFieldId !== crmField.id
+        // );
 
-        setCrmFields(filteredCrmFields);
+        setCrmFields(res.data);
         setmodal_delete(false);
         notifyFieldRemoved();
       })
