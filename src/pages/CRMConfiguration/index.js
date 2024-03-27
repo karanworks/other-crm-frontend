@@ -27,21 +27,27 @@ import {
   notifyFieldUpdated,
 } from "./toast";
 import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
+import CRMFormModal from "./CRMFormModal";
 
 const CRMConfiguration = () => {
   const user = useSelector((state) => state.Login.user);
 
   const [modal_list, setmodal_list] = useState(false);
+  const [crmFormModalList, setCrmFormModalList] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
   const [adminUsersData, setAdminUsersData] = useState([]);
   const [crmFields, setCrmFields] = useState([]);
   const [modal_delete, setmodal_delete] = useState(false);
   const [listCrmFieldId, setListCrmFieldId] = useState("");
   const [isEditingCrmField, setIsEditingCrmField] = useState(false);
+  const [customError, setCustomError] = useState("");
 
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingCrmField(false);
+  }
+  function crmFormModalToggleList() {
+    setCrmFormModalList(!crmFormModalList);
   }
 
   // toggles delete crmField confirmation modal
@@ -105,6 +111,14 @@ const CRMConfiguration = () => {
 
   function crmFieldFormHandleSubmit(e) {
     e.preventDefault();
+
+    if (crmFieldValidation.values.position > crmFields.length + 1) {
+      setCustomError(
+        `CRM Field position should not be more than ${crmFields.length + 1}`
+      );
+      return;
+    }
+
     crmFieldValidation.handleSubmit();
 
     return false;
@@ -149,36 +163,51 @@ const CRMConfiguration = () => {
   function handleAddCrmField(values) {
     axios
       .post(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/campaign/${selectedCampaignId}/crm-field/create`,
+        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/campaign/${selectedCampaignId}/crm-field/create`,
         values,
         {
           withCredentials: true,
         }
       )
       .then((res) => {
-        // Update the campaigns array with the new crmFields data
-        const updatedCampaigns = adminUsersData?.campaigns?.map((campaign) => {
-          if (campaign.id === selectedCampaignId) {
-            // Update the campaign's crmFields array
-            return {
-              ...campaign,
-              crmFields: [...campaign.crmFields, res.data],
-            };
-          }
-          return campaign;
-        });
+        if (res.status === "failure") {
+          setCustomError(res.message);
+          return;
+        }
+        if (res.status === "positions-updated") {
+          setCrmFields(res.data);
+          setmodal_list(false);
+          notifyFieldAdded();
+          return;
+        }
 
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          campaigns: updatedCampaigns,
-        }));
+        if (res.data) {
+          // Update the campaigns array with the new crmFields data
+          const updatedCampaigns = adminUsersData?.campaigns?.map(
+            (campaign) => {
+              if (campaign.id === selectedCampaignId) {
+                // Update the campaign's crmFields array
+                return {
+                  ...campaign,
+                  crmFields: [...campaign.crmFields, res.data],
+                };
+              }
+              return campaign;
+            }
+          );
 
-        // updating crmFields with latest fields
-        setCrmFields((prevState) => [...prevState, res.data]);
-        notifyFieldAdded();
+          setAdminUsersData((prevState) => ({
+            ...prevState,
+            campaigns: updatedCampaigns,
+          }));
 
-        setmodal_list(false);
-        !isEditingCampaign && notifyAddedCampaign();
+          // updating crmFields with latest fields
+          setCrmFields((prevState) => [...prevState, res.data]);
+          notifyFieldAdded();
+
+          setmodal_list(false);
+          !isEditingCampaign && notifyAddedCampaign();
+        }
       })
       .catch((error) => {
         console.log("error while registering user ->", error);
@@ -333,6 +362,10 @@ const CRMConfiguration = () => {
                               className="add-btn me-1"
                               type="submit"
                               id="show-btn"
+                              disabled={!selectedCampaignId}
+                              onClick={() =>
+                                crmFormModalToggleList(!crmFormModalList)
+                              }
                             >
                               <i className="ri-search-line search-icon"> </i>
                               Show CRM
@@ -344,12 +377,15 @@ const CRMConfiguration = () => {
                         className="col-sm-auto"
                         style={{ marginLeft: "auto" }}
                       >
-                        <div>
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <Button
                             color="primary"
                             className="add-btn me-1"
                             onClick={() => tog_list()}
                             id="create-btn"
+                            disabled={!selectedCampaignId} // if no campaign is selected button will remain disabled
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             CRM Field
@@ -496,6 +532,7 @@ const CRMConfiguration = () => {
         isEditingCrmField={isEditingCrmField}
         crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
         selectedCampaignId={selectedCampaignId}
+        customError={customError}
       />
       {/* crm field remove modal */}
       <CRMFieldRemoveModal
@@ -505,6 +542,14 @@ const CRMConfiguration = () => {
         handleDeleteCrmField={() =>
           handleDeleteCrmField(adminUsersData.id, listCrmFieldId)
         }
+      />
+      {/* crm form modal */}
+      <CRMFormModal
+        crmFormModalList={crmFormModalList}
+        crmFormModalToggleList={crmFormModalToggleList}
+        crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
+        crmFieldValidation={crmFieldValidation}
+        crmFields={crmFields}
       />
     </React.Fragment>
   );

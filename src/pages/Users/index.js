@@ -138,20 +138,12 @@ const Users = () => {
 
     validation.setValues({
       userId: userData.id,
-      name: userData.name,
+      name: userData.username,
       password: userData.password,
       crmEmail: userData.crmEmail,
       crmPassword: userData.crmPassword,
       agentMobile: userData.agentMobile,
     });
-
-    // previously working version
-    // validation.values.userId = userData.id;
-    // validation.values.name = userData.username;
-    // validation.values.password = userData.password;
-    // validation.values.crmEmail = userData.crmEmail;
-    // validation.values.crmPassword = userData.crmPassword;
-    // validation.values.agentMobile = userData.agentMobile;
   }
 
   // after making an edit and clicking on update user button this function updates the user details

@@ -6,6 +6,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
+  Alert,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,7 +16,7 @@ function CRMFieldFormModal({
   crmFieldFormHandleSubmit, // submit function for form
   crmFieldValidation, // to get the values from formik
   isEditingCrmField, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
-  currentCampaignId,
+  customError,
 }) {
   return (
     <Modal
@@ -41,6 +42,11 @@ function CRMFieldFormModal({
         }
       >
         <ModalBody style={{ paddingTop: "0px" }}>
+          {customError && (
+            <Alert color="danger" style={{ marginBlock: "5px" }}>
+              {customError}
+            </Alert>
+          )}
           <div className="mb-2">
             <Label htmlFor="caption" className="form-label">
               Field Caption
@@ -186,6 +192,7 @@ function CRMFieldFormModal({
               className="form-control"
               placeholder="Enter field position"
               type="number"
+              min={1}
               onChange={crmFieldValidation.handleChange}
               onBlur={crmFieldValidation.handleBlur}
               value={crmFieldValidation.values.position || ""}
