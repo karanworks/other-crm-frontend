@@ -239,24 +239,22 @@ const CRMConfiguration = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log("response after updating field ->", res.data);
+        if (res.status === "duplicate") {
+          setCustomError(res.message);
+        } else {
+          // const updatedField = crmFields.map((crmField) => {
+          //   if (crmField.id === listCrmFieldId) {
+          //     return res.data;
+          //   } else {
+          //     return crmField;
+          //   }
+          // });
 
-        console.log("crm field id while editing ->", listCrmFieldId);
+          setCrmFields(res.data);
 
-        const updatedField = crmFields.map((crmField) => {
-          if (crmField.id === listCrmFieldId) {
-            return res.data;
-          } else {
-            return crmField;
-          }
-        });
-
-        console.log("updated crm fields ->", updatedField);
-
-        setCrmFields(updatedField);
-
-        setmodal_list(!modal_list);
-        notifyFieldUpdated();
+          setmodal_list(!modal_list);
+          notifyFieldUpdated();
+        }
       })
       .catch((err) => {
         console.log("error while updating", err);

@@ -45,7 +45,7 @@ function CRMFieldFormModal({
       >
         <ModalBody style={{ paddingTop: "0px" }}>
           {sortedFields?.map((crmField) => (
-            <div className="mb-2">
+            <div className="mb-2" key={crmField.id}>
               <Label htmlFor="caption" className="form-label">
                 {crmField.caption}
               </Label>
