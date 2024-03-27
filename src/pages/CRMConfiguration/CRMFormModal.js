@@ -16,8 +16,6 @@ function CRMFieldFormModal({
   crmFieldValidation, // to get the values from formik
   crmFields,
 }) {
-  const sortedFields = crmFields.sort((a, b) => a.position - b.position);
-
   return (
     <Modal
       isOpen={crmFormModalList}
@@ -42,7 +40,7 @@ function CRMFieldFormModal({
         }
       >
         <ModalBody style={{ paddingTop: "0px" }}>
-          {sortedFields?.map((crmField) => (
+          {crmFields?.map((crmField) => (
             <div className="mb-2" key={crmField.id}>
               <Label htmlFor="caption" className="form-label">
                 {crmField.caption}

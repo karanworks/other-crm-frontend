@@ -61,6 +61,7 @@ const CRMConfiguration = () => {
         withCredentials: true,
       })
       .then((res) => {
+        console.log("sorted data ->", res.data.campaigns);
         setAdminUsersData(res.data);
       })
       .catch((err) => {
@@ -145,7 +146,11 @@ const CRMConfiguration = () => {
       }
     );
 
-    setCrmFields(crmFieldsOfCampaign[0]?.crmFields);
+    const sortedCrmFields = crmFieldsOfCampaign[0]?.crmFields?.sort(
+      (a, b) => a.position - b.position
+    );
+
+    setCrmFields(sortedCrmFields);
   }
 
   function showCampaignFormHandleSubmit(e) {
@@ -238,15 +243,6 @@ const CRMConfiguration = () => {
         if (res.status === "duplicate") {
           setCustomError(res.message);
         } else {
-          // const updatedField = crmFields.map((crmField) => {
-          //   if (crmField.id === listCrmFieldId) {
-          //     return res.data;
-          //   } else {
-          //     return crmField;
-          //   }
-          // });
-          console.log("data after field updation", res.data);
-
           setCrmFields(res.data);
 
           setmodal_list(!modal_list);
@@ -267,11 +263,6 @@ const CRMConfiguration = () => {
         }
       )
       .then((res) => {
-        // filtering crm Fields so that deleted crm field can be updated instantly
-        // const filteredCrmFields = crmFields.filter(
-        //   (crmField) => crmFieldId !== crmField.id
-        // );
-
         setCrmFields(res.data);
         setmodal_delete(false);
         notifyFieldRemoved();
