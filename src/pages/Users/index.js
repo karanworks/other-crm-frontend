@@ -69,7 +69,7 @@ const Users = () => {
     initialValues: {
       userId: "",
       name: "",
-      password: "",
+      role: "",
       crmEmail: "",
       crmPassword: "",
       agentMobile: "",
@@ -77,7 +77,7 @@ const Users = () => {
     validationSchema: Yup.object({
       userId: Yup.string().required("Please enter User Id"),
       name: Yup.string().required("Please enter Name"),
-      password: Yup.string().required("Please enter password"),
+      role: Yup.string().required("Please select user role"),
       crmEmail: Yup.string().required("Please enter CRM Email"),
       crmPassword: Yup.string().required("Please enter CRM Password"),
       agentMobile: Yup.string().required("Please enter Agent Mobile"),
@@ -95,6 +95,10 @@ const Users = () => {
     validation.handleSubmit();
 
     return false;
+  }
+
+  function handleRoleChange(e) {
+    campaignTypeValidation.setFieldValue("campaignName", e.target.value);
   }
 
   function handleAddUser(values) {
@@ -387,6 +391,7 @@ const Users = () => {
         validation={validation}
         isEditingUser={isEditingUser}
         isAlreadyRegisteredError={isAlreadyRegisteredError}
+        handleRoleChange={handleRoleChange}
       />
 
       {/* Remove Modal */}

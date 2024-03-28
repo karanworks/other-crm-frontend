@@ -30,22 +30,32 @@ import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
 import CRMFormModal from "./CRMFormModal";
 
 const CRMConfiguration = () => {
-  const user = useSelector((state) => state.Login.user);
-
+  // modal for crm field
   const [modal_list, setmodal_list] = useState(false);
+  // modal for crm form (form that is shown after show crm button is clicked)
   const [crmFormModalList, setCrmFormModalList] = useState(false);
+  // campaign id of selected campaign
   const [selectedCampaignId, setSelectedCampaignId] = useState("");
+  // admin's data like users, campaigns, crmfields
   const [adminUsersData, setAdminUsersData] = useState([]);
+  // all crm fields made this state so that can keep track of if any crm field is added or edited or removed
   const [crmFields, setCrmFields] = useState([]);
+  // modal for deleting a crm field
   const [modal_delete, setmodal_delete] = useState(false);
+  // id of crm field made this to store the id of crm field that is going to be deleted or edited
   const [listCrmFieldId, setListCrmFieldId] = useState("");
+  // to check whether a crm field is in editing state (it helps in changing the behaviour of submit method of form if a field is being edited then submit method to edit field will be called otherwise submit method to create crm field will be called)
   const [isEditingCrmField, setIsEditingCrmField] = useState(false);
+  // error other than formik errors like crm field with same caption already exist, crm field's position can not be more than total length of crm fields
   const [customError, setCustomError] = useState("");
 
+  // to toggle modal for crm field
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingCrmField(false);
   }
+
+  // to toggle modal for crm form (form that is shown after clicking show crm button)
   function crmFormModalToggleList() {
     setCrmFormModalList(!crmFormModalList);
   }
@@ -55,6 +65,7 @@ const CRMConfiguration = () => {
     setmodal_delete(!modal_delete);
   }
 
+  // to get all the crm fields and campaigns when page is rendered for the first time
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/crm-configuration`, {
@@ -98,16 +109,16 @@ const CRMConfiguration = () => {
         : handleAddCrmField(values);
     },
   });
+
+  // formik for campaign (that is selected inside select element)
   const campaignTypeValidation = useFormik({
     initialValues: {
       campaignName: "",
     },
     validationSchema: Yup.object({
-      campaignName: Yup.string().required("Please select a campaign"),
+      campaignName: Yup.string().required(),
     }),
-    onSubmit: (values) => {
-      // console.log(values);
-    },
+    onSubmit: (values) => {},
   });
 
   function crmFieldFormHandleSubmit(e) {
@@ -120,11 +131,13 @@ const CRMConfiguration = () => {
       return;
     }
 
+    // calls formik's submit function
     crmFieldValidation.handleSubmit();
 
     return false;
   }
 
+  // to update list of crm field when campaign is changed in select element
   function handleChange(e) {
     campaignTypeValidation.setFieldValue("campaignName", e.target.value);
     const currentCampaignId = adminUsersData?.campaigns?.filter((campaign) => {
@@ -133,7 +146,7 @@ const CRMConfiguration = () => {
       }
     });
 
-    // made this variable because cannot user new value of state immediately after state updation
+    // made this variable because cannot use new value of state immediately after state updation
     const updatedCurrentCampaignId = currentCampaignId[0].id;
     setSelectedCampaignId(updatedCurrentCampaignId);
 
@@ -160,6 +173,7 @@ const CRMConfiguration = () => {
     return false;
   }
 
+  // function to add crm field
   function handleAddCrmField(values) {
     axios
       .post(
@@ -254,6 +268,7 @@ const CRMConfiguration = () => {
       });
   }
 
+  // to delete a crm field
   function handleDeleteCrmField(adminId, crmFieldId) {
     axios
       .delete(
@@ -272,7 +287,7 @@ const CRMConfiguration = () => {
       });
   }
 
-  document.title = "Users";
+  document.title = "CRM Configuration";
   return (
     <React.Fragment>
       <div className="page-content">

@@ -17,7 +17,10 @@ function UserFormModal({
   validation, // to get the values from formik
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   isAlreadyRegisteredError, // gives error if user already registered with same - id, crmEmail, agentMobile
+  handleRoleChange,
 }) {
+  const rolesTempData = ["Admin", "Branch Manager", "Manager", "Team Leader"];
+
   return (
     <Modal
       isOpen={modal_list}
@@ -97,29 +100,35 @@ function UserFormModal({
             ) : null}
           </div>
           <div className="mb-2">
-            <Label htmlFor="exampleInputPassword1" className="form-label">
-              Password
+            <Label htmlFor="role" className="form-label">
+              Select Role
             </Label>
-
             <Input
-              id="password"
-              name="password"
+              id="role"
+              name="role"
               className="form-control"
-              placeholder="Enter Password"
-              type="password"
-              onChange={validation.handleChange}
+              type="select"
+              onChange={handleRoleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.password || ""}
+              value={validation.values.role || ""}
               invalid={
-                validation.touched.password && validation.errors.password
-                  ? true
-                  : false
+                validation.touched.role && validation.errors.role ? true : false
               }
-            />
+            >
+              <option value="" disabled>
+                Select Role
+              </option>
 
-            {validation.touched.password && validation.errors.password ? (
+              {rolesTempData?.map((role) => (
+                <option value={role} key={role}>
+                  {role}
+                </option>
+              ))}
+            </Input>
+
+            {validation.touched.role && validation.errors.role ? (
               <FormFeedback type="invalid">
-                {validation.errors.password}
+                {validation.errors.role}
               </FormFeedback>
             ) : null}
           </div>
