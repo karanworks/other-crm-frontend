@@ -18,6 +18,19 @@ const Mapping = () => {
         <Container fluid>
           <Breadcrumb title="Users" pageTitle="System Configuration" />
           <Row>
+          <Col className="col-sm-auto">
+                        <div>
+                          <Button
+                            color="primary"
+                            className="add-btn me-1"
+                            onClick={}
+                            id="create-btn"
+                          >
+                            <i className="ri-add-line align-bottom me-1"></i>{" "}
+                            Add Role
+                          </Button>
+                        </div>
+                      </Col>
             <Col lg={12}>
               <Card>
                 <CardHeader>
