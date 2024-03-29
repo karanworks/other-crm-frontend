@@ -17,12 +17,14 @@ import UserProfile from "../pages/Authentication/user-profile";
 import Home from "../pages/Home";
 import Campaign from "../pages/Campaign";
 import CRMConfiguration from "../pages/CRMConfiguration";
+import Mapping from "../pages/Mapping";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
   { path: "/users", component: <Users /> },
   { path: "/campaign", component: <Campaign /> },
   { path: "/crm-configuration", component: <CRMConfiguration /> },
+  { path: "/mapping", component: <Mapping /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

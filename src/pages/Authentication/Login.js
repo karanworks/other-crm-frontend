@@ -30,7 +30,6 @@ import { useFormik } from "formik";
 // actions
 import { loginUser, socialLogin, resetLoginFlag } from "../../slices/thunks";
 
-import logoLight from "../../assets/images/logo-light.png";
 import { createSelector } from "reselect";
 import { loginSuccess } from "../../slices/auth/login/reducer";
 //import images
@@ -257,8 +256,7 @@ const Login = (props) => {
                           >
                             {loading ? (
                               <Spinner size="sm" className="me-2">
-                                {" "}
-                                Loading...{" "}
+                                Loading...
                               </Spinner>
                             ) : null}
                             Login

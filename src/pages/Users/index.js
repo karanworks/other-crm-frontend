@@ -98,7 +98,7 @@ const Users = () => {
   }
 
   function handleRoleChange(e) {
-    campaignTypeValidation.setFieldValue("campaignName", e.target.value);
+    validationSchema.setFieldValue("campaignName", e.target.value);
   }
 
   function handleAddUser(values) {
