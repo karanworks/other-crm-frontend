@@ -9,8 +9,6 @@ const Navdata = () => {
   //state data
   const [isHome, setIsHome] = useState(false);
   const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
-  const [isOperationalConfiguration, setIsOperationalConfiguration] =
-    useState(false);
   const [isCampaignManagement, setIsCampaignManagement] = useState(false);
   const [isLeadManagement, setIsLeadManagement] = useState(false);
   const [isOtherManagement, setIsOtherManagement] = useState(false);
@@ -44,9 +42,7 @@ const Navdata = () => {
     if (iscurrentState !== "SystemConfiguration") {
       setIsSystemConfiguration(false);
     }
-    if (iscurrentState !== "OperationalConfiguration") {
-      setIsOperationalConfiguration(false);
-    }
+
     if (iscurrentState !== "CampaignManagement") {
       setIsCampaignManagement(false);
     }
@@ -72,13 +68,22 @@ const Navdata = () => {
     if (iscurrentState !== "Pages") {
       setIsPages(false);
     }
-  }, [history, iscurrentState, isSystemConfiguration, isAuth, isPages]);
+  }, [
+    history,
+    iscurrentState,
+    isSystemConfiguration,
+    isHome,
+    isCampaignManagement,
+    isLeadManagement,
+    isOtherManagement,
+    isMonitoring,
+    isQuality,
+    isAnalytics,
+    isAuth,
+    isPages,
+  ]);
 
   const menuItems = [
-    {
-      label: "Menu",
-      isHeader: true,
-    },
     {
       id: "home",
       label: "Home",
@@ -261,111 +266,6 @@ const Navdata = () => {
       ],
     },
 
-    // {
-    //   id: "operationalConfiguration",
-    //   label: "Operational Configuration",
-    //   icon: <FeatherIcon icon="git-branch" className="icon-dual" />,
-    //   link: "/#",
-    //   click: function (e) {
-    //     e.preventDefault();
-    //     setIsOperationalConfiguration(!isOperationalConfiguration);
-    //     setIscurrentState("OperationalConfiguration");
-    //     updateIconSidebar(e);
-    //   },
-    //   stateVariables: isOperationalConfiguration,
-    //   subItems: [
-    //     {
-    //       id: "campaignManagement",
-    //       label: "Campaign Management",
-    //       link: "/#",
-    //       parentId: "operationalConfiguration",
-    //       isChildItem: true,
-    //       click: function (e) {
-    //         e.preventDefault();
-    //         setIsCampaignManagement(!isCampaignManagement);
-    //       },
-    //       stateVariables: isCampaignManagement,
-    //       childItems: [
-    //         {
-    //           id: "campaign",
-    //           label: "Campaign",
-    //           link: "/campaign",
-    //           parentId: "campaignManagement",
-    //         },
-    //         {
-    //           id: "crmConfiguration",
-    //           label: "CRM Configuration",
-    //           link: "/crm-configuration",
-    //           parentId: "campaignManagement",
-    //         },
-    //         {
-    //           id: "mapping",
-    //           label: "Mapping",
-    //           link: "/#",
-    //           parentId: "campaignManagement",
-    //         },
-    //         {
-    //           id: "campaignTransferMapping ",
-    //           label: "Campaign Transfer Mapping",
-    //           link: "/#",
-    //           parentId: "campaignManagement",
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       id: "leadManagement",
-    //       label: "Lead Management",
-    //       link: "/#",
-    //       parentId: "operationalConfiguration",
-    //       isChildItem: true,
-    //       click: function (e) {
-    //         e.preventDefault();
-    //         setIsLeadManagement(!isLeadManagement);
-    //       },
-    //       stateVariables: isLeadManagement,
-    //       childItems: [
-    //         {
-    //           id: "importLead",
-    //           label: "Import Lead",
-    //           link: "/#",
-    //           parentId: "leadManagement",
-    //         },
-    //         {
-    //           id: "leadManager",
-    //           label: "Lead Manager",
-    //           link: "/#",
-    //           parentId: "leadManagement",
-    //         },
-    //         {
-    //           id: "crmData",
-    //           label: "CRM Data",
-    //           link: "/#",
-    //           parentId: "leadManagement",
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       id: "otherManagement",
-    //       label: "Other Management",
-    //       link: "/#",
-    //       parentId: "operationalConfiguration",
-    //       isChildItem: true,
-    //       click: function (e) {
-    //         e.preventDefault();
-    //         setIsOtherManagement(!isOtherManagement);
-    //       },
-    //       stateVariables: isOtherManagement,
-    //       childItems: [
-    //         {
-    //           id: "freeAgent",
-    //           label: "Free Agent",
-    //           link: "/#",
-    //           parentId: "otherManagement",
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
     {
       id: "monitoring",
       label: "Monitoring",
