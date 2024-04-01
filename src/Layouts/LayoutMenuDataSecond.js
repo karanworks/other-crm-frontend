@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import menus from "./DummyMenuData";
 
 //Import Icons
 import FeatherIcon from "feather-icons-react";
@@ -84,62 +83,6 @@ const Navdata = () => {
     isAuth,
     isPages,
   ]);
-
-  const parentMenuStates = {
-    SystemConfiguration: isSystemConfiguration,
-    CampaignManagement: isCampaignManagement,
-    LeadManagement: isLeadManagement,
-    OtherManagement: isOtherManagement,
-    Monitoring: isMonitoring,
-    Quality: isQuality,
-    Analytics: isAnalytics,
-  };
-
-  const handleClick = (menuLabelId) => {
-    return function (e) {
-      e.preventDefault();
-      switch (menuLabelId) {
-        case "SystemConfiguration":
-          setIsSystemConfiguration(!isSystemConfiguration);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "CampaignManagement":
-          setIsCampaignManagement(!isCampaignManagement);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "LeadManagement":
-          setIsLeadManagement(!isLeadManagement);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "OtherManagement":
-          setIsOtherManagement(!isOtherManagement);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Monitoring":
-          setIsMonitoring(!isMonitoring);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Quality":
-          setIsQuality(!isQuality);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Analytics":
-          setIsAnalytics(!isAnalytics);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-      }
-    };
-  };
-
-  const dynamicMenuData = menus.map((menu) => {
-    const updatedMenu = {
-      ...menu,
-      icon: <FeatherIcon icon={menu.icon} className="icon-dual" />,
-      stateVariables: parentMenuStates[menu.menuLabelId],
-      click: handleClick(menu.menuLabelId),
-    };
-    return updatedMenu;
-  });
 
   const menuItems = [
     {
@@ -396,5 +339,4 @@ const Navdata = () => {
   ];
   return <React.Fragment>{menuItems}</React.Fragment>;
 };
-
 export default Navdata;

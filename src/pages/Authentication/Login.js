@@ -28,7 +28,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 // actions
-import { loginUser, socialLogin, resetLoginFlag } from "../../slices/thunks";
+import { loginUser, resetLoginFlag } from "../../slices/thunks";
 
 import { createSelector } from "reselect";
 import { loginSuccess } from "../../slices/auth/login/reducer";
@@ -85,8 +85,6 @@ const Login = (props) => {
     enableReinitialize: true,
 
     initialValues: {
-      // email: userLogin.email || "admin@themesbrand.com" || '',
-      // password: userLogin.password || "123456" || '',
       email: userLogin.email || "",
       password: userLogin.password || "",
     },
@@ -99,18 +97,6 @@ const Login = (props) => {
       dispatch(loginUser(values, props.router.navigate));
     },
   });
-
-  const signIn = (type) => {
-    dispatch(socialLogin(type, props.router.navigate));
-  };
-
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
-
-  //for facebook and google authentication
-  const socialResponse = (type) => {
-    signIn(type);
-  };
 
   useEffect(() => {
     if (errorMsg) {
@@ -126,19 +112,6 @@ const Login = (props) => {
       <ParticlesAuth>
         <div className="auth-page-content">
           <Container>
-            <Row>
-              {/* <Col lg={12}>
-                                <div className="text-center mt-sm-5 mb-4 text-white-50">
-                                    <div>
-                                        <Link to="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
-                                        </Link>
-                                    </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
-                                </div>
-                            </Col> */}
-            </Row>
-
             <Row className="justify-content-center">
               <Col md={8} lg={6} xl={5}>
                 <Card className="mt-4">
@@ -262,44 +235,23 @@ const Login = (props) => {
                             Login
                           </Button>
                         </div>
-
-                        {/* <div className="mt-4 text-center">
-                                                    <div className="signin-other-title">
-                                                        <h5 className="fs-13 mb-4 title">Sign In with</h5>
-                                                    </div>
-                                                    <div>
-                                                        <Link
-                                                            to="#"
-                                                            className="btn btn-primary btn-icon me-1"
-                                                            onClick={e => {
-                                                                e.preventDefault();
-                                                                socialResponse("facebook");
-                                                            }}
-                                                            >
-                                                            <i className="ri-facebook-fill fs-16" />
-                                                        </Link>
-                                                        <Link
-                                                            to="#"
-                                                            className="btn btn-danger btn-icon me-1"
-                                                            onClick={e => {
-                                                                e.preventDefault();
-                                                                socialResponse("google");
-                                                            }}
-                                                            >
-                                                            <i className="ri-google-fill fs-16" />
-                                                        </Link>
-                                                        <Button color="dark" className="btn-icon"><i className="ri-github-fill fs-16"></i></Button>{" "}
-                                                        <Button color="info" className="btn-icon"><i className="ri-twitter-fill fs-16"></i></Button>
-                                                    </div>
-                                                </div> */}
                       </Form>
                     </div>
                   </CardBody>
                 </Card>
 
                 {/* <div className="mt-4 text-center">
-                                    <p className="mb-0">Don't have an account ? <Link to="/register" className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>
-                                </div> */}
+                  <p className="mb-0">
+                    Don't have an account ?{" "}
+                    <Link
+                      to="/register"
+                      className="fw-semibold text-primary text-decoration-underline"
+                    >
+                      {" "}
+                      Signup{" "}
+                    </Link>{" "}
+                  </p>
+                </div> */}
               </Col>
             </Row>
           </Container>
