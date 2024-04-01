@@ -16,11 +16,10 @@ function UserFormModal({
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
-  isAlreadyRegisteredError, // gives error if user already registered with same - id, crmEmail, agentMobile
+  isAlreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
   handleRoleChange,
+  roles,
 }) {
-  const rolesTempData = ["Admin", "Branch Manager", "Manager", "Team Leader"];
-
   return (
     <Modal
       isOpen={modal_list}
@@ -37,43 +36,14 @@ function UserFormModal({
       >
         Add User
       </ModalHeader>
-      <Form
-        className="tablelist-form"
-        onSubmit={(e) => formHandleSubmit(e, validation.userId)}
-      >
+      <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           {isAlreadyRegisteredError && (
             <Alert color="danger" style={{ marginBlock: "5px" }}>
               {isAlreadyRegisteredError}
             </Alert>
           )}
-          <div className="mb-2">
-            <Label htmlFor="userId" className="form-label">
-              User Id
-            </Label>
 
-            <Input
-              id="userId"
-              name="userId"
-              className="form-control"
-              placeholder="Enter User Id"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.userId || ""}
-              invalid={
-                validation.touched.userId && validation.errors.userId
-                  ? true
-                  : false
-              }
-            />
-
-            {validation.touched.userId && validation.errors.userId ? (
-              <FormFeedback type="invalid">
-                {validation.errors.userId}
-              </FormFeedback>
-            ) : null}
-          </div>
           <div className="mb-2">
             <Label htmlFor="name" className="form-label">
               Name
@@ -100,28 +70,30 @@ function UserFormModal({
             ) : null}
           </div>
           <div className="mb-2">
-            <Label htmlFor="role" className="form-label">
+            <Label htmlFor="roleId" className="form-label">
               Select Role
             </Label>
             <Input
-              id="role"
-              name="role"
+              id="roleId"
+              name="roleId"
               className="form-control"
               type="select"
               onChange={handleRoleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.role || ""}
+              value={validation.values.roleId || ""}
               invalid={
-                validation.touched.role && validation.errors.role ? true : false
+                validation.touched.roleId && validation.errors.roleId
+                  ? true
+                  : false
               }
             >
               <option value="" disabled>
                 Select Role
               </option>
 
-              {rolesTempData?.map((role) => (
-                <option value={role} key={role}>
-                  {role}
+              {roles?.map((role) => (
+                <option value={role.id} key={role.id}>
+                  {role.name}
                 </option>
               ))}
             </Input>
@@ -133,56 +105,56 @@ function UserFormModal({
             ) : null}
           </div>
           <div className="mb-2">
-            <Label htmlFor="crmEmail" className="form-label">
+            <Label htmlFor="email" className="form-label">
               CRM Email
             </Label>
 
             <Input
-              id="crmEmail"
-              name="crmEmail"
+              id="email"
+              name="email"
               className="form-control"
               placeholder="Enter CRM Email"
               type="email"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.crmEmail || ""}
+              value={validation.values.email || ""}
               invalid={
-                validation.touched.crmEmail && validation.errors.crmEmail
+                validation.touched.email && validation.errors.email
                   ? true
                   : false
               }
             />
 
-            {validation.touched.crmEmail && validation.errors.crmEmail ? (
+            {validation.touched.email && validation.errors.email ? (
               <FormFeedback type="invalid">
-                {validation.errors.crmEmail}
+                {validation.errors.email}
               </FormFeedback>
             ) : null}
           </div>
           <div className="mb-2">
-            <Label htmlFor="crmPassword" className="form-label">
+            <Label htmlFor="password" className="form-label">
               CRM Password
             </Label>
 
             <Input
-              id="crmPassword"
-              name="crmPassword"
+              id="password"
+              name="password"
               className="form-control"
               placeholder="Enter CRM Password"
               type="password"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.crmPassword || ""}
+              value={validation.values.password || ""}
               invalid={
-                validation.touched.crmPassword && validation.errors.crmPassword
+                validation.touched.password && validation.errors.password
                   ? true
                   : false
               }
             />
 
-            {validation.touched.crmPassword && validation.errors.crmPassword ? (
+            {validation.touched.password && validation.errors.password ? (
               <FormFeedback type="invalid">
-                {validation.errors.crmPassword}
+                {validation.errors.password}
               </FormFeedback>
             ) : null}
           </div>

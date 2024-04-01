@@ -38,6 +38,8 @@ const Users = () => {
   const [listUserId, setListUserId] = useState(null);
   // user already registered error
   const [isAlreadyRegisteredError, setIsAlreadyRegisteredError] = useState("");
+  // fetching all the roles
+  const [roles, setRoles] = useState([]);
 
   // toggles register / edit user modal
   function tog_list() {
@@ -51,9 +53,10 @@ const Users = () => {
   }
 
   // To get users when /users page renders for the first time
+
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/users`, {
+      .get(`${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/users`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -62,24 +65,33 @@ const Users = () => {
       .catch((err) => {
         console.log("error while fetching users on user page ->", err);
       });
+
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/roles`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setRoles(res.data);
+      })
+      .catch((error) => {
+        console.log("error while fetching roles ->", error);
+      });
   }, []);
 
   // formik setup
   const validation = useFormik({
     initialValues: {
-      userId: "",
       name: "",
-      role: "",
-      crmEmail: "",
-      crmPassword: "",
+      roleId: "",
+      email: "",
+      password: "",
       agentMobile: "",
     },
     validationSchema: Yup.object({
-      userId: Yup.string().required("Please enter User Id"),
       name: Yup.string().required("Please enter Name"),
-      role: Yup.string().required("Please select user role"),
-      crmEmail: Yup.string().required("Please enter CRM Email"),
-      crmPassword: Yup.string().required("Please enter CRM Password"),
+      roleId: Yup.string().required("Please select user role"),
+      email: Yup.string().required("Please enter CRM Email"),
+      password: Yup.string().required("Please enter CRM Password"),
       agentMobile: Yup.string().required("Please enter Agent Mobile"),
     }),
     onSubmit: (values) => {
@@ -91,18 +103,19 @@ const Users = () => {
 
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
+    console.log("handle submit called");
     e.preventDefault();
     validation.handleSubmit();
-
     return false;
   }
 
   function handleRoleChange(e) {
-    validation.setFieldValue("role", e.target.value);
+    validation.setFieldValue("roleId", e.target.value);
   }
 
   function handleAddUser(values) {
     // user register api call
+
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/user/register`,
@@ -112,8 +125,6 @@ const Users = () => {
         }
       )
       .then((res) => {
-        console.log("data after adding user ->", res);
-
         if (res.status === "failure") {
           setIsAlreadyRegisteredError(res.message);
           console.log(isAlreadyRegisteredError);
@@ -125,6 +136,7 @@ const Users = () => {
             ...prevState,
             users: [...prevState.users, { ...res.data }],
           }));
+
           setmodal_list(false);
           !isEditingUser && notifyAddedUser();
         }
@@ -141,11 +153,10 @@ const Users = () => {
     setListUserId(userData.id);
 
     validation.setValues({
-      userId: userData.id,
       name: userData.username,
       password: userData.password,
-      crmEmail: userData.crmEmail,
-      crmPassword: userData.crmPassword,
+      email: userData.email,
+      password: userData.password,
       agentMobile: userData.agentMobile,
     });
   }
@@ -392,6 +403,7 @@ const Users = () => {
         isEditingUser={isEditingUser}
         isAlreadyRegisteredError={isAlreadyRegisteredError}
         handleRoleChange={handleRoleChange}
+        roles={roles}
       />
 
       {/* Remove Modal */}
