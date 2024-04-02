@@ -4,9 +4,12 @@ import menus from "./DummyMenuData";
 
 //Import Icons
 import FeatherIcon from "feather-icons-react";
+import { useSelector } from "react-redux";
 
 const Navdata = () => {
   const history = useNavigate();
+
+  const menuDataOfUser = useSelector((state) => state.Login.user.menus);
 
   //state data
   const [isHome, setIsHome] = useState(false);
@@ -132,6 +135,7 @@ const Navdata = () => {
   };
 
   const dynamicMenuData = menus.map((menu) => {
+    // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
     const updatedMenu = {
       ...menu,
       icon: <FeatherIcon icon={menu.icon} className="icon-dual" />,
@@ -394,6 +398,7 @@ const Navdata = () => {
       ],
     },
   ];
+
   return <React.Fragment>{menuItems}</React.Fragment>;
 };
 

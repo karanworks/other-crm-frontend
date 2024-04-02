@@ -60,6 +60,7 @@ const Users = () => {
         withCredentials: true,
       })
       .then((res) => {
+        console.log("login get data ->", res.data);
         setAdminUsersData(res.data);
       })
       .catch((err) => {
@@ -152,12 +153,17 @@ const Users = () => {
     setmodal_list(!modal_list);
     setListUserId(userData.id);
 
+    // setting the value of role according to roleId because in select element roleId is used as value
+    const roleName = roles.find((role) => role.id === userData.roleId);
+
+    console.log("userData here ->", userData);
+
     validation.setValues({
       name: userData.username,
-      password: userData.password,
       email: userData.email,
       password: userData.password,
       agentMobile: userData.agentMobile,
+      roleId: roleName.id,
     });
   }
 
