@@ -65,7 +65,28 @@ const Mapping = () => {
                       alignItems: "center",
                     }}
                   >
-                    <div>
+                    <Input
+                      id="roleName"
+                      name="roleName"
+                      className="form-control me-1"
+                      placeholder="Select Role Name"
+                      style={{ width: "max-content" }}
+                      type="select"
+                    >
+                      <option value="" disabled>
+                        Select Role
+                      </option>
+
+                      <option value="admin">Admin</option>
+                      <option value="manager">Manager</option>
+                    </Input>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
                       <Button
                         color="primary"
                         className="add-btn me-1"
@@ -75,9 +96,25 @@ const Mapping = () => {
                         <i className="ri-add-line align-bottom me-1"></i> Add
                         Role
                       </Button>
+                      <Button
+                        color="primary"
+                        className="add-btn me-1 btn-block"
+                        id="create-btn"
+                        onClick={() => tog_list()}
+                      >
+                        <i class="ri-pencil-fill"></i> Edit Role Name
+                      </Button>
+
+                      <Button
+                        color="danger"
+                        className="add-btn me-1 btn-block"
+                        id="create-btn"
+                      >
+                        <i class="ri-delete-bin-2-line"></i> Remove Role
+                      </Button>
                     </div>
                   </Col>
-                  <div
+                  {/* <div
                     style={{
                       marginLeft: "auto",
                       display: "flex",
@@ -125,7 +162,7 @@ const Mapping = () => {
                         <i class="ri-delete-bin-2-line"></i> Remove Role
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
                   <div
                     className="listjs-table"
                     id="userList"
