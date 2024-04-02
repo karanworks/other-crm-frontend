@@ -1,4 +1,4 @@
-const menus = [
+const DummyMenus = [
   {
     id: 1,
     menuLabelId: "Home",
@@ -86,4 +86,4 @@ const menus = [
   },
 ];
 
-export default menus;
+export default DummyMenus;

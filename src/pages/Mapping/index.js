@@ -14,6 +14,8 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import RoleFormModal from "./RoleFormModal";
+import MenuList from "./MenuList";
+import DummyMenus from "../../Layouts/DummyMenuData";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -114,120 +116,12 @@ const Mapping = () => {
                       </Button>
                     </div>
                   </Col>
-                  {/* <div
-                    style={{
-                      marginLeft: "auto",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      marginTop: "15px",
-                    }}
-                  >
-                    <Input
-                      id="roleName"
-                      name="roleName"
-                      className="form-control"
-                      placeholder="Select Role Name"
-                      style={{ width: "max-content" }}
-                      type="select"
-                    >
-                      <option value="" disabled>
-                        Select Campaign Type
-                      </option>
 
-                      <option value="admin">Admin</option>
-                      <option value="manager">Manager</option>
-                    </Input>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        color="primary"
-                        className="add-btn me-1 btn-block"
-                        id="create-btn"
-                        onClick={() => tog_list()}
-                      >
-                        <i class="ri-pencil-fill"></i> Edit Name
-                      </Button>
-
-                      <Button
-                        color="danger"
-                        className="add-btn me-1 btn-block"
-                        id="create-btn"
-                      >
-                        <i class="ri-delete-bin-2-line"></i> Remove Role
-                      </Button>
-                    </div>
-                  </div> */}
                   <div
                     className="listjs-table"
                     id="userList"
                     style={{ display: "flex", gap: "35px" }}
                   >
-                    {/* <div
-                      className="table-responsive table-card mt-3 mb-1"
-                      style={{ flex: "1", border: "1px solid #d2d4d2" }}
-                    >
-                      <table
-                        className="table align-middle table-nowrap"
-                        id="userTable"
-                      >
-                        <thead className="table-light">
-                          <tr>
-                            <th data-sort="s_no">S.No</th>
-                            <th data-sort="role">Role</th>
-                            <th data-sort="menus">Menus</th>
-
-                            <th data-sort="action" style={{ width: "15px" }}>
-                              Action
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          <tr>
-                            <td className="s_no">1</td>
-                            <td className="role">Admin</td>
-                            <td className="menus">Menus</td>
-
-                            <td>
-                              <div
-                                className="d-flex gap-2"
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                <div className="edit">
-                                  <button
-                                    className="btn btn-sm btn-primary edit-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#showModal"
-                                    onClick={() => {}}
-                                  >
-                                    Edit
-                                  </button>
-                                </div>
-                                <div className="remove">
-                                  <button
-                                    className="btn btn-sm btn-success remove-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteRecordModal"
-                                    onClick={() => {}}
-                                  >
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div> */}
-
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table
                         className="table align-middle table-nowrap"
@@ -235,131 +129,46 @@ const Mapping = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th data-sort="menu">Home</th>
-                            <th data-sort="submenu">System Configuration</th>
-                            <th data-sort="campaign-management">
-                              Campaign Management
-                            </th>
-                            <th data-sort="lead-management">Lead Management</th>
-                            <th data-sort="other-management">
-                              Other Management
-                            </th>
-                            <th data-sort="monitoring">Monitoring</th>
-                            <th data-sort="quality">Quality</th>
-                            <th data-sort="analytics">Analytics</th>
+                            {MenuList?.map((menu) => (
+                              <th data-sort="home">{menu.label}</th>
+                            ))}
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
                           <tr>
-                            <td
-                              className="home"
-                              style={{
-                                borderBottom: "none",
-                                verticalAlign: "top",
-                              }}
-                            >
-                              <div>
-                                <span> No Submenus </span>
-                              </div>
-                            </td>
-                            <td
-                              className="system-configuration"
-                              style={{
-                                borderBottom: "none",
-                                verticalAlign: "top",
-                              }}
-                            >
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input
-                                  id="users"
-                                  name="users"
-                                  type="checkbox"
-                                />
-                                <Label htmlFor="users" className="form-label">
-                                  User
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  ACL Rules
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  User ModeMaster
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Menu Mapping
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  User Status Colour
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  User Mode Permission
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Extension Detail
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Disposition
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Callback Policy
-                                </Label>
-                              </div>
-                            </td>
-                            <td
-                              className="campaign-management"
-                              style={{
-                                borderBottom: "none",
-                                verticalAlign: "top",
-                              }}
-                            >
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Campaign
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  CRM Configuration
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Mapping
-                                </Label>
-                              </div>
-                              <div style={{ display: "flex", gap: "5px" }}>
-                                <Input id="menu" name="menu" type="checkbox" />
-                                <Label htmlFor="menu" className="form-label">
-                                  Campaign Transfer Mapping
-                                </Label>
-                              </div>
-                            </td>
+                            {MenuList.map((menu) => (
+                              <td
+                                className="campaign-management"
+                                style={{
+                                  borderBottom: "none",
+                                  verticalAlign: "top",
+                                }}
+                              >
+                                {Array.isArray(menu.subItems) &&
+                                menu.subItems.length > 0 ? (
+                                  menu.subItems.map((subItem) => (
+                                    <div
+                                      key={subItem.label}
+                                      style={{ display: "flex", gap: "5px" }}
+                                    >
+                                      <Input
+                                        id="menu"
+                                        name="menu"
+                                        type="checkbox"
+                                      />
+                                      <Label
+                                        htmlFor="menu"
+                                        className="form-label"
+                                      >
+                                        {subItem.label}
+                                      </Label>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div>No Submenus</div>
+                                )}
+                              </td>
+                            ))}
                           </tr>
                         </tbody>
                       </table>
