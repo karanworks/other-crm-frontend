@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -16,9 +16,59 @@ import * as Yup from "yup";
 import RoleFormModal from "./RoleFormModal";
 import MenuList from "./MenuList";
 import DummyMenus from "../../Layouts/DummyMenuData";
+import { useSelector } from "react-redux";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
+  const [checkedSubmenus, setCheckedSubmenus] = useState([]);
+
+  const menuDataOfUser = useSelector((state) => state.Login.user.menus);
+
+  useEffect(() => {
+    checkAndSetCheckedSubmenus();
+  }, []); // Run once on component mount
+
+  console.log("menu data from store ->", menuDataOfUser);
+  console.log("dummy data ->", DummyMenus);
+
+  // Function to check and set checked submenus
+  const checkAndSetCheckedSubmenus = () => {
+    const checkedSubmenuLabels = [];
+
+    MenuList.forEach((menu) => {
+      if (Array.isArray(menu.subItems)) {
+        menu.subItems.forEach((subItem) => {
+          const existsInDummy = menuDataOfUser.some(
+            (dummyMenu) =>
+              dummyMenu.subItems &&
+              dummyMenu.subItems.some(
+                (dummySubItem) => dummySubItem.label === subItem.label
+              )
+          );
+          if (existsInDummy) {
+            checkedSubmenuLabels.push(subItem.label);
+          }
+        });
+      }
+    });
+
+    setCheckedSubmenus(checkedSubmenuLabels);
+  };
+
+  // Function to handle checkbox change
+  const handleCheckboxChange = (e, menuId, subMenuId) => {
+    const { checked, id } = e.target;
+    if (checked) {
+      setCheckedSubmenus((prevChecked) => [...prevChecked, id]);
+    } else {
+      setCheckedSubmenus((prevChecked) =>
+        prevChecked.filter((item) => item !== id)
+      );
+    }
+
+    console.log("menu id ->", menuId);
+    console.log("subMenu id ->", subMenuId);
+  };
 
   // toggles register / edit user modal
   function tog_list() {
@@ -104,7 +154,7 @@ const Mapping = () => {
                         id="create-btn"
                         onClick={() => tog_list()}
                       >
-                        <i class="ri-pencil-fill"></i> Edit Role Name
+                        <i className="ri-pencil-fill"></i> Edit Role Name
                       </Button>
 
                       <Button
@@ -112,7 +162,7 @@ const Mapping = () => {
                         className="add-btn me-1 btn-block"
                         id="create-btn"
                       >
-                        <i class="ri-delete-bin-2-line"></i> Remove Role
+                        <i className="ri-delete-bin-2-line"></i> Remove Role
                       </Button>
                     </div>
                   </Col>
@@ -130,7 +180,9 @@ const Mapping = () => {
                         <thead className="table-light">
                           <tr>
                             {MenuList?.map((menu) => (
-                              <th data-sort="home">{menu.label}</th>
+                              <th data-sort="home" key={menu.id}>
+                                {menu.label}
+                              </th>
                             ))}
                           </tr>
                         </thead>
@@ -143,21 +195,32 @@ const Mapping = () => {
                                   borderBottom: "none",
                                   verticalAlign: "top",
                                 }}
+                                key={menu.id}
                               >
                                 {Array.isArray(menu.subItems) &&
                                 menu.subItems.length > 0 ? (
                                   menu.subItems.map((subItem) => (
                                     <div
-                                      key={subItem.label}
+                                      key={subItem.id}
                                       style={{ display: "flex", gap: "5px" }}
                                     >
                                       <Input
-                                        id="menu"
-                                        name="menu"
+                                        id={subItem.label}
+                                        name={subItem.label}
                                         type="checkbox"
+                                        checked={checkedSubmenus.includes(
+                                          subItem.label
+                                        )}
+                                        onChange={(e) =>
+                                          handleCheckboxChange(
+                                            e,
+                                            menu.id,
+                                            subItem.id
+                                          )
+                                        }
                                       />
                                       <Label
-                                        htmlFor="menu"
+                                        htmlFor={subItem.label}
                                         className="form-label"
                                       >
                                         {subItem.label}
