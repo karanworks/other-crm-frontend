@@ -134,13 +134,13 @@ const Navdata = () => {
     };
   };
 
-  const dynamicMenuData = menus.map((menu) => {
+  const dynamicMenuData = menuDataOfUser.map((menu) => {
     // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
     const updatedMenu = {
       ...menu,
       icon: <FeatherIcon icon={menu.icon} className="icon-dual" />,
-      stateVariables: parentMenuStates[menu.menuLabelId],
-      click: handleClick(menu.menuLabelId),
+      stateVariables: parentMenuStates[menu.menuLableId],
+      click: handleClick(menu.menuLableId),
     };
     return updatedMenu;
   });
@@ -399,7 +399,7 @@ const Navdata = () => {
     },
   ];
 
-  return <React.Fragment>{menuItems}</React.Fragment>;
+  return <React.Fragment>{dynamicMenuData}</React.Fragment>;
 };
 
 export default Navdata;

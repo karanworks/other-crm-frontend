@@ -22,8 +22,6 @@ const loginSlice = createSlice({
       state.user = action.payload;
       state.loading = false;
       state.errorMsg = false;
-
-      console.log("user state after login inside reducer ->", state.user);
     },
     logoutUserSuccess(state, action) {
       state.isUserLogout = true;

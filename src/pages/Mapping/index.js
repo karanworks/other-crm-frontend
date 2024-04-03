@@ -25,32 +25,32 @@ const Mapping = () => {
   const [checkedSubmenus, setCheckedSubmenus] = useState([]);
   const [roles, setRoles] = useState([]);
   const [editRole, setEditRole] = useState(false);
-  const [editRoleId, setEditRoleId] = useState(0);
+  // const [editRoleId, setEditRoleId] = useState(0);
+  const [selectedRoleId, setSelectedRoleId] = useState(0);
   const [modal_delete, setmodal_delete] = useState(false);
+  const [menusByRole, setMenusByRole] = useState([]);
 
   const user = useSelector((state) => state.Login.user);
 
-  useEffect(() => {
-    checkAndSetCheckedSubmenus();
-  }, []); // Run once on component mount
+  console.log("user menus", user.menus);
 
-  // Function to check and set checked submenus
-  const checkAndSetCheckedSubmenus = () => {
+  useEffect(() => {
     const checkedSubmenuLabels = [];
 
-    MenuList.forEach((menu) => {
+    user.menus.forEach((menu) => {
       if (Array.isArray(menu.subItems)) {
         menu.subItems.forEach((subItem) => {
-          const existsInDummy =
-            Array.isArray(user.menus) &&
-            user.menus.some(
-              (dummyMenu) =>
-                dummyMenu.subItems &&
-                dummyMenu.subItems.some(
-                  (dummySubItem) => dummySubItem.label === subItem.label
+          const existsInMenuByRole =
+            Array.isArray(menusByRole) &&
+            menusByRole.some(
+              (menuByRole) =>
+                menuByRole.subItems &&
+                menuByRole.subItems.some(
+                  (menuByRoleSubItem) =>
+                    menuByRoleSubItem.label === subItem.label
                 )
             );
-          if (existsInDummy) {
+          if (existsInMenuByRole) {
             checkedSubmenuLabels.push(subItem.label);
           }
         });
@@ -58,7 +58,7 @@ const Mapping = () => {
     });
 
     setCheckedSubmenus(checkedSubmenuLabels);
-  };
+  }, [menusByRole]);
 
   useEffect(() => {
     axios
@@ -74,7 +74,7 @@ const Mapping = () => {
   }, []);
 
   // Function to handle checkbox change
-  const handleCheckboxChange = (e, menuId, subMenuId) => {
+  const handleCheckboxChange = (e, menuId, submenuId) => {
     const { checked, id } = e.target;
     if (checked) {
       setCheckedSubmenus((prevChecked) => [...prevChecked, id]);
@@ -83,6 +83,9 @@ const Mapping = () => {
         prevChecked.filter((item) => item !== id)
       );
     }
+
+    // Call handlePermissionChange with menuId and submenuId
+    handlePermissionChange(menuId, submenuId);
   };
 
   // toggles register / edit role modal
@@ -104,7 +107,9 @@ const Mapping = () => {
       name: Yup.string().required("Please enter role name"),
     }),
     onSubmit: (values) => {
-      editRole ? handleRoleUpdate(editRoleId, values) : handleAddRole(values);
+      editRole
+        ? handleRoleUpdate(selectedRoleId, values)
+        : handleAddRole(values);
     },
   });
 
@@ -123,21 +128,39 @@ const Mapping = () => {
       });
   }
 
-  // to update list of crm field when campaign is changed in select element
   function handleRoleChange(e) {
     roleValidation.setFieldValue("name", e.target.value);
-    setEditRoleId(e.target.value);
+    setSelectedRoleId(e.target.value);
+    handleGetMenusByRole(e.target.value);
+  }
+
+  function handleGetMenusByRole(roleId) {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/permission`,
+        { withCredentials: true }
+      )
+      .then((res) => {
+        setMenusByRole(res.data);
+      })
+      .catch((error) => {
+        console.log("error while fetching menus by role ->", error);
+      });
   }
 
   function handleEditRole(e) {
     setEditRole(true);
     setmodal_list(!modal_list);
 
-    const matchingRole = roles.find((role) => role.id == editRoleId);
+    const matchingRole = roles.find((role) => role.id == selectedRoleId);
+    console.log("matching role name", matchingRole.name);
 
     roleValidation.setValues({
       name: matchingRole.name,
     });
+
+    // Set the selectedRoleId directly to match the edited role
+    setSelectedRoleId(matchingRole.id);
   }
 
   function handleRoleUpdate(roleId, values) {
@@ -179,6 +202,24 @@ const Mapping = () => {
       })
       .catch((err) => {
         console.log("error while deleting role", err);
+      });
+  }
+
+  function handlePermissionChange(menuId, subMenuId) {
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${selectedRoleId}/permission`,
+        {
+          menuId,
+          subMenuId,
+          roleId: selectedRoleId,
+        }
+      )
+      .then((res) => {
+        console.log("permission changed successfuly", res);
+      })
+      .catch((error) => {
+        console.log("error while changing route permissions ->".error);
       });
   }
 
@@ -265,7 +306,8 @@ const Mapping = () => {
                         color="primary"
                         className="add-btn me-1 btn-block"
                         id="create-btn"
-                        onClick={(e) => handleEditRole(e)}
+                        disabled={!selectedRoleId}
+                        onClick={handleEditRole}
                       >
                         <i className="ri-pencil-fill"></i> Edit Role Name
                       </Button>
@@ -274,6 +316,7 @@ const Mapping = () => {
                         color="danger"
                         className="add-btn me-1 btn-block"
                         id="create-btn"
+                        disabled={!selectedRoleId}
                         onClick={() => tog_delete()}
                       >
                         <i className="ri-delete-bin-2-line"></i> Remove Role
@@ -281,76 +324,100 @@ const Mapping = () => {
                     </div>
                   </Col>
 
-                  <div
-                    className="listjs-table"
-                    id="userList"
-                    style={{ display: "flex", gap: "35px" }}
-                  >
-                    <div className="table-responsive table-card mt-3 mb-1">
-                      <table
-                        className="table align-middle table-nowrap"
-                        id="userTable"
-                      >
-                        <thead className="table-light">
-                          <tr>
-                            {MenuList?.map((menu) => (
-                              <th data-sort="home" key={menu.id}>
-                                {menu.label}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          <tr>
-                            {MenuList.map((menu) => (
-                              <td
-                                className="campaign-management"
-                                style={{
-                                  borderBottom: "none",
-                                  verticalAlign: "top",
-                                }}
-                                key={menu.id}
-                              >
-                                {Array.isArray(menu.subItems) &&
-                                menu.subItems.length > 0 ? (
-                                  menu.subItems.map((subItem) => (
-                                    <div
-                                      key={subItem.id}
-                                      style={{ display: "flex", gap: "5px" }}
-                                    >
-                                      <Input
-                                        id={subItem.label}
-                                        name={subItem.label}
-                                        type="checkbox"
-                                        checked={checkedSubmenus.includes(
-                                          subItem.label
-                                        )}
-                                        onChange={(e) =>
-                                          handleCheckboxChange(
-                                            e,
-                                            menu.id,
-                                            subItem.id
-                                          )
-                                        }
-                                      />
-                                      <Label
-                                        htmlFor={subItem.label}
-                                        className="form-label"
+                  {selectedRoleId ? (
+                    <div
+                      className="listjs-table"
+                      id="userList"
+                      style={{ display: "flex", gap: "35px" }}
+                    >
+                      <div className="table-responsive table-card mt-3 mb-1">
+                        <table
+                          className="table align-middle table-nowrap"
+                          id="userTable"
+                          style={{
+                            borderTop: "1px solid #e9ebec",
+                            borderRight: "1px solid #e9ebec",
+                          }}
+                        >
+                          <thead className="table-light">
+                            <tr>
+                              {user.menus?.map((menu) => (
+                                <th data-sort="home" key={menu.id}>
+                                  {menu.label}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="list form-check-all">
+                            <tr>
+                              {/* future me sare menus ki list database se aayegi and hum MenuList ko us List se replace kr denge */}
+                              {user.menus.map((menu) => (
+                                <td
+                                  className="campaign-management"
+                                  style={{
+                                    borderLeft: "1px solid #e9ebec",
+                                    verticalAlign: "top",
+                                  }}
+                                  key={menu.id}
+                                >
+                                  {Array.isArray(menu.subItems) &&
+                                  menu.subItems.length > 0 ? (
+                                    menu.subItems.map((subItem) => (
+                                      <div
+                                        key={subItem.id}
+                                        style={{ display: "flex", gap: "5px" }}
                                       >
-                                        {subItem.label}
-                                      </Label>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <div>No Submenus</div>
-                                )}
-                              </td>
-                            ))}
-                          </tr>
-                        </tbody>
-                      </table>
+                                        <Input
+                                          id={subItem.label}
+                                          name={subItem.label}
+                                          type="checkbox"
+                                          checked={checkedSubmenus.includes(
+                                            subItem.label
+                                          )}
+                                          onChange={(e) =>
+                                            handleCheckboxChange(
+                                              e,
+                                              menu.id,
+                                              subItem.id
+                                            )
+                                          }
+                                        />
+                                        <Label
+                                          htmlFor={subItem.label}
+                                          className="form-label"
+                                        >
+                                          {subItem.label}
+                                        </Label>
+                                      </div>
+                                    ))
+                                  ) : (
+                                    <div>No Submenus</div>
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontSize: "40px",
+                        fontWeight: "bold",
+                        height: "200px",
+                        color: "#b5b5b5",
+                      }}
+                    >
+                      <span>
+                        {" "}
+                        <i className="ri-user-fill"></i> Please select a role!
+                      </span>
+                    </div>
+                  )}
                 </CardBody>
               </Card>
             </Col>
@@ -368,7 +435,7 @@ const Mapping = () => {
       <RoleRemoveModal
         modal_delete={modal_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteRole={() => handleDeleteRole(editRoleId)}
+        handleDeleteRole={() => handleDeleteRole(selectedRoleId)}
       />
     </React.Fragment>
   );
