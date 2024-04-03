@@ -18,13 +18,15 @@ import RoleFormModal from "./RoleFormModal";
 import MenuList from "./MenuList";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import RoleRemoveModal from "./RoleRemoveModal";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [checkedSubmenus, setCheckedSubmenus] = useState([]);
   const [roles, setRoles] = useState([]);
   const [editRole, setEditRole] = useState(false);
-  const [editRoleId, setEditRoleId] = useState();
+  const [editRoleId, setEditRoleId] = useState(0);
+  const [modal_delete, setmodal_delete] = useState(false);
 
   const user = useSelector((state) => state.Login.user);
 
@@ -83,9 +85,14 @@ const Mapping = () => {
     }
   };
 
-  // toggles register / edit user modal
+  // toggles register / edit role modal
   function tog_list() {
     setmodal_list(!modal_list);
+  }
+
+  //toggles remove role modal
+  function tog_delete() {
+    setmodal_delete(!modal_delete);
   }
 
   // formik setup
@@ -97,7 +104,7 @@ const Mapping = () => {
       name: Yup.string().required("Please enter role name"),
     }),
     onSubmit: (values) => {
-      editRole ? null : handleAddRole(values);
+      editRole ? handleRoleUpdate(editRoleId, values) : handleAddRole(values);
     },
   });
 
@@ -109,7 +116,7 @@ const Mapping = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log(res);
+        setRoles((prev) => [...prev, res.data]);
       })
       .catch((error) => {
         console.log("error while creating user ->", error);
@@ -119,42 +126,59 @@ const Mapping = () => {
   // to update list of crm field when campaign is changed in select element
   function handleRoleChange(e) {
     roleValidation.setFieldValue("name", e.target.value);
+    setEditRoleId(e.target.value);
   }
 
-  function handleEditRole(role) {
+  function handleEditRole(e) {
     setEditRole(true);
     setmodal_list(!modal_list);
 
-    const matchingRole = roles.find((role) => role.id === e.target.value);
-
-    console.log("matching role name", matchingRole);
+    const matchingRole = roles.find((role) => role.id == editRoleId);
 
     roleValidation.setValues({
       name: matchingRole.name,
     });
   }
 
-  function handleRoleUpdate(roleId) {
-    console.log("crm fields on updation submit ->", crmFields);
-
+  function handleRoleUpdate(roleId, values) {
     axios
       .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/role/${roleId}/edit`,
-        crmFieldValidation.values,
+        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/edit`,
+        values,
         { withCredentials: true }
       )
       .then((res) => {
-        if (res.status === "duplicate") {
-          setCustomError(res.message);
-        } else {
-          setCrmFields(res.data);
+        const updatedRoles = roles.map((role) => {
+          if (role.id == roleId) {
+            role.name = res.data.name;
+            return role;
+          } else {
+            return role;
+          }
+        });
 
-          setmodal_list(!modal_list);
-          notifyFieldUpdated();
-        }
+        setRoles(updatedRoles);
       })
       .catch((err) => {
-        console.log("error while updating", err);
+        console.log("error while updating role", err);
+      });
+  }
+
+  function handleDeleteRole(roleId) {
+    axios
+      .delete(
+        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/delete`,
+        { withCredentials: true }
+      )
+      .then((res) => {
+        const updatedRoles = roles.filter((role) => role.id !== res.data.id);
+        setRoles(updatedRoles);
+        setmodal_delete(false);
+
+        console.log("deleted role ->", res.data);
+      })
+      .catch((err) => {
+        console.log("error while deleting role", err);
       });
   }
 
@@ -162,6 +186,7 @@ const Mapping = () => {
     console.log("handle submit called");
     e.preventDefault();
     roleValidation.handleSubmit();
+    setmodal_list(false);
     return false;
   }
 
@@ -192,7 +217,7 @@ const Mapping = () => {
                         className="form-control"
                         placeholder="Enter Role Name"
                         type="select"
-                        onChange={handleRoleChange}
+                        onChange={(e) => handleRoleChange(e)}
                         onBlur={roleValidation.handleBlur}
                         value={roleValidation.values.name || ""}
                         invalid={
@@ -240,7 +265,7 @@ const Mapping = () => {
                         color="primary"
                         className="add-btn me-1 btn-block"
                         id="create-btn"
-                        onClick={() => handleEditRole()}
+                        onClick={(e) => handleEditRole(e)}
                       >
                         <i className="ri-pencil-fill"></i> Edit Role Name
                       </Button>
@@ -249,6 +274,7 @@ const Mapping = () => {
                         color="danger"
                         className="add-btn me-1 btn-block"
                         id="create-btn"
+                        onClick={() => tog_delete()}
                       >
                         <i className="ri-delete-bin-2-line"></i> Remove Role
                       </Button>
@@ -336,6 +362,13 @@ const Mapping = () => {
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
         roleValidation={roleValidation}
+        editRole={editRole}
+      />
+
+      <RoleRemoveModal
+        modal_delete={modal_delete}
+        setmodal_delete={setmodal_delete}
+        handleDeleteRole={() => handleDeleteRole(editRoleId)}
       />
     </React.Fragment>
   );

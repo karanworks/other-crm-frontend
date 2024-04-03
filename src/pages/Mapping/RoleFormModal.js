@@ -15,6 +15,7 @@ function RoleFormModal({
   tog_list, // to change modal state
   formHandleSubmit, // submit function for form
   roleValidation, // to get the values from formik
+  editRole,
 }) {
   return (
     <Modal
@@ -64,7 +65,7 @@ function RoleFormModal({
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
-              Add Role
+              {editRole ? "Update Role Name" : "Add Role"}
             </button>
           </div>
         </ModalBody>
