@@ -52,29 +52,34 @@ class APIClient {
   //  get = (url, params) => {
   //   return axios.get(url, params);
   // };
-  get = (url, params) => {
-    let response;
+  // get = (url, params) => {
+  //   let response;
 
-    let paramKeys = [];
+  //   let paramKeys = [];
 
-    if (params) {
-      Object.keys(params).map((key) => {
-        paramKeys.push(key + "=" + params[key]);
-        return paramKeys;
-      });
+  //   if (params) {
+  //     Object.keys(params).map((key) => {
+  //       paramKeys.push(key + "=" + params[key]);
+  //       return paramKeys;
+  //     });
 
-      const queryString =
-        paramKeys && paramKeys.length ? paramKeys.join("&") : "";
-      response = axios.get(`${url}?${queryString}`, params);
-    } else {
-      response = axios.get(`${url}`, params);
-    }
+  //     const queryString =
+  //       paramKeys && paramKeys.length ? paramKeys.join("&") : "";
+  //     response = axios.get(`${url}?${queryString}`, params);
+  //   } else {
+  //     response = axios.get(`${url}`, params);
+  //   }
 
-    return response;
-  };
+  //   return response;
+  // };
   /**
    * post given data to url
    */
+
+  get = (url) => {
+    return axios.get(url, { withCredentials: true });
+  };
+
   create = (url, data) => {
     return axios.post(url, data, { withCredentials: true });
   };
@@ -82,7 +87,7 @@ class APIClient {
    * Updates data
    */
   update = (url, data) => {
-    return axios.patch(url, data);
+    return axios.patch(url, data, { withCredentials: true });
   };
 
   put = (url, data) => {
@@ -91,8 +96,8 @@ class APIClient {
   /**
    * Delete
    */
-  delete = (url, config) => {
-    return axios.delete(url, { ...config });
+  delete = (url) => {
+    return axios.delete(url, { withCredentials: true });
   };
 }
 const getLoggedinUser = () => {

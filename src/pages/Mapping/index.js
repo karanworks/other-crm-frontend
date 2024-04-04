@@ -32,8 +32,6 @@ const Mapping = () => {
 
   const user = useSelector((state) => state.Login.user);
 
-  console.log("user menus", user.menus);
-
   useEffect(() => {
     const checkedSubmenuLabels = [];
 
@@ -350,7 +348,7 @@ const Mapping = () => {
                           </thead>
                           <tbody className="list form-check-all">
                             <tr>
-                              {/* future me sare menus ki list database se aayegi and hum MenuList ko us List se replace kr denge */}
+                              {/* menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha */}
                               {user.menus.map((menu) => (
                                 <td
                                   className="campaign-management"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import menus from "./DummyMenuData";
+import { getLoggedinUser } from "../helpers/api_helper";
 
 //Import Icons
 import FeatherIcon from "feather-icons-react";
@@ -9,7 +9,9 @@ import { useSelector } from "react-redux";
 const Navdata = () => {
   const history = useNavigate();
 
-  const menuDataOfUser = useSelector((state) => state.Login.user.menus);
+  // const menuDataOfUser = useSelector((state) => state.Login.user.menus);
+  const userData = getLoggedinUser();
+  const menuDataOfUser = userData.data.menus;
 
   //state data
   const [isHome, setIsHome] = useState(false);
@@ -399,6 +401,7 @@ const Navdata = () => {
     },
   ];
 
+  // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
   return <React.Fragment>{dynamicMenuData}</React.Fragment>;
 };
 

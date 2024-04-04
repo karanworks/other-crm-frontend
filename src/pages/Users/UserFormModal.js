@@ -16,7 +16,7 @@ function UserFormModal({
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
-  isAlreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
+  alreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
   handleRoleChange,
   roles,
 }) {
@@ -38,9 +38,9 @@ function UserFormModal({
       </ModalHeader>
       <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
-          {isAlreadyRegisteredError && (
+          {alreadyRegisteredError && (
             <Alert color="danger" style={{ marginBlock: "5px" }}>
-              {isAlreadyRegisteredError}
+              {alreadyRegisteredError}
             </Alert>
           )}
 

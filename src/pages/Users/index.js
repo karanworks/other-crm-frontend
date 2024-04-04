@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { getLoggedinUser } from "../../helpers/api_helper";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -24,22 +24,31 @@ import {
   notifyDeletedUser,
   notifyUpdatedUser,
 } from "./toasts";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getUsers,
+  createUser,
+  removeUser,
+  updateUser,
+} from "../../slices/Users/thunk";
 
 const Users = () => {
   // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
   // this state triggers when editing the user
   const [isEditingUser, setIsEditingUser] = useState(false);
-  // admin details with users that he has added
-  const [adminUsersData, setAdminUsersData] = useState([]);
   // delete user confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   const [listUserId, setListUserId] = useState(null);
   // user already registered error
-  const [isAlreadyRegisteredError, setIsAlreadyRegisteredError] = useState("");
+  // const [isAlreadyRegisteredError, setIsAlreadyRegisteredError] = useState("");
   // fetching all the roles
   const [roles, setRoles] = useState([]);
+
+  const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+
+  const dispatch = useDispatch();
 
   // toggles register / edit user modal
   function tog_list() {
@@ -52,21 +61,7 @@ const Users = () => {
     setmodal_delete(!modal_delete);
   }
 
-  // To get users when /users page renders for the first time
-
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/users`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log("login get data ->", res.data);
-        setAdminUsersData(res.data);
-      })
-      .catch((err) => {
-        console.log("error while fetching users on user page ->", err);
-      });
-
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/roles`, {
         withCredentials: true,
@@ -78,6 +73,10 @@ const Users = () => {
         console.log("error while fetching roles ->", error);
       });
   }, []);
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
@@ -97,14 +96,14 @@ const Users = () => {
     }),
     onSubmit: (values) => {
       isEditingUser
-        ? handleUserUpdate(adminUsersData.id)
-        : handleAddUser(values);
+        ? dispatch(updateUser({ values, listUserId }))
+        : dispatch(createUser(values));
+      setmodal_list(false);
     },
   });
 
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
-    console.log("handle submit called");
     e.preventDefault();
     validation.handleSubmit();
     return false;
@@ -113,40 +112,6 @@ const Users = () => {
   function handleRoleChange(e) {
     validation.setFieldValue("roleId", e.target.value);
   }
-
-  function handleAddUser(values) {
-    // user register api call
-
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/user/register`,
-        values,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.status === "failure") {
-          setIsAlreadyRegisteredError(res.message);
-          console.log(isAlreadyRegisteredError);
-          return;
-        }
-
-        if (res.data) {
-          setAdminUsersData((prevState) => ({
-            ...prevState,
-            users: [...prevState.users, { ...res.data }],
-          }));
-
-          setmodal_list(false);
-          !isEditingUser && notifyAddedUser();
-        }
-      })
-      .catch((error) => {
-        console.log("error while registering user ->", error);
-      });
-  }
-
   // to update the values of register form when editing the user
   function handleEditUser(userData) {
     setIsEditingUser(true);
@@ -165,64 +130,6 @@ const Users = () => {
       agentMobile: userData.agentMobile,
       roleId: roleName.id,
     });
-  }
-
-  // after making an edit and clicking on update user button this function updates the user details
-  function handleUserUpdate(adminId) {
-    axios
-      .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${listUserId}/edit`,
-        validation.values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        console.log("response while updating user", res);
-        // filtering users so that updated user details can be updated instantly
-        const updatedUsers = adminUsersData.users.map((user) => {
-          if (user.id === listUserId) {
-            return res.data;
-          } else {
-            return user;
-          }
-        });
-
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          users: [...updatedUsers],
-        }));
-        setmodal_list(!modal_list);
-        notifyUpdatedUser();
-      })
-      .catch((err) => {
-        console.log("error while updating", err);
-      });
-  }
-
-  // to delete a user
-  function handleDeleteUser(adminId, userId) {
-    axios
-      .delete(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${userId}/delete`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // filtering users so that deleted user can be updated instantly
-        const filteredUsers = adminUsersData.users.filter(
-          (user) => user.id !== userId
-        );
-
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          users: filteredUsers,
-        }));
-        setmodal_delete(false);
-        notifyDeletedUser();
-      })
-      .catch((err) => {
-        console.log("error while deleting user", err);
-      });
   }
 
   document.title = "Users";
@@ -305,7 +212,7 @@ const Users = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {adminUsersData?.users?.map((user) => (
+                          {users?.map((user) => (
                             <tr key={user?.id}>
                               <th scope="row">
                                 <div className="form-check">
@@ -407,7 +314,7 @@ const Users = () => {
         formHandleSubmit={formHandleSubmit}
         validation={validation}
         isEditingUser={isEditingUser}
-        isAlreadyRegisteredError={isAlreadyRegisteredError}
+        alreadyRegisteredError={alreadyRegisteredError}
         handleRoleChange={handleRoleChange}
         roles={roles}
       />
@@ -417,7 +324,10 @@ const Users = () => {
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteUser={() => handleDeleteUser(adminUsersData, listUserId)}
+        handleDeleteUser={() => {
+          dispatch(removeUser(listUserId));
+          setmodal_delete(false);
+        }}
       />
     </React.Fragment>
   );
