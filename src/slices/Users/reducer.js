@@ -13,25 +13,24 @@ export const initialState = {
 const usersSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {
-    updateAlreadyRegisteredError(state, action) {
-      state.alreadyRegisteredError = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getUsers.fulfilled, (state, action) => {
-      state.users = action.payload.data.users;
+      state.users = action.payload?.data.users;
     });
 
     builder.addCase(createUser.fulfilled, (state, action) => {
-      console.log("payload while creating add ->", action.payload);
-
-      state.users = [...state.users, action.payload.data];
-      toast.success("User has been added !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
+      if (action.payload.status == "failure") {
+        state.alreadyRegisteredError = action.payload.message;
+      } else {
+        state.users = [...state.users, action.payload.data];
+        state.alreadyRegisteredError = null;
+        toast.success("User has been added !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
     });
 
     // builder.addCase(createUser.fulfilled, (state, action) => {
@@ -50,21 +49,29 @@ const usersSlice = createSlice({
     });
 
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      const updatedUserId = action.payload.id;
-      state.users = state.users.map((user) => {
-        if (user.id == updatedUserId) {
-          user = action.payload;
-          return user;
-        } else {
-          return user;
-        }
-      });
+      console.log("payload while updating user ->", action.payload);
 
-      toast.success("User details updated !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
+      if (action.payload.status == "failure") {
+        state.alreadyRegisteredError = action.payload.message;
+      } else {
+        const updatedUserId = action.payload.id;
+        state.users = state.users.map((user) => {
+          if (user.id == updatedUserId) {
+            user = action.payload;
+            return user;
+          } else {
+            return user;
+          }
+        });
+
+        state.alreadyRegisteredError = null;
+
+        toast.success("User details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
     });
   },
 });

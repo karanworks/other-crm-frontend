@@ -72,7 +72,6 @@ const CRMConfiguration = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("sorted data ->", res.data.campaigns);
         setAdminUsersData(res.data);
       })
       .catch((err) => {

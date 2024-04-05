@@ -14,53 +14,55 @@ import {
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CampaignFormModal from "./CampaignFormModal";
 import CampaignRemoveModal from "./CampaignRemoveModal";
+import { useDispatch } from "react-redux";
 import {
-  notifyAddedCampaign,
-  notifyDeletedCampaign,
-  notifyUpdatedCampaign,
-} from "./toasts";
+  getCampaigns,
+  createCampaign,
+  removeCampaign,
+  updateCampaign,
+} from "../../slices/Campaigns/thunk";
+import { useSelector } from "react-redux";
 
 const Campaign = () => {
-  // register / edit user modal state whether modal is open or not
+  // register / edit campaign modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
-  // this state triggers when editing the user
+  // this state triggers when editing the campaign
   const [isEditingCampaign, setIsEditingCampaign] = useState(false);
-  // admin details with users that he has added
-  const [adminUsersData, setAdminUsersData] = useState([]);
-  // delete user confirmation modal state
+  // delete campaign confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
+  // when we click on edit / delete campaign button this state stores that campaign's id, had to make this state because I needed to have that campaign's id to make changes to it
   const [listCampaignId, setListCampaignId] = useState(null);
 
-  // toggles register / edit user modal
+  const dispatch = useDispatch();
+
+  const { campaigns, alreadyExistsError } = useSelector(
+    (state) => state.Campaigns
+  );
+
+  // toggles register / edit campaign modal
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingCampaign(false);
   }
 
-  // toggles delete user confirmation modal
+  // toggles delete campaign confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
 
-  // To get users when /users page renders for the first time
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/campaigns`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setAdminUsersData(res.data);
-      })
-      .catch((err) => {
-        console.log("error while fetching users on user page ->", err);
-      });
-  }, []);
+    if (alreadyExistsError) {
+      setmodal_list(!modal_list);
+    }
+  }, [alreadyExistsError]);
+
+  useEffect(() => {
+    dispatch(getCampaigns());
+  }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
@@ -80,8 +82,10 @@ const Campaign = () => {
     }),
     onSubmit: (values) => {
       isEditingCampaign
-        ? handleCampaignUpdate(adminUsersData.id)
-        : handleAddCampaign(values);
+        ? dispatch(updateCampaign({ values, listCampaignId }))
+        : dispatch(createCampaign(values));
+
+      setmodal_list(false);
     },
   });
 
@@ -93,31 +97,6 @@ const Campaign = () => {
     return false;
   }
 
-  function handleAddCampaign(values) {
-    // campaign add api call
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/campaign/create`,
-        values,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // update the new campaign in the list instantly
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          campaigns: [...prevState.campaigns, { ...res.data }],
-        }));
-
-        setmodal_list(false);
-        !isEditingCampaign && notifyAddedCampaign();
-      })
-      .catch((error) => {
-        console.log("error while registering user ->", error);
-      });
-  }
-
   // to update the values of register form when editing the campaign
   function handleEditCampaign(campaignData) {
     setIsEditingCampaign(true);
@@ -127,63 +106,6 @@ const Campaign = () => {
     validation.values.campaignName = campaignData.campaignName;
     validation.values.campaignDescription = campaignData.campaignDescription;
     validation.values.campaignType = campaignData.campaignType;
-  }
-
-  // after making an edit and clicking on update campaign button this function updates the campaign details
-  function handleCampaignUpdate(adminId) {
-    axios
-      .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${listCampaignId}/edit`,
-        validation.values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        // filtering campaigns so that updated campaigns details can be updated instantly
-        const updatedCampaigns = adminUsersData.campaigns.map((campaign) => {
-          if (campaign.id === listCampaignId) {
-            return res.data;
-          } else {
-            return campaign;
-          }
-        });
-
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          campaigns: [...updatedCampaigns],
-        }));
-        setmodal_list(!modal_list);
-        notifyUpdatedCampaign();
-      })
-      .catch((err) => {
-        console.log("error while updating", err);
-      });
-  }
-
-  // to delete a campaign
-  function handleDeleteCampaign(adminId, campaignId) {
-    axios
-      .delete(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${campaignId}/delete`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        // filtering campaigns so that deleted campaigns can be updated instantly
-        const filteredCampaigns = adminUsersData.campaigns.filter(
-          (campaign) => campaign.id !== campaignId
-        );
-
-        setAdminUsersData((prevState) => ({
-          ...prevState,
-          campaigns: filteredCampaigns,
-        }));
-        setmodal_delete(false);
-        notifyDeletedCampaign();
-      })
-      .catch((err) => {
-        console.log("error while deleting user", err);
-      });
   }
 
   document.title = "Campaign";
@@ -274,7 +196,7 @@ const Campaign = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {adminUsersData?.campaigns?.map((campaign) => (
+                          {campaigns?.map((campaign) => (
                             <tr key={campaign?.id}>
                               <th scope="row">
                                 <div className="form-check">
@@ -375,6 +297,7 @@ const Campaign = () => {
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
+        alreadyExistsError={alreadyExistsError}
         validation={validation}
         isEditingCampaign={isEditingCampaign}
       />
@@ -384,9 +307,10 @@ const Campaign = () => {
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteCampaign={() =>
-          handleDeleteCampaign(adminUsersData, listCampaignId)
-        }
+        handleDeleteCampaign={() => {
+          dispatch(removeCampaign(listCampaignId));
+          setmodal_delete(false);
+        }}
       />
     </React.Fragment>
   );

@@ -17,16 +17,17 @@ export const getUsers = createAsyncThunk("users/getUsers", async () => {
     console.log("error inside getUsers thunk", error);
   }
 });
+
 export const createUser = createAsyncThunk("users/createUser", async (data) => {
   try {
     const response = await createUserApi(loggedInUser.data.id, data);
 
-    console.log("thunk response while adding user ->", response.status);
     return response;
   } catch (error) {
     console.log("error inside getUsers thunk", error);
   }
 });
+
 export const removeUser = createAsyncThunk(
   "users/removeUser",
   async (userId) => {
@@ -39,6 +40,7 @@ export const removeUser = createAsyncThunk(
     }
   }
 );
+
 export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
   try {
     const response = await updateUserApi(

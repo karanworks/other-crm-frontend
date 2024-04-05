@@ -19,11 +19,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import UserFormModal from "./UserFormModal";
 import UserRemoveModal from "./UserRemoveModal";
-import {
-  notifyAddedUser,
-  notifyDeletedUser,
-  notifyUpdatedUser,
-} from "./toasts";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUsers,
@@ -41,8 +37,6 @@ const Users = () => {
   const [modal_delete, setmodal_delete] = useState(false);
   // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
   const [listUserId, setListUserId] = useState(null);
-  // user already registered error
-  // const [isAlreadyRegisteredError, setIsAlreadyRegisteredError] = useState("");
   // fetching all the roles
   const [roles, setRoles] = useState([]);
 
@@ -75,6 +69,12 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
+    if (alreadyRegisteredError) {
+      setmodal_list(!modal_list);
+    }
+  }, [alreadyRegisteredError]);
+
+  useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
 
@@ -98,14 +98,16 @@ const Users = () => {
       isEditingUser
         ? dispatch(updateUser({ values, listUserId }))
         : dispatch(createUser(values));
-      setmodal_list(false);
     },
   });
 
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();
+
     validation.handleSubmit();
+
+    setmodal_list(false);
     return false;
   }
 
@@ -120,8 +122,6 @@ const Users = () => {
 
     // setting the value of role according to roleId because in select element roleId is used as value
     const roleName = roles.find((role) => role.id === userData.roleId);
-
-    console.log("userData here ->", userData);
 
     validation.setValues({
       name: userData.username,
