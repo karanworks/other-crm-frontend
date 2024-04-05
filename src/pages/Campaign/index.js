@@ -93,7 +93,6 @@ const Campaign = () => {
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
-
     return false;
   }
 

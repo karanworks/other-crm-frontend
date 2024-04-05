@@ -36,6 +36,31 @@ const campaignSlice = createSlice({
       }
     });
 
+    builder.addCase(updateCampaign.fulfilled, (state, action) => {
+      const updatedUserId = action.payload.data.id;
+
+      if (action.payload.status == "failure") {
+        state.alreadyExistsError = action.payload.message;
+      } else {
+        state.campaigns = state.campaigns.map((user) => {
+          if (user.id == updatedUserId) {
+            user = action.payload.data;
+            return user;
+          } else {
+            return user;
+          }
+        });
+
+        state.alreadyExistsError = null;
+
+        toast.success("Campaign details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
+    });
+
     builder.addCase(removeCampaign.fulfilled, (state, action) => {
       const deletedCampaignId = action.payload.id;
       state.campaigns = state.campaigns.filter(
@@ -43,24 +68,6 @@ const campaignSlice = createSlice({
       );
 
       toast.error("Campaign has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
-
-    builder.addCase(updateCampaign.fulfilled, (state, action) => {
-      const updatedUserId = action.payload.id;
-      state.campaigns = state.campaigns.map((user) => {
-        if (user.id == updatedUserId) {
-          user = action.payload;
-          return user;
-        } else {
-          return user;
-        }
-      });
-
-      toast.success("Campaign details updated !", {
         position: "bottom-center",
         autoClose: 3000,
         theme: "colored",

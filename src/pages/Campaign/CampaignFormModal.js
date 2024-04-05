@@ -18,9 +18,6 @@ function UserFormModal({
   isEditingCampaign, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   alreadyExistsError,
 }) {
-  {
-    console.log("already exists in form error ->", alreadyExistsError);
-  }
   return (
     <Modal
       isOpen={modal_list}

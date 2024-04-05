@@ -57,7 +57,7 @@ const usersSlice = createSlice({
         const updatedUserId = action.payload.id;
         state.users = state.users.map((user) => {
           if (user.id == updatedUserId) {
-            user = action.payload;
+            user = action.payload.data.updatedUser;
             return user;
           } else {
             return user;

@@ -60,7 +60,7 @@ export const updateCampaign = createAsyncThunk(
         data.values
       );
 
-      return response.data.updatedCampaign;
+      return response;
     } catch (error) {
       console.log("error inside update campaign thunk", error);
     }

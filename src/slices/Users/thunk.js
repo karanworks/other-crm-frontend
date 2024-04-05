@@ -48,7 +48,7 @@ export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
       data.listUserId,
       data.values
     );
-    return response.data.updatedUser;
+    return response;
   } catch (error) {
     console.log("error inside remove user thunk", error);
   }
