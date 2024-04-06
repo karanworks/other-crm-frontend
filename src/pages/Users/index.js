@@ -96,7 +96,7 @@ const Users = () => {
     }),
     onSubmit: (values) => {
       isEditingUser
-        ? dispatch(updateUser({ values, listUserId }))
+        ? dispatch(updateUser({ values, userId: listUserId }))
         : dispatch(createUser(values));
     },
   });
@@ -325,7 +325,7 @@ const Users = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteUser={() => {
-          dispatch(removeUser(listUserId));
+          dispatch(removeUser({ userId: listUserId }));
           setmodal_delete(false);
         }}
       />
