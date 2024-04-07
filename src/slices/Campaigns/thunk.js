@@ -3,7 +3,7 @@ import {
   getCampaigns as getCampaignsApi,
   createCampaign as createCampaignApi,
   removeCampaign as removeCampaignApi,
-  udpateCampaign as udpateCampaignApi,
+  updateCampaign as updateCampaignApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getCampaigns = createAsyncThunk(
@@ -35,7 +35,7 @@ export const updateCampaign = createAsyncThunk(
   "campaigns/udpateCampaign",
   async (data) => {
     try {
-      const response = await udpateCampaignApi(
+      const response = await updateCampaignApi(
         data.listCampaignId,
         data.values
       );

@@ -16,8 +16,10 @@ function CRMFieldFormModal({
   crmFieldFormHandleSubmit, // submit function for form
   crmFieldValidation, // to get the values from formik
   isEditingCrmField, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
-  customError,
+  alreadyExistsError,
 }) {
+  console.log("alreadyExistsError in form modal ->", alreadyExistsError);
+
   return (
     <Modal
       isOpen={modal_list}
@@ -42,9 +44,9 @@ function CRMFieldFormModal({
         }
       >
         <ModalBody style={{ paddingTop: "0px" }}>
-          {customError && (
-            <Alert color="danger" style={{ marginBlock: "5px" }}>
-              {customError}
+          {alreadyExistsError && (
+            <Alert color="danger" style={{ marginBlock: "10px" }}>
+              {alreadyExistsError}
             </Alert>
           )}
           <div className="mb-2">

@@ -67,10 +67,37 @@ export const removeCampaign = (campaignId) => {
   );
 };
 
-export const udpateCampaign = (campaignId, data) => {
+export const updateCampaign = (campaignId, data) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/edit`,
     data
+  );
+};
+
+// *****************************************************************
+// *********************** CRM CONFIGURATION ***********************
+// *****************************************************************
+
+export const getCrmConfigurationData = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/crm-configuration`);
+};
+export const createCrmField = (campaignId, values) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/create`,
+    values
+  );
+};
+
+export const updateCrmField = (campaignId, crmFieldId, values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/${crmFieldId}/edit`,
+    values
+  );
+};
+
+export const removeCrmField = (campaignId, crmFieldId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/${crmFieldId}/delete`
   );
 };
 
