@@ -101,6 +101,43 @@ export const removeCrmField = (campaignId, crmFieldId) => {
   );
 };
 
+// *****************************************************************
+// **************************** MAPPING ******************************
+// *****************************************************************
+
+export const getMenus = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/mapping`);
+};
+export const getMenusByRole = (roleId) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/role/${roleId}/mapping`);
+};
+export const getRoles = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/roles`);
+};
+export const changePermission = ({ menuId, subMenuId, roleId }) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/mapping`,
+    { menuId, subMenuId, roleId }
+  );
+};
+
+export const createRole = (values) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/role/create`, values);
+};
+
+export const updateRole = (roleId, values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/edit`,
+    values
+  );
+};
+
+export const removeRole = (roleId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/delete`
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

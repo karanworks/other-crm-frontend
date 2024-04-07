@@ -18,8 +18,6 @@ function CRMFieldFormModal({
   isEditingCrmField, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   alreadyExistsError,
 }) {
-  console.log("alreadyExistsError in form modal ->", alreadyExistsError);
-
   return (
     <Modal
       isOpen={modal_list}
