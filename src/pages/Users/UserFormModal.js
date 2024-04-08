@@ -41,7 +41,7 @@ function UserFormModal({
       <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           {alreadyRegisteredError && (
-            <Alert color="danger" style={{ marginBlock: "5px" }}>
+            <Alert color="danger" style={{ marginBlock: "10px" }}>
               {alreadyRegisteredError}
             </Alert>
           )}

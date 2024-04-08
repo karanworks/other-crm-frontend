@@ -3,11 +3,8 @@ import { getUsers, createUser, removeUser, updateUser } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
-  // editingUser: false, // if we press on edit user button this will be true
   users: [], // list of all users
-  // currentUserId: null, // id of current user we editing / deleting
   alreadyRegisteredError: null, // if user with same email, mobile number already registered
-  // roles: [], // list of all roles
 };
 
 const usersSlice = createSlice({
@@ -49,8 +46,6 @@ const usersSlice = createSlice({
     });
 
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      console.log("payload while updating user ->", action.payload);
-
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
       } else {

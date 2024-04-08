@@ -24,7 +24,7 @@ export const createUser = createAsyncThunk("users/createUser", async (data) => {
 
     return response;
   } catch (error) {
-    console.log("error inside getUsers thunk", error);
+    console.log("error inside createUser thunk", error);
   }
 });
 

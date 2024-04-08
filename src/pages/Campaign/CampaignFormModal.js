@@ -41,7 +41,7 @@ function UserFormModal({
       >
         <ModalBody style={{ paddingTop: "0px" }}>
           {alreadyExistsError && (
-            <Alert color="danger" style={{ marginBlock: "5px" }}>
+            <Alert color="danger" style={{ marginBlock: "10px" }}>
               {alreadyExistsError}
             </Alert>
           )}
