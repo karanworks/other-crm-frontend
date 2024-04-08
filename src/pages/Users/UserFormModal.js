@@ -9,6 +9,8 @@ import {
   ModalHeader,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
+import Select from "react-select";
+import { useState } from "react";
 
 function UserFormModal({
   modal_list, // modal state
@@ -19,9 +21,31 @@ function UserFormModal({
   alreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
   handleRoleChange,
   roles,
+  campaigns,
 }) {
-  {
-  }
+  const [selectedCampaigns, setSelectedCampaigns] = useState(null);
+
+  // function handleMulti(selectedMulti) {
+  //   setselectedMulti(selectedMulti);
+  // }
+
+  const campaignsList = [
+    { id: 1, campaignName: "Debit Card" },
+    { id: 2, campaignName: "Credit Card" },
+    { id: 3, campaignName: "Loan" },
+  ];
+
+  // const SingleOptions = [
+  //   { value: "Choices 1", label: "Choices 1" },
+  //   { value: "Choices 2", label: "Choices 2" },
+  //   { value: "Choices 3", label: "Choices 3" },
+  //   { value: "Choices 4", label: "Choices 4" },
+  // ];
+
+  const SingleOptions = campaigns.map((campaign) => {
+    return { value: campaign.id, label: campaign.campaignName };
+  });
+
   return (
     <Modal
       isOpen={modal_list}
@@ -187,6 +211,37 @@ function UserFormModal({
               </FormFeedback>
             ) : null}
           </div>
+          <div className="mb-3">
+            <Label htmlFor="agentMobile" className="form-label">
+              Select campaigns
+            </Label>
+
+            <Select
+              className={
+                validation.touched.campaigns && !!validation.errors.campaigns
+                  ? "is-invalid"
+                  : ""
+              }
+              value={selectedCampaigns}
+              isMulti={true}
+              isClearable={true}
+              onChange={(selectedOptions) => {
+                setSelectedCampaigns(selectedOptions);
+                validation.setFieldValue(
+                  "campaigns",
+                  selectedOptions.map((option) => option.value)
+                );
+                validation.setFieldTouched("campaigns", true);
+              }}
+              options={SingleOptions}
+            />
+            {validation.touched.campaigns && validation.errors.campaigns ? (
+              <FormFeedback type="invalid">
+                {validation.errors.campaigns}
+              </FormFeedback>
+            ) : null}
+          </div>
+
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
               {isEditingUser ? "Update User" : "Save User"}

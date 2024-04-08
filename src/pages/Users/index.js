@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getLoggedinUser } from "../../helpers/api_helper";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -39,6 +38,8 @@ const Users = () => {
   const [listUserId, setListUserId] = useState(null);
   // fetching all the roles
   const [roles, setRoles] = useState([]);
+  // fetching all the campaigns
+  const [campaigns, setCampaigns] = useState([]);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
 
@@ -66,6 +67,17 @@ const Users = () => {
       .catch((error) => {
         console.log("error while fetching roles ->", error);
       });
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/campaigns`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setCampaigns(res.data.campaigns);
+        console.log("campaigns inside users page ->", res.data);
+      })
+      .catch((error) => {
+        console.log("error while fetching roles ->", error);
+      });
   }, []);
 
   useEffect(() => {
@@ -86,6 +98,7 @@ const Users = () => {
       email: "",
       password: "",
       agentMobile: "",
+      campaigns: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Please enter Name"),
@@ -93,6 +106,9 @@ const Users = () => {
       email: Yup.string().required("Please enter CRM Email"),
       password: Yup.string().required("Please enter CRM Password"),
       agentMobile: Yup.string().required("Please enter Agent Mobile"),
+      campaigns: Yup.array()
+        .min(1)
+        .required("Please select at least one campaign"),
     }),
     onSubmit: (values) => {
       isEditingUser
@@ -104,7 +120,7 @@ const Users = () => {
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();
-
+    console.log("formik values ->", validation);
     validation.handleSubmit();
 
     setmodal_list(false);
@@ -114,6 +130,7 @@ const Users = () => {
   function handleRoleChange(e) {
     validation.setFieldValue("roleId", e.target.value);
   }
+
   // to update the values of register form when editing the user
   function handleEditUser(userData) {
     setIsEditingUser(true);
@@ -317,6 +334,7 @@ const Users = () => {
         alreadyRegisteredError={alreadyRegisteredError}
         handleRoleChange={handleRoleChange}
         roles={roles}
+        campaigns={campaigns}
       />
 
       {/* Remove Modal */}
