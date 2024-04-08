@@ -32,14 +32,14 @@ export const createCampaign = createAsyncThunk(
 );
 
 export const updateCampaign = createAsyncThunk(
-  "campaigns/udpateCampaign",
+  "campaigns/updateCampaign",
   async (data) => {
     try {
       const response = await updateCampaignApi(
         data.listCampaignId,
         data.values
       );
-
+      console.log("response while updating campaign", response);
       return response;
     } catch (error) {
       console.log("error inside update campaign thunk", error);

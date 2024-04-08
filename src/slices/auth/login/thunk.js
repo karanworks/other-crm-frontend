@@ -41,21 +41,16 @@ export const loginUser = (user, history) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   try {
     sessionStorage.removeItem("authUser");
-    let fireBaseBackend = getFirebaseBackend();
-    if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-      const response = fireBaseBackend.logout;
-      dispatch(logoutUserSuccess(response));
-    } else {
-      dispatch(logoutUserSuccess(true));
-      axios
-        .get("http://localhost:3001/logout", { withCredentials: true })
-        .then((res) => {
-          console.log("user logout", res);
-        })
-        .catch((err) => {
-          console.log("error while logging out", err);
-        });
-    }
+
+    dispatch(logoutUserSuccess(true));
+    axios
+      .get("http://localhost:3001/logout", { withCredentials: true })
+      .then((res) => {
+        console.log("user logout", res);
+      })
+      .catch((err) => {
+        console.log("error while logging out", err);
+      });
   } catch (error) {
     dispatch(apiError(error));
   }

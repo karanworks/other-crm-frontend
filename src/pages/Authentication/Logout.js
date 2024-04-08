@@ -16,7 +16,7 @@ const Logout = (props) => {
   const logoutData = createSelector(
     (state) => state.Login,
     (login) => ({
-      isUserLogout: login.isUserLogout
+      isUserLogout: login.isUserLogout,
     })
   );
   // Inside your component

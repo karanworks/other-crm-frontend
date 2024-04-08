@@ -130,9 +130,7 @@ const CRMConfiguration = () => {
       setmodal_list(!modal_list);
       return;
     }
-
     crmFieldValidation.handleSubmit();
-
     return false;
   }
 
