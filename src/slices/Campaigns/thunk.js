@@ -3,11 +3,8 @@ import {
   getCampaigns as getCampaignsApi,
   createCampaign as createCampaignApi,
   removeCampaign as removeCampaignApi,
-  udpateCampaign as udpateCampaignApi,
+  updateCampaign as updateCampaignApi,
 } from "../../helpers/fakebackend_helper";
-import { getLoggedinUser } from "../../helpers/api_helper";
-
-const loggedInUser = getLoggedinUser();
 
 export const getCampaigns = createAsyncThunk(
   "campaigns/getCampaigns",
@@ -25,7 +22,7 @@ export const createCampaign = createAsyncThunk(
   "campaigns/createCampaigns",
   async (data) => {
     try {
-      const response = await createCampaignApi(loggedInUser.data.id, data);
+      const response = await createCampaignApi(data);
 
       return response;
     } catch (error) {
@@ -34,28 +31,11 @@ export const createCampaign = createAsyncThunk(
   }
 );
 
-export const removeCampaign = createAsyncThunk(
-  "campaigns/removeCampaign",
-  async (campaignId) => {
-    try {
-      const response = await removeCampaignApi(
-        loggedInUser.data.id,
-        campaignId
-      );
-
-      return response.data.deletedCampaign;
-    } catch (error) {
-      console.log("error inside remove campaign thunk", error);
-    }
-  }
-);
-
 export const updateCampaign = createAsyncThunk(
   "campaigns/udpateCampaign",
   async (data) => {
     try {
-      const response = await udpateCampaignApi(
-        loggedInUser.data.id,
+      const response = await updateCampaignApi(
         data.listCampaignId,
         data.values
       );
@@ -63,6 +43,19 @@ export const updateCampaign = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside update campaign thunk", error);
+    }
+  }
+);
+
+export const removeCampaign = createAsyncThunk(
+  "campaigns/removeCampaign",
+  async (campaignId) => {
+    try {
+      const response = await removeCampaignApi(campaignId);
+
+      return response.data.deletedCampaign;
+    } catch (error) {
+      console.log("error inside remove campaign thunk", error);
     }
   }
 );

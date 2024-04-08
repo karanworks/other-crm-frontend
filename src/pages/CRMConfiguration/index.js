@@ -19,35 +19,40 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CRMFieldFormModal from "./CRMFieldFormModal";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import {
-  notifyFieldAdded,
-  notifyFieldRemoved,
-  notifyFieldUpdated,
-} from "./toast";
 import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
 import CRMFormModal from "./CRMFormModal";
+import {
+  getCrmConfigurationData,
+  createCrmField,
+  updateCrmField,
+  removeCrmField,
+} from "../../slices/CRMConfiguration/thunk";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeCampaign,
+  checkPositionLength,
+} from "../../slices/CRMConfiguration/reducer";
 
 const CRMConfiguration = () => {
   // modal for crm field
   const [modal_list, setmodal_list] = useState(false);
   // modal for crm form (form that is shown after show crm button is clicked)
   const [crmFormModalList, setCrmFormModalList] = useState(false);
-  // campaign id of selected campaign
-  const [selectedCampaignId, setSelectedCampaignId] = useState("");
-  // admin's data like users, campaigns, crmfields
-  const [adminUsersData, setAdminUsersData] = useState([]);
-  // all crm fields made this state so that can keep track of if any crm field is added or edited or removed
-  const [crmFields, setCrmFields] = useState([]);
   // modal for deleting a crm field
   const [modal_delete, setmodal_delete] = useState(false);
   // id of crm field made this to store the id of crm field that is going to be deleted or edited
   const [listCrmFieldId, setListCrmFieldId] = useState("");
   // to check whether a crm field is in editing state (it helps in changing the behaviour of submit method of form if a field is being edited then submit method to edit field will be called otherwise submit method to create crm field will be called)
   const [isEditingCrmField, setIsEditingCrmField] = useState(false);
-  // error other than formik errors like crm field with same caption already exist, crm field's position can not be more than total length of crm fields
-  const [customError, setCustomError] = useState("");
+
+  const {
+    crmFields,
+    crmConfigurationData,
+    selectedCampaignId,
+    alreadyExistsError,
+  } = useSelector((state) => state.CRMConfiguration);
+
+  const dispatch = useDispatch();
 
   // to toggle modal for crm field
   function tog_list() {
@@ -65,22 +70,15 @@ const CRMConfiguration = () => {
     setmodal_delete(!modal_delete);
   }
 
-  // to get all the crm fields and campaigns when page is rendered for the first time
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/crm-configuration`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setAdminUsersData(res.data);
-      })
-      .catch((err) => {
-        console.log(
-          "error while fetching crm fields on crm-configuration page ->",
-          err
-        );
-      });
-  }, []);
+    if (alreadyExistsError) {
+      setmodal_list(!modal_list);
+    }
+  }, [alreadyExistsError]);
+
+  useEffect(() => {
+    dispatch(getCrmConfigurationData());
+  }, [dispatch]);
 
   // formik setup
   const crmFieldValidation = useFormik({
@@ -104,8 +102,11 @@ const CRMConfiguration = () => {
     }),
     onSubmit: (values) => {
       isEditingCrmField
-        ? handleCrmFieldUpdate(adminUsersData.id)
-        : handleAddCrmField(values);
+        ? dispatch(
+            updateCrmField({ selectedCampaignId, listCrmFieldId, values })
+          )
+        : dispatch(createCrmField({ selectedCampaignId, values }));
+      setmodal_list(!modal_list);
     },
   });
 
@@ -123,14 +124,13 @@ const CRMConfiguration = () => {
   function crmFieldFormHandleSubmit(e) {
     e.preventDefault();
 
+    dispatch(checkPositionLength(crmFieldValidation.values.position));
+
     if (crmFieldValidation.values.position > crmFields.length + 1) {
-      setCustomError(
-        `CRM Field position should not be more than ${crmFields.length + 1}`
-      );
+      setmodal_list(!modal_list);
       return;
     }
 
-    // calls formik's submit function
     crmFieldValidation.handleSubmit();
 
     return false;
@@ -139,30 +139,7 @@ const CRMConfiguration = () => {
   // to update list of crm field when campaign is changed in select element
   function handleChange(e) {
     campaignTypeValidation.setFieldValue("campaignName", e.target.value);
-    const currentCampaignId = adminUsersData?.campaigns?.filter((campaign) => {
-      if (campaign.campaignName === e.target.value) {
-        return campaign;
-      }
-    });
-
-    // made this variable because cannot use new value of state immediately after state updation
-    const updatedCurrentCampaignId = currentCampaignId[0].id;
-    setSelectedCampaignId(updatedCurrentCampaignId);
-
-    // all fields of particular campaign
-    const crmFieldsOfCampaign = adminUsersData?.campaigns?.filter(
-      (campaign) => {
-        if (campaign.id === updatedCurrentCampaignId) {
-          return campaign;
-        }
-      }
-    );
-
-    const sortedCrmFields = crmFieldsOfCampaign[0]?.crmFields?.sort(
-      (a, b) => a.position - b.position
-    );
-
-    setCrmFields(sortedCrmFields);
+    dispatch(changeCampaign(e.target.value));
   }
 
   function showCampaignFormHandleSubmit(e) {
@@ -170,61 +147,6 @@ const CRMConfiguration = () => {
     campaignTypeValidation.handleSubmit();
 
     return false;
-  }
-
-  // function to add crm field
-  function handleAddCrmField(values) {
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${adminUsersData.id}/campaign/${selectedCampaignId}/crm-field/create`,
-        values,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.status === "failure") {
-          setCustomError(res.message);
-          return;
-        }
-        if (res.status === "positions-updated") {
-          setCrmFields(res.data);
-          setmodal_list(false);
-          notifyFieldAdded();
-          return;
-        }
-
-        if (res.data) {
-          // Update the campaigns array with the new crmFields data
-          const updatedCampaigns = adminUsersData?.campaigns?.map(
-            (campaign) => {
-              if (campaign.id === selectedCampaignId) {
-                // Update the campaign's crmFields array
-                return {
-                  ...campaign,
-                  crmFields: [...campaign.crmFields, res.data],
-                };
-              }
-              return campaign;
-            }
-          );
-
-          setAdminUsersData((prevState) => ({
-            ...prevState,
-            campaigns: updatedCampaigns,
-          }));
-
-          // updating crmFields with latest fields
-          setCrmFields((prevState) => [...prevState, res.data]);
-          notifyFieldAdded();
-
-          setmodal_list(false);
-          !isEditingCampaign && notifyAddedCampaign();
-        }
-      })
-      .catch((error) => {
-        console.log("error while registering user ->", error);
-      });
   }
 
   // to update the values of crmField form when editing the crmField
@@ -240,50 +162,6 @@ const CRMConfiguration = () => {
       readOnly: crmFieldData.readOnly ? "Yes" : "No",
       position: crmFieldData.position,
     });
-  }
-
-  // after making an edit and clicking on update crm field button this function updates the crm field details
-  function handleCrmFieldUpdate(adminId) {
-    console.log("crm fields on updation submit ->", crmFields);
-
-    axios
-      .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${listCrmFieldId}/edit`,
-        crmFieldValidation.values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        if (res.status === "duplicate") {
-          setCustomError(res.message);
-        } else {
-          setCrmFields(res.data);
-
-          setmodal_list(!modal_list);
-          notifyFieldUpdated();
-        }
-      })
-      .catch((err) => {
-        console.log("error while updating", err);
-      });
-  }
-
-  // to delete a crm field
-  function handleDeleteCrmField(adminId, crmFieldId) {
-    axios
-      .delete(
-        `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${selectedCampaignId}/crm-field/${crmFieldId}/delete`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        setCrmFields(res.data);
-        setmodal_delete(false);
-        notifyFieldRemoved();
-      })
-      .catch((err) => {
-        console.log("error while deleting user", err);
-      });
   }
 
   document.title = "CRM Configuration";
@@ -338,14 +216,16 @@ const CRMConfiguration = () => {
                                 Select Campaign Type
                               </option>
 
-                              {adminUsersData?.campaigns?.map((campaign) => (
-                                <option
-                                  value={campaign?.campaignName}
-                                  key={campaign.id}
-                                >
-                                  {campaign?.campaignName}
-                                </option>
-                              ))}
+                              {crmConfigurationData?.campaigns?.map(
+                                (campaign) => (
+                                  <option
+                                    value={campaign?.campaignName}
+                                    key={campaign.id}
+                                  >
+                                    {campaign?.campaignName}
+                                  </option>
+                                )
+                              )}
                             </Input>
 
                             {campaignTypeValidation.touched.campaignType &&
@@ -531,16 +411,17 @@ const CRMConfiguration = () => {
         isEditingCrmField={isEditingCrmField}
         crmFieldFormHandleSubmit={crmFieldFormHandleSubmit}
         selectedCampaignId={selectedCampaignId}
-        customError={customError}
+        alreadyExistsError={alreadyExistsError}
       />
       {/* crm field remove modal */}
       <CRMFieldRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteCrmField={() =>
-          handleDeleteCrmField(adminUsersData.id, listCrmFieldId)
-        }
+        handleDeleteCrmField={() => {
+          dispatch(removeCrmField({ selectedCampaignId, listCrmFieldId }));
+          setmodal_delete(false);
+        }}
       />
       {/* crm form modal */}
       <CRMFormModal

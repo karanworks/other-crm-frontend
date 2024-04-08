@@ -26,51 +26,115 @@ export const postFakeRegister = (data) =>
 // Login Method
 export const postLogin = (data) => api.create(url.POST_LOGIN, data);
 
-// USERS
-export const getUsers = (userId) => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/${userId}/users`);
+// *****************************************************************
+// *************************** USERS *******************************
+// *****************************************************************
+export const getUsers = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/users`);
 };
 
-export const createUser = (userId, data) => {
-  return api.create(
-    `${process.env.REACT_APP_SERVER_URL}/${userId}/user/register`,
-    data
-  );
+export const createUser = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/user/register`, data);
 };
-export const removeUser = (adminId, userId) => {
+export const removeUser = (userId) => {
   return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${userId}/delete`
+    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/delete`
   );
 };
 
-export const updateUser = (adminId, userId, data) => {
+export const updateUser = (userId, data) => {
   return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/${adminId}/user/${userId}/edit`,
+    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/edit`,
     data
   );
 };
-
-// CAMPAIGNS
+// *****************************************************************
+// *************************** CAMPAIGNS ***************************
+// *****************************************************************
 export const getCampaigns = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/campaigns`);
 };
 
-export const createCampaign = (adminId, data) => {
+export const createCampaign = (data) => {
   return api.create(
-    `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/create`,
+    `${process.env.REACT_APP_SERVER_URL}/campaign/create`,
     data
   );
 };
-export const removeCampaign = (adminId, campaignId) => {
+export const removeCampaign = (campaignId) => {
   return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${campaignId}/delete`
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/delete`
   );
 };
 
-export const udpateCampaign = (adminId, campaignId, data) => {
+export const updateCampaign = (campaignId, data) => {
   return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/${adminId}/campaign/${campaignId}/edit`,
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/edit`,
     data
+  );
+};
+
+// *****************************************************************
+// *********************** CRM CONFIGURATION ***********************
+// *****************************************************************
+
+export const getCrmConfigurationData = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/crm-configuration`);
+};
+export const createCrmField = (campaignId, values) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/create`,
+    values
+  );
+};
+
+export const updateCrmField = (campaignId, crmFieldId, values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/${crmFieldId}/edit`,
+    values
+  );
+};
+
+export const removeCrmField = (campaignId, crmFieldId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/crm-field/${crmFieldId}/delete`
+  );
+};
+
+// *****************************************************************
+// **************************** MAPPING ******************************
+// *****************************************************************
+
+export const getMenus = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/mapping`);
+};
+export const getMenusByRole = (roleId) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/role/${roleId}/mapping`);
+};
+export const getRoles = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/roles`);
+};
+export const changePermission = ({ menuId, subMenuId, roleId }) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/mapping`,
+    { menuId, subMenuId, roleId }
+  );
+};
+
+export const createRole = (values) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/role/create`, values);
+};
+
+export const updateRole = (roleId, values) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/edit`,
+    values
+  );
+};
+
+export const removeRole = (roleId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/role/${roleId}/delete`
   );
 };
 

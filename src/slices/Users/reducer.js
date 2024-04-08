@@ -49,7 +49,7 @@ const usersSlice = createSlice({
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
       } else {
-        const updatedUserId = action.payload.id;
+        const updatedUserId = action.payload.data.updatedUser.id;
         state.users = state.users.map((user) => {
           if (user.id == updatedUserId) {
             user = action.payload.data.updatedUser;
