@@ -15,27 +15,33 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import RoleFormModal from "./RoleFormModal";
-import MenuList from "./MenuList";
-import { useSelector } from "react-redux";
-import axios from "axios";
 import RoleRemoveModal from "./RoleRemoveModal";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getMenus,
+  getMenusByRole,
+  changePermission,
+  getRoles,
+  createRole,
+  updateRole,
+  removeRole,
+} from "../../slices/Mapping/thunk";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [checkedSubmenus, setCheckedSubmenus] = useState([]);
-  const [roles, setRoles] = useState([]);
   const [editRole, setEditRole] = useState(false);
-  // const [editRoleId, setEditRoleId] = useState(0);
   const [selectedRoleId, setSelectedRoleId] = useState(0);
   const [modal_delete, setmodal_delete] = useState(false);
-  const [menusByRole, setMenusByRole] = useState([]);
 
-  const user = useSelector((state) => state.Login.user);
+  const { user } = useSelector((state) => state.Login.user);
+  const { roles, menus, menusByRole } = useSelector((state) => state.Mapping);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const checkedSubmenuLabels = [];
 
-    user.menus.forEach((menu) => {
+    menus.forEach((menu) => {
       if (Array.isArray(menu.subItems)) {
         menu.subItems.forEach((subItem) => {
           const existsInMenuByRole =
@@ -59,20 +65,12 @@ const Mapping = () => {
   }, [menusByRole]);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/roles`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setRoles(res.data);
-      })
-      .catch((error) => {
-        console.log("error while fetching roles", error);
-      });
-  }, []);
+    dispatch(getRoles());
+    dispatch(getMenus());
+  }, [dispatch]);
 
   // Function to handle checkbox change
-  const handleCheckboxChange = (e, menuId, submenuId) => {
+  const handleCheckboxChange = (e, menuId, subMenuId) => {
     const { checked, id } = e.target;
     if (checked) {
       setCheckedSubmenus((prevChecked) => [...prevChecked, id]);
@@ -82,8 +80,13 @@ const Mapping = () => {
       );
     }
 
-    // Call handlePermissionChange with menuId and submenuId
-    handlePermissionChange(menuId, submenuId);
+    dispatch(
+      changePermission({
+        menuId,
+        subMenuId,
+        roleId: selectedRoleId,
+      })
+    );
   };
 
   // toggles register / edit role modal
@@ -106,44 +109,15 @@ const Mapping = () => {
     }),
     onSubmit: (values) => {
       editRole
-        ? handleRoleUpdate(selectedRoleId, values)
-        : handleAddRole(values);
+        ? dispatch(updateRole({ roleId: selectedRoleId, values })) // handleRoleUpdate(selectedRoleId, values)
+        : dispatch(createRole(values)); // handleAddRole(values);
     },
   });
-
-  function handleAddRole(values) {
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/create`,
-        values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        setRoles((prev) => [...prev, res.data]);
-      })
-      .catch((error) => {
-        console.log("error while creating user ->", error);
-      });
-  }
 
   function handleRoleChange(e) {
     roleValidation.setFieldValue("name", e.target.value);
     setSelectedRoleId(e.target.value);
-    handleGetMenusByRole(e.target.value);
-  }
-
-  function handleGetMenusByRole(roleId) {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/permission`,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        setMenusByRole(res.data);
-      })
-      .catch((error) => {
-        console.log("error while fetching menus by role ->", error);
-      });
+    dispatch(getMenusByRole(e.target.value));
   }
 
   function handleEditRole(e) {
@@ -151,7 +125,6 @@ const Mapping = () => {
     setmodal_list(!modal_list);
 
     const matchingRole = roles.find((role) => role.id == selectedRoleId);
-    console.log("matching role name", matchingRole.name);
 
     roleValidation.setValues({
       name: matchingRole.name,
@@ -159,66 +132,6 @@ const Mapping = () => {
 
     // Set the selectedRoleId directly to match the edited role
     setSelectedRoleId(matchingRole.id);
-  }
-
-  function handleRoleUpdate(roleId, values) {
-    axios
-      .patch(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/edit`,
-        values,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        const updatedRoles = roles.map((role) => {
-          if (role.id == roleId) {
-            role.name = res.data.name;
-            return role;
-          } else {
-            return role;
-          }
-        });
-
-        setRoles(updatedRoles);
-      })
-      .catch((err) => {
-        console.log("error while updating role", err);
-      });
-  }
-
-  function handleDeleteRole(roleId) {
-    axios
-      .delete(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${roleId}/delete`,
-        { withCredentials: true }
-      )
-      .then((res) => {
-        const updatedRoles = roles.filter((role) => role.id !== res.data.id);
-        setRoles(updatedRoles);
-        setmodal_delete(false);
-
-        console.log("deleted role ->", res.data);
-      })
-      .catch((err) => {
-        console.log("error while deleting role", err);
-      });
-  }
-
-  function handlePermissionChange(menuId, subMenuId) {
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/${user.id}/role/${selectedRoleId}/permission`,
-        {
-          menuId,
-          subMenuId,
-          roleId: selectedRoleId,
-        }
-      )
-      .then((res) => {
-        console.log("permission changed successfuly", res);
-      })
-      .catch((error) => {
-        console.log("error while changing route permissions ->".error);
-      });
   }
 
   function formHandleSubmit(e) {
@@ -339,7 +252,7 @@ const Mapping = () => {
                         >
                           <thead className="table-light">
                             <tr>
-                              {user.menus?.map((menu) => (
+                              {menus?.map((menu) => (
                                 <th data-sort="home" key={menu.id}>
                                   {menu.label}
                                 </th>
@@ -349,7 +262,7 @@ const Mapping = () => {
                           <tbody className="list form-check-all">
                             <tr>
                               {/* menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha */}
-                              {user.menus.map((menu) => (
+                              {menus.map((menu) => (
                                 <td
                                   className="campaign-management"
                                   style={{
@@ -433,7 +346,10 @@ const Mapping = () => {
       <RoleRemoveModal
         modal_delete={modal_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteRole={() => handleDeleteRole(selectedRoleId)}
+        handleDeleteRole={() => {
+          dispatch(removeRole(selectedRoleId));
+          setmodal_delete(false);
+        }}
       />
     </React.Fragment>
   );

@@ -37,17 +37,17 @@ const campaignSlice = createSlice({
     });
 
     builder.addCase(updateCampaign.fulfilled, (state, action) => {
-      const updatedUserId = action.payload.data.id;
+      const udpatedCampaignId = action.payload.data.updatedCampaign.id;
 
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
       } else {
-        state.campaigns = state.campaigns.map((user) => {
-          if (user.id == updatedUserId) {
-            user = action.payload.data;
-            return user;
+        state.campaigns = state.campaigns.map((campaign) => {
+          if (campaign.id == udpatedCampaignId) {
+            campaign = action.payload.data.updatedCampaign;
+            return campaign;
           } else {
-            return user;
+            return campaign;
           }
         });
 
