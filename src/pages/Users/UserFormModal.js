@@ -21,10 +21,10 @@ function UserFormModal({
   alreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
   handleRoleChange,
   roles,
-  campaigns,
+  selectedCampaigns,
+  setSelectedCampaigns,
+  campaignOptions,
 }) {
-  const [selectedCampaigns, setSelectedCampaigns] = useState(null);
-
   // function handleMulti(selectedMulti) {
   //   setselectedMulti(selectedMulti);
   // }
@@ -41,10 +41,6 @@ function UserFormModal({
   //   { value: "Choices 3", label: "Choices 3" },
   //   { value: "Choices 4", label: "Choices 4" },
   // ];
-
-  const SingleOptions = campaigns.map((campaign) => {
-    return { value: campaign.id, label: campaign.campaignName };
-  });
 
   return (
     <Modal
@@ -233,7 +229,7 @@ function UserFormModal({
                 );
                 validation.setFieldTouched("campaigns", true);
               }}
-              options={SingleOptions}
+              options={campaignOptions}
             />
             {validation.touched.campaigns && validation.errors.campaigns ? (
               <FormFeedback type="invalid">

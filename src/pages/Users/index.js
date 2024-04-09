@@ -40,6 +40,8 @@ const Users = () => {
   const [roles, setRoles] = useState([]);
   // fetching all the campaigns
   const [campaigns, setCampaigns] = useState([]);
+  // campaigns that a user is in
+  const [selectedCampaigns, setSelectedCampaigns] = useState(null);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
 
@@ -55,6 +57,10 @@ const Users = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
+
+  const campaignOptions = campaigns.map((campaign) => {
+    return { value: campaign.id, label: campaign.campaignName };
+  });
 
   useEffect(() => {
     axios
@@ -106,9 +112,7 @@ const Users = () => {
       email: Yup.string().required("Please enter CRM Email"),
       password: Yup.string().required("Please enter CRM Password"),
       agentMobile: Yup.string().required("Please enter Agent Mobile"),
-      campaigns: Yup.array()
-        .min(1)
-        .required("Please select at least one campaign"),
+      campaigns: Yup.array().required("Please select at least one campaign"),
     }),
     onSubmit: (values) => {
       isEditingUser
@@ -121,7 +125,11 @@ const Users = () => {
   function formHandleSubmit(e) {
     e.preventDefault();
     console.log("formik values ->", validation);
+
     validation.handleSubmit();
+  
+
+    console.log("users after updation -.", users);
 
     setmodal_list(false);
     return false;
@@ -140,12 +148,21 @@ const Users = () => {
     // setting the value of role according to roleId because in select element roleId is used as value
     const roleName = roles.find((role) => role.id === userData.roleId);
 
+    const campaignsIdForFormikValue = userData.campaigns.map((c) => c.id);
+
+    const campaignNamesForOptions = userData.campaigns.map((c) => {
+      return { value: c.id, label: c.campaignName };
+    });
+
+    setSelectedCampaigns(campaignNamesForOptions);
+
     validation.setValues({
       name: userData.username,
       email: userData.email,
       password: userData.password,
       agentMobile: userData.agentMobile,
       roleId: roleName.id,
+      campaigns: campaignsIdForFormikValue,
     });
   }
 
@@ -335,6 +352,9 @@ const Users = () => {
         handleRoleChange={handleRoleChange}
         roles={roles}
         campaigns={campaigns}
+        selectedCampaigns={selectedCampaigns}
+        setSelectedCampaigns={setSelectedCampaigns}
+        campaignOptions={campaignOptions}
       />
 
       {/* Remove Modal */}
