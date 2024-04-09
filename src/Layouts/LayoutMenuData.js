@@ -13,6 +13,7 @@ const Navdata = () => {
   const userData = getLoggedinUser();
   const menuDataOfUser = userData.data.menus;
 
+
   //state data
   const [isHome, setIsHome] = useState(false);
   const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
@@ -22,6 +23,9 @@ const Navdata = () => {
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [isQuality, setIsQuality] = useState(false);
   const [isAnalytics, setIsAnalytics] = useState(false);
+  const [isWork, setIsWork] = useState(false);
+
+  //
   const [isAuth, setIsAuth] = useState(false);
   const [isPages, setIsPages] = useState(false);
 
@@ -68,6 +72,9 @@ const Navdata = () => {
     if (iscurrentState !== "Analytics") {
       setIsAnalytics(false);
     }
+    if (iscurrentState !== "Work") {
+      setIsWork(false);
+    }
 
     if (iscurrentState !== "Auth") {
       setIsAuth(false);
@@ -86,6 +93,7 @@ const Navdata = () => {
     isMonitoring,
     isQuality,
     isAnalytics,
+    isWork,
     isAuth,
     isPages,
   ]);
@@ -98,6 +106,7 @@ const Navdata = () => {
     Monitoring: isMonitoring,
     Quality: isQuality,
     Analytics: isAnalytics,
+    Work: isWork,
   };
 
   const handleClick = (menuLabelId) => {
@@ -130,6 +139,10 @@ const Navdata = () => {
           updateIconSidebar(e);
         case "Analytics":
           setIsAnalytics(!isAnalytics);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "Work":
+          setIsWork(!isWork);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }
@@ -400,6 +413,7 @@ const Navdata = () => {
       ],
     },
   ];
+
 
   // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
   return <React.Fragment>{dynamicMenuData}</React.Fragment>;

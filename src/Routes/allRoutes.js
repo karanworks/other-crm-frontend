@@ -18,6 +18,7 @@ import Home from "../pages/Home";
 import Campaign from "../pages/Campaign";
 import CRMConfiguration from "../pages/CRMConfiguration";
 import Mapping from "../pages/Mapping";
+import CRM from "../pages/CRM";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
@@ -25,6 +26,7 @@ const authProtectedRoutes = [
   { path: "/campaign", component: <Campaign /> },
   { path: "/crm-configuration", component: <CRMConfiguration /> },
   { path: "/mapping", component: <Mapping /> },
+  { path: "/crm", component: <CRM /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },
