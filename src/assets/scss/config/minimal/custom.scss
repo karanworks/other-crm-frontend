@@ -5,3 +5,44 @@ Website: https://themesbrand.com/
 Contact: support@themesbrand.com
 File: Custom Css File
 */
+
+//************************* DIALPAD *************************
+// .dialpad-input-container {
+//   height: 50px;
+//   background-color: "gray";
+// }
+
+.dialpad-container {
+  margin-top: 10px;
+}
+
+.dialpad-mobile-number-delete-btn {
+  &:hover {
+    background: none;
+  }
+}
+
+.dialpad-key-container {
+  width: 50px;
+  height: 50px;
+}
+
+.dialpad-dial-key-container {
+  margin-top: 10px;
+
+  .dialpad-dial-key {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.oncall-control-btn {
+  .oncall-btn-icon {
+    color: #3caae5;
+  }
+  &:hover {
+    .oncall-btn-icon {
+      color: white;
+    }
+  }
+}

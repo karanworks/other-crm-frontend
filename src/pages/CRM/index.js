@@ -8,9 +8,35 @@ import CRMForm from "./CRMForm";
 import CallLogs from "./CallLogs";
 import Campaigns from "./Campaigns";
 import Modes from "./Modes";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { getCampaigns } from "../../slices/Campaigns/thunk";
 
 const CRM = () => {
   document.title = "CRM";
+
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [selectedCampaignCrmFields, setSelectedCampaignCrmFields] =
+    useState(null);
+
+  const { campaigns } = useSelector((state) => state.Campaigns);
+
+  const dispatch = useDispatch();
+
+  function handleSelectCampaign(selectedCampaign) {
+    setSelectedCampaign(selectedCampaign);
+
+    const campaignWithFields = campaigns.find((campaign) => {
+      return selectedCampaign.value === campaign.id;
+    });
+
+    setSelectedCampaignCrmFields(campaignWithFields.crmFields);
+  }
+
+  useEffect(() => {
+    dispatch(getCampaigns());
+  }, []);
 
   return (
     <React.Fragment>
@@ -18,21 +44,30 @@ const CRM = () => {
         <Container fluid>
           <BreadCrumb title="CRM" pageTitle="Work" />
           <Row>
-            <Col lg={2}>
+            <Col lg={3}>
               <Row>
                 <Modes />
               </Row>
               <Row>
-                <Campaigns />
+                <Campaigns
+                  campaigns={campaigns}
+                  selectedCampaign={selectedCampaign}
+                  handleSelectCampaign={handleSelectCampaign}
+                />
               </Row>
               <Row>
-                <CallLogs />
+                <div>
+                  <CallLogs />
+                </div>
               </Row>
             </Col>
-            <Col lg={8}>
-              <CRMForm />
+            <Col lg={6}>
+              <CRMForm
+                selectedCampaignCrmFields={selectedCampaignCrmFields}
+                selectedCampaign={selectedCampaign}
+              />
             </Col>
-            <Col lg={2}>
+            <Col lg={3}>
               <Row>
                 <Dialpad />
               </Row>

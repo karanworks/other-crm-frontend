@@ -138,6 +138,14 @@ export const removeRole = (roleId) => {
   );
 };
 
+// *****************************************************************
+// ***************************** CRM *******************************
+// *****************************************************************
+
+export const createCrmFormData = (values) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/crm/create`, values);
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

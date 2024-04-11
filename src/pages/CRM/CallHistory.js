@@ -65,17 +65,38 @@ const CallHistory = () => {
       >
         <h4 className="card-title mb-0 flex-grow-1">Today's Call History</h4>
       </CardHeader>
-      <CardBody className="p-0" style={{ height: "280px" }}>
-        <div className="table-responsive table-card" style={{ margin: "0" }}>
+      <CardBody
+        className="p-0"
+        style={{
+          height: "280px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          className="table-responsive table-card"
+          style={{
+            margin: "0",
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
           <table className="table table-borderless table-nowrap align-middle mb-0">
             <tbody>
               {(teamMembers || []).map((item, key) => (
-                <tr key={key}>
+                <tr
+                  key={key}
+                  className="d-flex "
+                  style={{
+                    justifyContent: "space-between",
+                    paddingBlock: "3px",
+                  }}
+                >
                   <td
                     className="d-flex"
                     style={{
-                      paddingLeft: "0",
-                      paddingRight: "0",
+                      padding: "0",
                     }}
                   >
                     <img
@@ -89,7 +110,11 @@ const CallHistory = () => {
                     </div>
                   </td>
 
-                  <td>
+                  <td
+                    style={{
+                      padding: "0",
+                    }}
+                  >
                     <div style={{ display: "flex" }}>
                       <Button
                         size="sm"
@@ -105,7 +130,7 @@ const CallHistory = () => {
                         }}
                       >
                         <FeatherIcon
-                          icon="phone-call"
+                          icon="phone"
                           style={{
                             width: "13px",
                             height: "13px",
