@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { createCrmFormData } from "../../slices/CRM/thunk";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import {
   Card,
   CardBody,
@@ -14,33 +17,12 @@ import {
 import { useDispatch } from "react-redux";
 import selectCampaignGif from "./select-campaign.gif";
 
-const CRMForm = ({ selectedCampaignCrmFields, selectedCampaign }) => {
-  const fields = [
-    {
-      id: 1,
-      caption: "Name",
-      type: "text",
-      required: "yes",
-      readOnly: "no",
-    },
-    {
-      id: 2,
-      caption: "Mobile",
-      type: "number",
-      required: "yes",
-      readOnly: "no",
-    },
-    {
-      id: 3,
-      caption: "Address",
-      type: "text",
-      required: "yes",
-      readOnly: "no",
-    },
-  ];
-
-  const [formData, setFormData] = useState({});
-
+const CRMForm = ({
+  selectedCampaignCrmFields,
+  selectedCampaign,
+  formData,
+  setFormData,
+}) => {
   const dispatch = useDispatch();
 
   const handleInputChange = (fieldCaption, value) => {
@@ -52,11 +34,23 @@ const CRMForm = ({ selectedCampaignCrmFields, selectedCampaign }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(createCrmFormData(formData));
-    // Make your API call using formData
-  };
+    dispatch(
+      createCrmFormData({ ...formData, campaignId: selectedCampaign.value })
+    );
 
-  console.log("selected campaign in crm form ->", selectedCampaign);
+    toast.success("Form has been submitted !", {
+      position: "bottom-center",
+      autoClose: 3000,
+      theme: "colored",
+    });
+
+    setFormData({});
+    // Clear input values
+    const inputElements = document.querySelectorAll("input");
+    inputElements.forEach((input) => {
+      input.value = "";
+    });
+  };
 
   const renderFormFields = () => {
     const totalFields = selectedCampaignCrmFields?.length;
@@ -70,7 +64,7 @@ const CRMForm = ({ selectedCampaignCrmFields, selectedCampaign }) => {
       const field2 = selectedCampaignCrmFields[rowIndex + 1];
 
       formFields.push(
-        <Row key={i}>
+        <Row key={i} style={{ marginBottom: "10px" }}>
           <Col>
             <Label>{field1.caption}</Label>
             <Input
@@ -122,13 +116,16 @@ const CRMForm = ({ selectedCampaignCrmFields, selectedCampaign }) => {
           <div style={{ marginTop: "30px" }}>
             <Form onSubmit={handleSubmit}>
               {renderFormFields()}
-              <Button
-                color="primary"
-                type="submit"
-                style={{ marginTop: "10px" }}
-              >
-                Submit
-              </Button>
+
+              <div className="d-flex justify-content-end">
+                <Button
+                  color="primary"
+                  type="submit"
+                  style={{ marginTop: "10px" }}
+                >
+                  Submit
+                </Button>
+              </div>
             </Form>
           </div>
         ) : (
@@ -141,6 +138,7 @@ const CRMForm = ({ selectedCampaignCrmFields, selectedCampaign }) => {
           </div>
         )}
       </CardBody>
+      <ToastContainer />
     </Card>
   );
 };

@@ -19,6 +19,7 @@ const CRM = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [selectedCampaignCrmFields, setSelectedCampaignCrmFields] =
     useState(null);
+  const [formData, setFormData] = useState({});
 
   const { campaigns } = useSelector((state) => state.Campaigns);
 
@@ -32,6 +33,8 @@ const CRM = () => {
     });
 
     setSelectedCampaignCrmFields(campaignWithFields.crmFields);
+    setFormData({});
+    console.log("changed the campaign");
   }
 
   useEffect(() => {
@@ -65,6 +68,8 @@ const CRM = () => {
               <CRMForm
                 selectedCampaignCrmFields={selectedCampaignCrmFields}
                 selectedCampaign={selectedCampaign}
+                formData={formData}
+                setFormData={setFormData}
               />
             </Col>
             <Col lg={3}>

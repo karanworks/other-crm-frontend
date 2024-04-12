@@ -79,7 +79,6 @@ const Users = () => {
       })
       .then((res) => {
         setCampaigns(res.data.campaigns);
-        console.log("campaigns inside users page ->", res.data);
       })
       .catch((error) => {
         console.log("error while fetching roles ->", error);
@@ -127,7 +126,6 @@ const Users = () => {
     console.log("formik values ->", validation);
 
     validation.handleSubmit();
-  
 
     console.log("users after updation -.", users);
 

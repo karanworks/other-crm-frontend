@@ -139,10 +139,26 @@ export const removeRole = (roleId) => {
 };
 
 // *****************************************************************
+// *********************** DISPOSITION *****************************
+// *****************************************************************
+
+export const getDispositions = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/dispositions/`);
+};
+export const createDisposition = ({ campaignId, options, dispositionName }) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/disposition/create`, {
+    campaignId,
+    options,
+    dispositionName,
+  });
+};
+
+// *****************************************************************
 // ***************************** CRM *******************************
 // *****************************************************************
 
 export const createCrmFormData = (values) => {
+  console.log("values while creating form data in backend helper ->", values);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/crm/create`, values);
 };
 
