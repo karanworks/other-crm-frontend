@@ -19,20 +19,17 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import DispositionFormModal from "./DispositionFormModal";
-import CRMFieldRemoveModal from "./CRMFieldRemoveModal";
-import CRMFormModal from "./CRMFormModal";
-import {
-  getCrmConfigurationData,
-  createCrmField,
-  updateCrmField,
-  removeCrmField,
-} from "../../slices/CRMConfiguration/thunk";
+import CRMFieldRemoveModal from "./DispositionRemoveModal";
+
 import {
   getDispositions,
   createDisposition,
+  updateDisposition,
+  removeDisposition,
 } from "../../slices/Disposition/thunk";
 import { useDispatch, useSelector } from "react-redux";
 import { changeCampaign } from "../../slices/Disposition/reducer";
+import { toArray } from "lodash";
 
 const Disposition = () => {
   // modal for crm field
@@ -42,9 +39,11 @@ const Disposition = () => {
   // modal for deleting a crm field
   const [modal_delete, setmodal_delete] = useState(false);
   // id of crm field made this to store the id of crm field that is going to be deleted or edited
-  const [listCrmFieldId, setListCrmFieldId] = useState("");
+  // const [listCrmFieldId, setListCrmFieldId] = useState("");
+  const [listDispositionId, setListDispositionId] = useState("");
   // to check whether a crm field is in editing state (it helps in changing the behaviour of submit method of form if a field is being edited then submit method to edit field will be called otherwise submit method to create crm field will be called)
-  const [isEditingCrmField, setIsEditingCrmField] = useState(false);
+  // const [isEditingCrmField, setIsEditingCrmField] = useState(false);
+  const [isEditingDisposition, setIsEditingDisposition] = useState(false);
   // badges
   const [inputBadges, setInputBadges] = useState([]);
 
@@ -55,7 +54,7 @@ const Disposition = () => {
     alreadyExistsError,
   } = useSelector((state) => state.CRMConfiguration);
 
-  const { dispositionsData, selectedCampaignId } = useSelector(
+  const { dispositions, dispositionsData, selectedCampaignId } = useSelector(
     (state) => state.Disposition
   );
 
@@ -64,7 +63,7 @@ const Disposition = () => {
   // to toggle modal for crm field
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingCrmField(false);
+    setIsEditingDisposition(false);
   }
 
   // to toggle modal for crm form (form that is shown after clicking show crm button)
@@ -98,19 +97,30 @@ const Disposition = () => {
       options: Yup.array().required("Please enter atleast 1 item"),
     }),
     onSubmit: (values) => {
-      // isEditingCrmField
+      // isEditingDisposition
       //   ? dispatch(
       //       updateCrmField({ selectedCampaignId, listCrmFieldId, values })
       //     )
       //   : dispatch(createCrmField({ selectedCampaignId, values }));
-
       const { dispositionName, options } = values;
 
-      dispatch(
-        createDisposition({ selectedCampaignId, dispositionName, options })
-      );
+      isEditingDisposition
+        ? dispatch(
+            updateDisposition({
+              selectedCampaignId,
+              listDispositionId,
+              dispositionName,
+              options,
+            })
+          )
+        : dispatch(
+            createDisposition({ selectedCampaignId, dispositionName, options })
+          );
 
-      // console.log("disposition form values", values);
+      console.log("disposition form values", values);
+      // dispatch(
+      //   createDisposition({ selectedCampaignId, dispositionName, options })
+      // );
       setmodal_list(!modal_list);
     },
   });
@@ -146,18 +156,26 @@ const Disposition = () => {
   }
 
   // to update the values of crmField form when editing the crmField
-  function handleEditCrmField(crmFieldData) {
-    setIsEditingCrmField(true);
+  function handleEditCrmField(dispositionData) {
+    setIsEditingDisposition(true);
     setmodal_list(!modal_list);
-    setListCrmFieldId(crmFieldData.id);
+    setListDispositionId(dispositionData.id);
+
+    setInputBadges(JSON.parse(dispositionData.options));
 
     dispositionFormValidation.setValues({
-      dispositionName: crmFieldData.caption,
-      options: crmFieldData.type,
+      dispositionName: dispositionData.dispositionName,
+      options: dispositionData.options,
+    });
+
+    // Clear input values
+    const inputElements = document.querySelectorAll("input");
+    inputElements.forEach((input) => {
+      input.value = "";
     });
   }
 
-  document.title = "CRM Configuration";
+  document.title = "Disposition";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -285,7 +303,7 @@ const Disposition = () => {
                               Disposition Name
                             </th>
                             <th className="sort" data-sort="type">
-                              Fields
+                              Options
                             </th>
                             {/* <th className="sort" data-sort="required">
                               Required
@@ -302,8 +320,8 @@ const Disposition = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {crmFields?.map((crmField) => (
-                            <tr key={crmField.id}>
+                          {dispositions?.map((disposition) => (
+                            <tr key={disposition.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -315,16 +333,29 @@ const Disposition = () => {
                                 </div>
                               </th>
                               <td className="dispositionName">
-                                {crmField?.caption}
+                                {disposition?.dispositionName}
                               </td>
-                              <td className="fields">{crmField?.type}</td>
-                              {/* <td className="required">
-                                {crmField?.required ? "yes" : "no"}
-                              </td> */}
-                              {/* <td className="readOnly">
-                                {crmField?.readOnly ? "yes" : "No"}
-                              </td> */}
-                              {/* <td className="position">{crmField?.position}</td> */}
+                              <td className="options">
+                                {disposition?.options &&
+                                Array.isArray(JSON.parse(disposition.options))
+                                  ? JSON.parse(disposition.options).map(
+                                      (option, index) => (
+                                        <span
+                                          key={index}
+                                          className="d-inline-block bg-primary fs-12 rounded"
+                                          style={{
+                                            padding: "5px",
+                                            margin: "2px",
+                                            color: "white",
+                                          }}
+                                        >
+                                          {option}
+                                        </span>
+                                      )
+                                    )
+                                  : null}
+                              </td>
+
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="edit">
@@ -333,7 +364,7 @@ const Disposition = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() =>
-                                        handleEditCrmField(crmField)
+                                        handleEditCrmField(disposition)
                                       }
                                     >
                                       Edit
@@ -345,7 +376,7 @@ const Disposition = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
-                                        setListCrmFieldId(crmField.id);
+                                        setListDispositionId(disposition.id);
                                         setmodal_delete(true);
                                       }}
                                     >
@@ -386,7 +417,7 @@ const Disposition = () => {
         modal_list={modal_list}
         tog_list={tog_list}
         dispositionFormValidation={dispositionFormValidation}
-        isEditingCrmField={isEditingCrmField}
+        isEditingDisposition={isEditingDisposition}
         handleDispositionFormSubmit={handleDispositionFormSubmit}
         selectedCampaignId={selectedCampaignId}
         alreadyExistsError={alreadyExistsError}
@@ -398,8 +429,10 @@ const Disposition = () => {
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteCrmField={() => {
-          dispatch(removeCrmField({ selectedCampaignId, listCrmFieldId }));
+        handleDeleteDisposition={() => {
+          dispatch(
+            removeDisposition({ selectedCampaignId, listDispositionId })
+          );
           setmodal_delete(false);
         }}
       />

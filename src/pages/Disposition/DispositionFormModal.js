@@ -17,7 +17,7 @@ function DispositionFormModal({
   tog_list, // to change modal state
   handleDispositionFormSubmit, // submit function for form
   dispositionFormValidation, // to get the values from formik
-  isEditingCrmField, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  isEditingDisposition, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   alreadyExistsError,
   inputBadges,
   setInputBadges,
@@ -60,7 +60,6 @@ function DispositionFormModal({
   }
 
   function handleInputFocus() {
-    console.log("input ref ->", inputRef.current);
     inputRef.current.focus();
   }
 
@@ -78,8 +77,7 @@ function DispositionFormModal({
           tog_list();
         }}
       >
-        {" "}
-        Create Field{" "}
+        {isEditingDisposition ? "Update Disposition" : "Create Disposition"}
       </ModalHeader>
       <Form
         className="tablelist-form"
@@ -132,11 +130,8 @@ function DispositionFormModal({
           </div>
 
           <div className="mb-3">
-            <Label
-              htmlFor="choices-text-unique-values"
-              className="form-label text-muted"
-            >
-              Items
+            <Label htmlFor="choices-text-unique-values" className="form-label">
+              Options
             </Label>
 
             <div
@@ -186,7 +181,7 @@ function DispositionFormModal({
           {/* <button onClick={handleInputFocus}>Focus input</button> */}
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
-              {isEditingCrmField ? "Update Disposition" : "Create Disposition"}
+              {isEditingDisposition ? "Update " : "Create "}
             </button>
           </div>
         </ModalBody>

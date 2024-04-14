@@ -1,9 +1,9 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function CRMFieldRemoveModal({
+function DispositionRemoveModal({
   modal_delete, // delete user confirmation modal
   setmodal_delete, // change user confirmation modal state
-  handleDeleteCrmField, // function to delete a user
+  handleDeleteDisposition, // function to delete a user
 }) {
   return (
     <Modal
@@ -50,7 +50,7 @@ function CRMFieldRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteCrmField}
+            onClick={handleDeleteDisposition}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +60,4 @@ function CRMFieldRemoveModal({
   );
 }
 
-export default CRMFieldRemoveModal;
+export default DispositionRemoveModal;
