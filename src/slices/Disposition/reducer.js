@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDispositions, createDisposition } from "./thunk";
+import {
+  getDispositions,
+  createDisposition,
+  updateDisposition,
+  removeDisposition,
+} from "./thunk";
 
 export const initialState = {
   dispositionsData: null,
@@ -25,11 +30,11 @@ const dispositionSlice = createSlice({
         if (dispositionsOfCamapaign && dispositionsOfCamapaign.dispositions) {
           state.dispositions = dispositionsOfCamapaign.dispositions;
         } else {
-          state.dispositions = []; // Set an empty array if CRM fields are missing
+          state.dispositions = []; // Set an empty array if Dispositions are missing
         }
       } else {
         state.selectedCampaignId = null; // Set selectedCampaignId to null if campaign is not found
-        state.dispositions = []; // Set crmFields to empty array if campaign is not found
+        state.dispositions = []; // Set Dispositions to empty array if disposition is not found
       }
     },
   },
@@ -39,6 +44,23 @@ const dispositionSlice = createSlice({
         "disposition payload in create disposition reducer ->",
         action.payload
       );
+      state.dispositions = [...state.dispositions, action.payload.data];
+    });
+    builder.addCase(updateDisposition.fulfilled, (state, action) => {
+      console.log(
+        "disposition payload in update disposition reducer ->",
+        action.payload
+      );
+    });
+    builder.addCase(removeDisposition.fulfilled, (state, action) => {
+      console.log(
+        "disposition payload in remove disposition reducer ->",
+        action.payload
+      );
+
+      state.dispositions = state.dispositions.filter((disposition) => {
+        return disposition.id !== action.payload.data.id;
+      });
     });
     builder.addCase(getDispositions.fulfilled, (state, action) => {
       console.log(

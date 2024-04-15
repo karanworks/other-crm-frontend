@@ -152,6 +152,29 @@ export const createDisposition = ({ campaignId, options, dispositionName }) => {
     dispositionName,
   });
 };
+export const updateDisposition = ({
+  campaignId,
+  dispositionId,
+  dispositionName,
+  options,
+}) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/disposition/${dispositionId}/edit`,
+    {
+      dispositionName,
+      options,
+    }
+  );
+};
+export const removeDisposition = ({ campaignId, dispositionId }) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/disposition/${dispositionId}/delete`,
+    {
+      campaignId,
+      dispositionId,
+    }
+  );
+};
 
 // *****************************************************************
 // ***************************** CRM *******************************
