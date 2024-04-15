@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import {
   getDispositions,
   createDisposition,
@@ -45,13 +46,35 @@ const dispositionSlice = createSlice({
         action.payload
       );
       state.dispositions = [...state.dispositions, action.payload.data];
+
+      toast.success("Disposition has been added !", {
+        position: "bottom-center",
+        autoClose: 3000,
+        theme: "colored",
+      });
     });
+
     builder.addCase(updateDisposition.fulfilled, (state, action) => {
       console.log(
         "disposition payload in update disposition reducer ->",
         action.payload
       );
+
+      state.dispositions = state.dispositions.map((disposition) => {
+        if (disposition.id === action.payload.data.id) {
+          return action.payload.data;
+        } else {
+          return disposition;
+        }
+      });
+
+      toast.success("Disposition has been updated !", {
+        position: "bottom-center",
+        autoClose: 3000,
+        theme: "colored",
+      });
     });
+
     builder.addCase(removeDisposition.fulfilled, (state, action) => {
       console.log(
         "disposition payload in remove disposition reducer ->",
@@ -61,7 +84,14 @@ const dispositionSlice = createSlice({
       state.dispositions = state.dispositions.filter((disposition) => {
         return disposition.id !== action.payload.data.id;
       });
+
+      toast.error("Disposition has been removed !", {
+        position: "bottom-center",
+        autoClose: 3000,
+        theme: "colored",
+      });
     });
+
     builder.addCase(getDispositions.fulfilled, (state, action) => {
       console.log(
         "disposition payload in get position reducer ->",

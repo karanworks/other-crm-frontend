@@ -30,10 +30,12 @@ function DispositionFormModal({
   function handleInputOnKeyPress(e) {
     if (e.key === "Enter") {
       setInputBadges((prev) => [...prev, e.target.value]);
+
       dispositionFormValidation.setFieldValue("options", [
         ...inputBadges,
         e.target.value,
       ]);
+      dispositionFormValidation.setFieldValue("options", "");
     }
 
     if (e.key === "Backspace") {
@@ -45,11 +47,6 @@ function DispositionFormModal({
           updatedBadges.pop();
           return updatedBadges;
         });
-
-        const filteredBadges = inputBadges.filter(
-          (badge) => badge !== e.target.value
-        );
-        dispositionFormValidation.setFieldValue("options", filteredBadges);
       }
     }
   }
@@ -81,12 +78,13 @@ function DispositionFormModal({
       </ModalHeader>
       <Form
         className="tablelist-form"
-        onSubmit={(e) =>
-          handleDispositionFormSubmit(
-            e,
-            dispositionFormValidation.dispositionName
-          )
-        }
+        // onSubmit={(e) => {
+        //   handleDispositionFormSubmit(
+        //     e,
+        //     dispositionFormValidation.dispositionName
+        //   );
+        // }}
+        onSubmit={handleDispositionFormSubmit}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
@@ -165,6 +163,7 @@ function DispositionFormModal({
                   height: "22px",
                   padding: "0",
                   width: inputWidth ? inputWidth + "ch" : "1ch",
+                  border: "none",
                 }}
                 onChange={(e) => {
                   handleInputWidth(e);

@@ -29,7 +29,6 @@ import {
 } from "../../slices/Disposition/thunk";
 import { useDispatch, useSelector } from "react-redux";
 import { changeCampaign } from "../../slices/Disposition/reducer";
-import { toArray } from "lodash";
 
 const Disposition = () => {
   // modal for crm field
@@ -94,15 +93,10 @@ const Disposition = () => {
     },
     validationSchema: Yup.object({
       dispositionName: Yup.string().required("Disposition name is required"),
-      options: Yup.array().required("Please enter atleast 1 item"),
+      options: Yup.array(),
     }),
     onSubmit: (values) => {
-      // isEditingDisposition
-      //   ? dispatch(
-      //       updateCrmField({ selectedCampaignId, listCrmFieldId, values })
-      //     )
-      //   : dispatch(createCrmField({ selectedCampaignId, values }));
-      const { dispositionName, options } = values;
+      const { dispositionName } = values;
 
       isEditingDisposition
         ? dispatch(
@@ -110,17 +104,20 @@ const Disposition = () => {
               selectedCampaignId,
               listDispositionId,
               dispositionName,
-              options,
+              options: inputBadges,
             })
           )
         : dispatch(
-            createDisposition({ selectedCampaignId, dispositionName, options })
+            createDisposition({
+              selectedCampaignId,
+              dispositionName,
+              options: inputBadges,
+            })
           );
 
-      console.log("disposition form values", values);
-      // dispatch(
-      //   createDisposition({ selectedCampaignId, dispositionName, options })
-      // );
+      console.log("disposition form submit called");
+      dispositionFormValidation.resetForm();
+      setInputBadges([]);
       setmodal_list(!modal_list);
     },
   });
@@ -138,7 +135,12 @@ const Disposition = () => {
 
   function handleDispositionFormSubmit(e) {
     e.preventDefault();
+    console.log(
+      "handle disposition form validation",
+      dispositionFormValidation
+    );
     dispositionFormValidation.handleSubmit();
+
     return false;
   }
 
@@ -163,16 +165,15 @@ const Disposition = () => {
 
     setInputBadges(JSON.parse(dispositionData.options));
 
+    console.log("options in edit form", dispositionData.options);
+
     dispositionFormValidation.setValues({
       dispositionName: dispositionData.dispositionName,
-      options: dispositionData.options,
+      options: JSON.parse(dispositionData.options),
     });
 
-    // Clear input values
-    const inputElements = document.querySelectorAll("input");
-    inputElements.forEach((input) => {
-      input.value = "";
-    });
+    // Clear option input values
+    dispositionFormValidation.setFieldValue("options", "");
   }
 
   document.title = "Disposition";
@@ -197,12 +198,13 @@ const Disposition = () => {
                       <Col className="col-sm-auto">
                         <Form
                           style={{ display: "flex", gap: "10px" }}
-                          onSubmit={(e) =>
-                            showCampaignFormHandleSubmit(
-                              e,
-                              campaignTypeValidation.caption
-                            )
-                          }
+                          // onSubmit={(e) =>
+                          //   showCampaignFormHandleSubmit(
+                          //     e,
+                          //     campaignTypeValidation.caption
+                          //   )
+                          // }
+                          onSubmit={showCampaignFormHandleSubmit}
                         >
                           <div className="mb-2">
                             <Input
