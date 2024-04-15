@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createCrmFormData } from "../../slices/CRM/thunk";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,17 +14,59 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import Select from "react-select";
 import { useDispatch } from "react-redux";
 import selectCampaignGif from "./select-campaign.gif";
 
 const CRMForm = ({
   selectedCampaignCrmFields,
   selectedCampaign,
+  selectedCampaignDispositions,
   formData,
   setFormData,
 }) => {
+  const [selectDispositions, setSelectDispositions] = useState([]);
+  const [selectedDisposition, setSelectedDisposition] = useState(null);
+  const [selectSubDispositions, setSelectSubDispositions] = useState(null);
+  const [selectedSubDisposition, setSelectedSubDisposition] = useState(null);
+
   const dispatch = useDispatch();
 
+  const dispositionOptions = selectedCampaignDispositions?.map(
+    (disposition) => {
+      return {
+        value: disposition.dispositionName,
+        label: disposition.dispositionName,
+      };
+    }
+  );
+
+  function handleSelectDisposition(selectedDisposition) {
+    setSelectedDisposition(selectedDisposition);
+
+    const selectedDispositionWithOptions = selectedCampaignDispositions?.find(
+      (disposition) => disposition.dispositionName === selectedDisposition.value
+    );
+
+    const selectedDispositionOptions = selectedDispositionWithOptions
+      ? selectedDispositionWithOptions.options
+      : [];
+
+    const dispositionOptionsForSelect = JSON.parse(
+      selectedDispositionOptions
+    )?.map((option) => {
+      return { value: option, label: option };
+    });
+
+    setSelectSubDispositions(dispositionOptionsForSelect);
+  }
+
+  function handleSelectSubDisposition(selectedSubDisposition) {
+    setSelectedSubDisposition(selectedSubDisposition);
+    console.log("selected sub disposition ->", selectedSubDisposition);
+  }
+
+  // Function to handle input change for CRM form fields
   const handleInputChange = (fieldCaption, value) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -32,10 +74,14 @@ const CRMForm = ({
     }));
   };
 
+  // Function to handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(
-      createCrmFormData({ ...formData, campaignId: selectedCampaign.value })
+      createCrmFormData({
+        ...formData,
+        campaignId: selectedCampaign.value,
+      })
     );
 
     toast.success("Form has been submitted !", {
@@ -45,6 +91,14 @@ const CRMForm = ({
     });
 
     setFormData({});
+
+    console.log(
+      "disposition ->",
+      selectedDisposition.value,
+      "sub-disposition ->",
+      selectedSubDisposition.value
+    );
+
     // Clear input values
     const inputElements = document.querySelectorAll("input");
     inputElements.forEach((input) => {
@@ -52,6 +106,7 @@ const CRMForm = ({
     });
   };
 
+  // Function to render CRM form fields
   const renderFormFields = () => {
     const totalFields = selectedCampaignCrmFields?.length;
     const numRows = Math.ceil(totalFields / 2); // Calculate number of rows needed
@@ -115,8 +170,39 @@ const CRMForm = ({
         ) : selectedCampaignCrmFields?.length !== 0 ? (
           <div style={{ marginTop: "30px" }}>
             <Form onSubmit={handleSubmit}>
+              {/* Render CRM form fields */}
               {renderFormFields()}
 
+              <Row>
+                <Col>
+                  <Label
+                    htmlFor="choices-single-default"
+                    className="form-label "
+                  >
+                    Dispositions
+                  </Label>
+
+                  <Select
+                    value={selectedDisposition}
+                    onChange={handleSelectDisposition}
+                    options={dispositionOptions}
+                  />
+                </Col>
+                <Col>
+                  <Label
+                    htmlFor="choices-single-default"
+                    className="form-label "
+                  >
+                    Sub Dispositions
+                  </Label>
+
+                  <Select
+                    value={selectedSubDisposition}
+                    onChange={handleSelectSubDisposition}
+                    options={selectSubDispositions}
+                  />
+                </Col>
+              </Row>
               <div className="d-flex justify-content-end">
                 <Button
                   color="primary"

@@ -6,7 +6,6 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Button,
   Alert,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
