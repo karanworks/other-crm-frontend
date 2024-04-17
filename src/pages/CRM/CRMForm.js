@@ -25,7 +25,6 @@ const CRMForm = ({
   formData,
   setFormData,
 }) => {
-  const [selectDispositions, setSelectDispositions] = useState([]);
   const [selectedDisposition, setSelectedDisposition] = useState(null);
   const [selectSubDispositions, setSelectSubDispositions] = useState(null);
   const [selectedSubDisposition, setSelectedSubDisposition] = useState(null);
@@ -81,6 +80,8 @@ const CRMForm = ({
       createCrmFormData({
         ...formData,
         campaignId: selectedCampaign.value,
+        disposition: selectedDisposition.value,
+        subDisposition: selectedSubDisposition.value,
       })
     );
 
@@ -92,12 +93,8 @@ const CRMForm = ({
 
     setFormData({});
 
-    console.log(
-      "disposition ->",
-      selectedDisposition.value,
-      "sub-disposition ->",
-      selectedSubDisposition.value
-    );
+    setSelectedDisposition(null);
+    setSelectedSubDisposition(null);
 
     // Clear input values
     const inputElements = document.querySelectorAll("input");
@@ -197,6 +194,7 @@ const CRMForm = ({
                   </Label>
 
                   <Select
+                    isDisabled={!selectedDisposition}
                     value={selectedSubDisposition}
                     onChange={handleSelectSubDisposition}
                     options={selectSubDispositions}

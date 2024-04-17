@@ -13,7 +13,6 @@ const Navdata = () => {
   const userData = getLoggedinUser();
   const menuDataOfUser = userData.data.menus;
 
-
   //state data
   const [isHome, setIsHome] = useState(false);
   const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
@@ -413,7 +412,6 @@ const Navdata = () => {
       ],
     },
   ];
-
 
   // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
   return <React.Fragment>{dynamicMenuData}</React.Fragment>;
