@@ -3,9 +3,11 @@ import { Col, Container, Row } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import TeamStatus from "./TeamStatus";
 import LiveData from "./LiveData";
+import LiveStatus from "./LiveStatus";
 
 const UserStatus = () => {
   document.title = "User Status";
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -20,6 +22,12 @@ const UserStatus = () => {
           <Row>
             <Col>
               <TeamStatus />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <LiveStatus />
             </Col>
           </Row>
         </Container>

@@ -1,4 +1,4 @@
-import { Button, Input, Label } from "reactstrap";
+import { Button, ButtonGroup, Input, Label } from "reactstrap";
 import FeatherIcon from "feather-icons-react";
 import {
   DropdownItem,
@@ -28,14 +28,14 @@ function TeamStatus() {
       username: "Karan",
       campaign: "Credit Card",
       state: "On Call",
-      time: "00::12:22",
+      time: "00:12:22",
     },
     {
       id: 2,
       username: "Someon",
       campaign: "Credit Card",
       state: "On Call",
-      time: "00::12:22",
+      time: "00:12:22",
     },
   ];
 
@@ -141,104 +141,97 @@ function TeamStatus() {
               <td className="campaign-name">{user.username}</td>
               <td className="campaign-description">{user.campaign}</td>
               <td className="campaign-callback">
-                <span class="badge border border-success text-success">
+                <span className="badge border border-success text-success">
                   {" "}
                   {user.state}
                 </span>
               </td>
               <td className="campaign-dnc">{user.time}</td>
               <td>
-                <UncontrolledDropdown
-                  direction="left"
-                  style={{ position: "absolute", zIndex: "999999" }}
-                >
-                  <DropdownToggle
-                    tag="button"
-                    className="btn btn-primary btn-sm"
-                  >
-                    <span className="text-uppercase">
-                      Action
-                      <i className="mdi mdi-chevron-down align-middle ms-1"></i>
-                    </span>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu dropdown-menu-end">
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="log-out" className="icon-dual" />
-                      <span className="text-muted fw-bold">Log-out</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="phone-off" className="icon-dual" />
-                      <span className="text-muted fw-bold">Hangup</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="repeat" className="icon-dual" />
-                      <span className="text-muted fw-bold">Transfer</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon
-                        icon="phone-forwarded"
-                        className="icon-dual"
-                      />
-                      <span className="text-muted fw-bold">Eavesdrop</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="users" className="icon-dual" />
-                      <span className="text-muted fw-bold">Conference</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="volume-1" className="icon-dual" />
-                      <span className="text-muted fw-bold">Whisper</span>
-                    </DropdownItem>
-                    <DropdownItem
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                      }}
-                    >
-                      <FeatherIcon icon="video" className="icon-dual" />
-                      <span className="text-muted fw-bold">
-                        Call Screen Recording
-                      </span>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                <ButtonGroup>
+                  <UncontrolledDropdown direction="start">
+                    <DropdownToggle tag="button" className="btn btn-primary">
+                      Action <i className="mdi mdi-chevron-down"></i>
+                    </DropdownToggle>
+                    <DropdownMenu className="dropdown-menu dropdown-menu-end">
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="log-out" className="icon-dual" />
+                        <span className="text-muted fw-bold">Log-out</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="phone-off" className="icon-dual" />
+                        <span className="text-muted fw-bold">Hangup</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="repeat" className="icon-dual" />
+                        <span className="text-muted fw-bold">Transfer</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon
+                          icon="phone-forwarded"
+                          className="icon-dual"
+                        />
+                        <span className="text-muted fw-bold">Eavesdrop</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="users" className="icon-dual" />
+                        <span className="text-muted fw-bold">Conference</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="volume-1" className="icon-dual" />
+                        <span className="text-muted fw-bold">Whisper</span>
+                      </DropdownItem>
+                      <DropdownItem
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <FeatherIcon icon="video" className="icon-dual" />
+                        <span className="text-muted fw-bold">
+                          Call Screen Recording
+                        </span>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </ButtonGroup>
               </td>
             </tr>
           ))}
