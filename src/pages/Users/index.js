@@ -258,13 +258,13 @@ const Users = () => {
                               </th>
                               <td className="id">
                                 <Link to="#" className="fw-medium link-primary">
-                                  {user.id}
+                                  {user?.id}
                                 </Link>
                               </td>
-                              <td className="name">{user.username}</td>
-                              <td className="email">{user.email}</td>
+                              <td className="name">{user?.username}</td>
+                              <td className="email">{user?.email}</td>
                               <td className="agent_mobile">
-                                {user.agentMobile}
+                                {user?.agentMobile}
                               </td>
                               <td>
                                 <div className="d-flex gap-2">

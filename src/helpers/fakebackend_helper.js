@@ -102,7 +102,7 @@ export const removeCrmField = (campaignId, crmFieldId) => {
 };
 
 // *****************************************************************
-// **************************** MAPPING ******************************
+// **************************** MAPPING ****************************
 // *****************************************************************
 
 export const getMenus = () => {
@@ -183,6 +183,17 @@ export const removeDisposition = ({ campaignId, dispositionId }) => {
 export const createCrmFormData = (values) => {
   console.log("values while creating form data in backend helper ->", values);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/crm/create`, values);
+};
+
+// *****************************************************************
+// ************************* MONITORING ****************************
+// *****************************************************************
+
+export const getMonitoringData = (selectedCampaigns) => {
+  console.log("campaigns after submit ->", selectedCampaigns);
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/monitoring`, {
+    campaigns: selectedCampaigns,
+  });
 };
 
 // postForgetPwd

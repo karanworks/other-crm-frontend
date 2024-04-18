@@ -8,18 +8,65 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getCampaigns } from "../../slices/Campaigns/thunk";
-import { useEffect } from "react";
+import { getMonitoringData } from "../../slices/Monitoring/thunk";
+import { useEffect, useState } from "react";
 
 function LiveStatus() {
+  const [campaignUsersOptions, setCampaignUsersOptions] = useState([]);
+  const [selectedCampaigns, setSelectedCampaigns] = useState([]);
+  const [users, setUsers] = useState([]);
+
   const { campaigns } = useSelector((state) => state.Campaigns);
+  const { campaignUsers } = useSelector((state) => state.Monitoring);
 
   const dispatch = useDispatch();
 
-  console.log("campaigns inside live status", campaigns);
+  console.log("all the users inside monitoring ->", campaignUsers);
 
   useEffect(() => {
     dispatch(getCampaigns());
   }, [dispatch]);
+
+  function handleAddCampaign(campaignId) {
+    const alreadyIncluded = selectedCampaigns.includes(campaignId);
+
+    if (alreadyIncluded) {
+      const updatedCampaigns = selectedCampaigns.filter(
+        (singleCampaignId) => singleCampaignId !== campaignId
+      );
+
+      setSelectedCampaigns(updatedCampaigns);
+    } else {
+      setSelectedCampaigns((prev) => [...prev, campaignId]);
+    }
+  }
+
+  function handleAddUser(user) {
+    const alreadyExists = users.find((u) => {
+      return u.id === user.id;
+    });
+
+    if (alreadyExists) {
+      const filteredUsers = users.filter((u) => {
+        return u.id !== user.id;
+      });
+
+      setUsers(filteredUsers);
+    } else {
+      setUsers((prev) => [...prev, user]);
+    }
+  }
+
+  useEffect(() => {
+    setCampaignUsersOptions(campaignUsers);
+  }, [campaignUsers]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(selectedCampaigns);
+    dispatch(getMonitoringData(selectedCampaigns));
+    console.log("campaign users after list submit ->", campaignUsers);
+  }
 
   const usersData = [
     {
@@ -76,15 +123,17 @@ function LiveStatus() {
                 Select Campaigns <i className="mdi mdi-chevron-down"></i>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-sm p-2">
-                <form>
+                <form onSubmit={handleSubmit}>
                   {campaigns?.map((campaign) => (
                     <div className="mb-2" key={campaign.id}>
                       <div className="form-check custom-checkbox">
                         <Input
                           type="checkbox"
+                          checked={selectedCampaigns.includes(campaign.id)}
                           className="form-check-input"
                           id={campaign.campaignName}
                           name={campaign.campaignName}
+                          onChange={() => handleAddCampaign(campaign.id)}
                         />
                         <label
                           className="form-check-label"
@@ -96,29 +145,12 @@ function LiveStatus() {
                     </div>
                   ))}
 
-                  {/* <div className="mb-2">
-                    <div className="form-check custom-checkbox">
-                      <Input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="rememberdropdownCheck"
-                        name="rememberdropdownCheck"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="rememberdropdownCheck"
-                      >
-                        User One
-                      </label>
-                    </div>
-                  </div> */}
-
                   <Button
                     type="submit"
                     color="primary"
                     className="btn-sm btn-primary"
                   >
-                    Search
+                    Submit
                   </Button>
                 </form>
               </DropdownMenu>
@@ -131,7 +163,27 @@ function LiveStatus() {
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-sm p-2">
                 <form>
-                  <div className="mb-2">
+                  {campaignUsersOptions?.map((userOption) => (
+                    <div className="mb-2" key={userOption.id}>
+                      <div className="form-check custom-checkbox">
+                        <Input
+                          type="checkbox"
+                          className="form-check-input"
+                          id="rememberdropdownCheck3"
+                          name="rememberdropdownCheck3"
+                          onChange={() => handleAddUser(userOption)}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="rememberdropdownCheck3"
+                        >
+                          {userOption.name}
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* <div className="mb-2">
                     <div className="form-check custom-checkbox">
                       <Input
                         type="checkbox"
@@ -146,8 +198,8 @@ function LiveStatus() {
                         User One
                       </label>
                     </div>
-                  </div>
-                  <div className="mb-2">
+                  </div> */}
+                  {/* <div className="mb-2">
                     <div className="form-check custom-checkbox">
                       <Input
                         type="checkbox"
@@ -162,13 +214,13 @@ function LiveStatus() {
                         User Two
                       </label>
                     </div>
-                  </div>
+                  </div> */}
                   <Button
                     type="submit"
                     color="primary"
                     className="btn-sm btn-primary"
                   >
-                    Search
+                    Submit
                   </Button>
                 </form>
               </DropdownMenu>
@@ -221,7 +273,7 @@ function LiveStatus() {
           </tr>
         </thead>
         <tbody className="list form-check-all">
-          {usersData?.map((user) => (
+          {users?.map((user) => (
             <tr key={user?.id}>
               <th scope="row">
                 <div className="form-check">
@@ -233,26 +285,47 @@ function LiveStatus() {
                   />
                 </div>
               </th>
-              <td className="campaign-name">{user.username}</td>
-              <td className="campaign-description">{user.other_id}</td>
-              <td className="campaign-description">{user.campaign}</td>
+              <td className="campaign-name">{user.name}</td>
+              <td className="campaign-description">9827348</td>
+              <td className="campaign-description ">
+                {" "}
+                {user.campaignName?.map((campaign) => (
+                  <span
+                    className="badge bg-primary"
+                    style={{ marginRight: "2px" }}
+                  >
+                    {campaign}
+                  </span>
+                ))}
+              </td>
               <td className="campaign-callback">
-                <span className="badge border border-success text-success">
-                  {" "}
-                  {user.mode}
-                </span>
+                <span className="badge bg-danger"> Manual</span>
+              </td>
+              <td className="campaign-dnc">00:12:53</td>
+              <td className="campaign-dnc">
+                {" "}
+                <span className="badge bg-success"> Ready</span>
+              </td>
+              <td className="campaign-dnc"> 9982837483 {user.cust_phone}</td>
+              <td className="campaign-dnc">127878333</td>
+              <td className="campaign-dnc">00:12:53</td>
+              {/* <td className="campaign-name">{user.username}</td>
+              <td className="campaign-description">{user.other_id}</td>
+              <td className="campaign-description">
+                {" "}
+                <span className="badge bg-primary"> {user.campaign}</span>
+              </td>
+              <td className="campaign-callback">
+                <span className="badge bg-danger"> {user.mode}</span>
               </td>
               <td className="campaign-dnc">{user.duration}</td>
               <td className="campaign-dnc">
                 {" "}
-                <span className="badge border border-success text-success">
-                  {" "}
-                  {user.status}
-                </span>
+                <span className="badge bg-success"> {user.status}</span>
               </td>
               <td className="campaign-dnc">{user.cust_phone}</td>
               <td className="campaign-dnc">{user.did_tfn}</td>
-              <td className="campaign-dnc">{user.talk_time}</td>
+              <td className="campaign-dnc">{user.talk_time}</td> */}
             </tr>
           ))}
         </tbody>
