@@ -12,7 +12,6 @@ const monitoringSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getMonitoringData.fulfilled, (state, action) => {
-      console.log("monitroring data ->", action.payload);
       state.campaignUsers = action.payload.data.users;
     });
   },

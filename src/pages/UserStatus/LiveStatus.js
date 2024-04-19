@@ -12,16 +12,17 @@ import { getMonitoringData } from "../../slices/Monitoring/thunk";
 import { useEffect, useState } from "react";
 
 function LiveStatus() {
-  const [campaignUsersOptions, setCampaignUsersOptions] = useState([]);
   const [selectedCampaigns, setSelectedCampaigns] = useState([]);
+  const [campaignUsersOptions, setCampaignUsersOptions] = useState([]);
+  const [isSelectCampaignsDropdownOpen, setIsSelectCampaignsDropdownOpen] =
+    useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [users, setUsers] = useState([]);
 
   const { campaigns } = useSelector((state) => state.Campaigns);
   const { campaignUsers } = useSelector((state) => state.Monitoring);
 
   const dispatch = useDispatch();
-
-  console.log("all the users inside monitoring ->", campaignUsers);
 
   useEffect(() => {
     dispatch(getCampaigns());
@@ -34,7 +35,6 @@ function LiveStatus() {
       const updatedCampaigns = selectedCampaigns.filter(
         (singleCampaignId) => singleCampaignId !== campaignId
       );
-
       setSelectedCampaigns(updatedCampaigns);
     } else {
       setSelectedCampaigns((prev) => [...prev, campaignId]);
@@ -42,18 +42,21 @@ function LiveStatus() {
   }
 
   function handleAddUser(user) {
-    const alreadyExists = users.find((u) => {
-      return u.id === user.id;
-    });
+    const alreadyIncluded = selectedUsers.includes(user.userId);
 
-    if (alreadyExists) {
+    if (alreadyIncluded) {
       const filteredUsers = users.filter((u) => {
-        return u.id !== user.id;
+        return u.userId !== user.userId;
       });
 
       setUsers(filteredUsers);
+      setSelectedUsers(
+        selectedUsers.filter((userId) => userId !== user.userId)
+      );
     } else {
+      console.log("user after on change ->", user);
       setUsers((prev) => [...prev, user]);
+      setSelectedUsers((prev) => [...prev, user.userId]);
     }
   }
 
@@ -63,9 +66,8 @@ function LiveStatus() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(selectedCampaigns);
     dispatch(getMonitoringData(selectedCampaigns));
-    console.log("campaign users after list submit ->", campaignUsers);
+    setIsSelectCampaignsDropdownOpen(false);
   }
 
   const usersData = [
@@ -108,7 +110,8 @@ function LiveStatus() {
   ];
 
   return (
-    <div className="table-responsive table-card mt-3 mb-1">
+    // removed the "table-responsive" because it was restricting the table's height
+    <div className="table-card mt-3 mb-1">
       <div
         className="d-flex align-items-center"
         style={{ marginBottom: " 10px" }}
@@ -118,7 +121,12 @@ function LiveStatus() {
           style={{ gap: "10px", width: "50%" }}
         >
           <ButtonGroup>
-            <UncontrolledDropdown>
+            <UncontrolledDropdown
+              isOpen={isSelectCampaignsDropdownOpen}
+              toggle={() =>
+                setIsSelectCampaignsDropdownOpen(!isSelectCampaignsDropdownOpen)
+              }
+            >
               <DropdownToggle tag="button" className="btn btn-light">
                 Select Campaigns <i className="mdi mdi-chevron-down"></i>
               </DropdownToggle>
@@ -164,18 +172,19 @@ function LiveStatus() {
               <DropdownMenu className="dropdown-menu-sm p-2">
                 <form>
                   {campaignUsersOptions?.map((userOption) => (
-                    <div className="mb-2" key={userOption.id}>
+                    <div className="mb-2" key={userOption.userId}>
                       <div className="form-check custom-checkbox">
                         <Input
                           type="checkbox"
+                          checked={selectedUsers.includes(userOption.userId)}
                           className="form-check-input"
-                          id="rememberdropdownCheck3"
-                          name="rememberdropdownCheck3"
+                          id={userOption.name}
+                          name={userOption.name}
                           onChange={() => handleAddUser(userOption)}
                         />
                         <label
                           className="form-check-label"
-                          htmlFor="rememberdropdownCheck3"
+                          htmlFor={userOption.name}
                         >
                           {userOption.name}
                         </label>
@@ -183,45 +192,13 @@ function LiveStatus() {
                     </div>
                   ))}
 
-                  {/* <div className="mb-2">
-                    <div className="form-check custom-checkbox">
-                      <Input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="rememberdropdownCheck3"
-                        name="rememberdropdownCheck3"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="rememberdropdownCheck3"
-                      >
-                        User One
-                      </label>
-                    </div>
-                  </div> */}
-                  {/* <div className="mb-2">
-                    <div className="form-check custom-checkbox">
-                      <Input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="rememberdropdownCheck4"
-                        name="rememberdropdownCheck4"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="rememberdropdownCheck4"
-                      >
-                        User Two
-                      </label>
-                    </div>
-                  </div> */}
-                  <Button
+                  {/* <Button
                     type="submit"
                     color="primary"
                     className="btn-sm btn-primary"
                   >
                     Submit
-                  </Button>
+                  </Button> */}
                 </form>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -274,7 +251,7 @@ function LiveStatus() {
         </thead>
         <tbody className="list form-check-all">
           {users?.map((user) => (
-            <tr key={user?.id}>
+            <tr key={user?.userId}>
               <th scope="row">
                 <div className="form-check">
                   <input
@@ -306,26 +283,9 @@ function LiveStatus() {
                 {" "}
                 <span className="badge bg-success"> Ready</span>
               </td>
-              <td className="campaign-dnc"> 9982837483 {user.cust_phone}</td>
+              <td className="campaign-dnc"> 9982837483 </td>
               <td className="campaign-dnc">127878333</td>
               <td className="campaign-dnc">00:12:53</td>
-              {/* <td className="campaign-name">{user.username}</td>
-              <td className="campaign-description">{user.other_id}</td>
-              <td className="campaign-description">
-                {" "}
-                <span className="badge bg-primary"> {user.campaign}</span>
-              </td>
-              <td className="campaign-callback">
-                <span className="badge bg-danger"> {user.mode}</span>
-              </td>
-              <td className="campaign-dnc">{user.duration}</td>
-              <td className="campaign-dnc">
-                {" "}
-                <span className="badge bg-success"> {user.status}</span>
-              </td>
-              <td className="campaign-dnc">{user.cust_phone}</td>
-              <td className="campaign-dnc">{user.did_tfn}</td>
-              <td className="campaign-dnc">{user.talk_time}</td> */}
             </tr>
           ))}
         </tbody>

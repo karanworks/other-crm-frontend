@@ -6,7 +6,6 @@ export const getMonitoringData = createAsyncThunk(
   async (selectedCampaigns) => {
     try {
       const response = await getMonitoringDataApi(selectedCampaigns);
-      console.log("response from monitoring api inside thunk ->", response);
       return response;
     } catch (error) {
       console.log("error inside getmonitoringdata thunk", error);
