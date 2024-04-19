@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getCampaigns } from "../../slices/Campaigns/thunk";
-import { getMonitoringData } from "../../slices/Monitoring/thunk";
+import { getMonitoringData } from "../../slices/UserStatus/thunk";
 import { useEffect, useState } from "react";
 
 function LiveStatus() {

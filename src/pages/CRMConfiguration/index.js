@@ -32,6 +32,8 @@ import {
   changeCampaign,
   checkPositionLength,
 } from "../../slices/CRMConfiguration/reducer";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../slices/auth/login/thunk";
 
 const CRMConfiguration = () => {
   // modal for crm field
@@ -50,9 +52,19 @@ const CRMConfiguration = () => {
     crmConfigurationData,
     selectedCampaignId,
     alreadyExistsError,
+    error,
   } = useSelector((state) => state.CRMConfiguration);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      console.log("error caught in use effect inside users page");
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
 
   // to toggle modal for crm field
   function tog_list() {

@@ -25,6 +25,8 @@ import {
   removeCampaign,
   updateCampaign,
 } from "../../slices/Campaigns/thunk";
+import { logoutUser } from "../../slices/auth/login/thunk";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Campaign = () => {
@@ -38,10 +40,19 @@ const Campaign = () => {
   const [listCampaignId, setListCampaignId] = useState(null);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { campaigns, alreadyExistsError } = useSelector(
+  const { campaigns, alreadyExistsError, error } = useSelector(
     (state) => state.Campaigns
   );
+
+  useEffect(() => {
+    if (error) {
+      console.log("error caught in use effect inside users page");
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
 
   // toggles register / edit campaign modal
   function tog_list() {

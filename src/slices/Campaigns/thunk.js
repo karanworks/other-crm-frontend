@@ -23,7 +23,6 @@ export const createCampaign = createAsyncThunk(
   async (data) => {
     try {
       const response = await createCampaignApi(data);
-
       return response;
     } catch (error) {
       console.log("error inside get campgaigns thunk", error);

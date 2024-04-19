@@ -10,7 +10,7 @@ import CampaignReducer from "./Campaigns/reducer";
 import CRMConfigurationReducer from "./CRMConfiguration/reducer";
 import MappingReducer from "./Mapping/reducer";
 import DispositionReducer from "./Disposition/reducer";
-import MonitoringReducer from "./Monitoring/reducer";
+import MonitoringReducer from "./UserStatus/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";

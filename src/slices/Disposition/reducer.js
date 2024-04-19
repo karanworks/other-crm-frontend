@@ -10,6 +10,7 @@ import {
 export const initialState = {
   dispositionsData: null,
   dispositions: null,
+  error: "",
 };
 
 const dispositionSlice = createSlice({
@@ -40,12 +41,19 @@ const dispositionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getDispositions.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.dispositionsData = action.payload.data;
+        state.error = "";
+      }
+    });
+
     builder.addCase(createDisposition.fulfilled, (state, action) => {
-      console.log(
-        "disposition payload in create disposition reducer ->",
-        action.payload
-      );
       state.dispositions = [...state.dispositions, action.payload.data];
+
+      state.error = "";
 
       toast.success("Disposition has been added !", {
         position: "bottom-center",
@@ -55,11 +63,6 @@ const dispositionSlice = createSlice({
     });
 
     builder.addCase(updateDisposition.fulfilled, (state, action) => {
-      console.log(
-        "disposition payload in update disposition reducer ->",
-        action.payload
-      );
-
       state.dispositions = state.dispositions.map((disposition) => {
         if (disposition.id === action.payload.data.id) {
           return action.payload.data;
@@ -67,6 +70,8 @@ const dispositionSlice = createSlice({
           return disposition;
         }
       });
+
+      state.error = "";
 
       toast.success("Disposition has been updated !", {
         position: "bottom-center",
@@ -76,28 +81,17 @@ const dispositionSlice = createSlice({
     });
 
     builder.addCase(removeDisposition.fulfilled, (state, action) => {
-      console.log(
-        "disposition payload in remove disposition reducer ->",
-        action.payload
-      );
-
       state.dispositions = state.dispositions.filter((disposition) => {
         return disposition.id !== action.payload.data.id;
       });
+
+      state.error = "";
 
       toast.error("Disposition has been removed !", {
         position: "bottom-center",
         autoClose: 3000,
         theme: "colored",
       });
-    });
-
-    builder.addCase(getDispositions.fulfilled, (state, action) => {
-      console.log(
-        "disposition payload in get position reducer ->",
-        action.payload
-      );
-      state.dispositionsData = action.payload.data;
     });
   },
 });

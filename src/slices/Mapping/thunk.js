@@ -12,7 +12,6 @@ import {
 export const getMenus = createAsyncThunk("mapping/getMenus", async () => {
   try {
     const response = await getMenusApi();
-    console.log("get menus response ->", response);
     return response;
   } catch (error) {
     console.log("error inside get menus thunk", error);
@@ -46,7 +45,6 @@ export const changePermission = createAsyncThunk(
 export const getRoles = createAsyncThunk("mapping/getRoles", async () => {
   try {
     const response = await getRolesApi();
-    console.log("roles response ->", response);
     return response;
   } catch (error) {
     console.log("error inside get roles thunk", error);

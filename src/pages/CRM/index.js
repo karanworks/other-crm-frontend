@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getCampaigns } from "../../slices/Campaigns/thunk";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../slices/auth/login/thunk";
 
 const CRM = () => {
   document.title = "CRM";
@@ -23,9 +25,17 @@ const CRM = () => {
     useState(null);
   const [formData, setFormData] = useState({});
 
-  const { campaigns } = useSelector((state) => state.Campaigns);
+  const { campaigns, error } = useSelector((state) => state.Campaigns);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
 
   function handleSelectCampaign(selectedCampaign) {
     setSelectedCampaign(selectedCampaign);

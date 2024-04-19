@@ -42,10 +42,10 @@ export const logoutUser = () => async (dispatch) => {
   try {
     sessionStorage.removeItem("authUser");
 
-    dispatch(logoutUserSuccess(true));
     axios
       .get("http://localhost:3001/logout", { withCredentials: true })
       .then((res) => {
+        dispatch(logoutUserSuccess(true));
         console.log("user logout", res);
       })
       .catch((err) => {

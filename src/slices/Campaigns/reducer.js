@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 export const initialState = {
   campaigns: [],
   alreadyExistsError: null,
+  error: "",
 };
 
 const campaignSlice = createSlice({
@@ -18,15 +19,22 @@ const campaignSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCampaigns.fulfilled, (state, action) => {
-      state.campaigns = action.payload?.data.campaigns;
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.campaigns = action.payload?.data.campaigns;
+        state.error = "";
+      }
     });
 
     builder.addCase(createCampaign.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
+        state.error = "";
       } else {
         state.campaigns = [...state.campaigns, action.payload.data];
         state.alreadyExistsError = null;
+        state.error = "";
 
         toast.success("Campaign has been added !", {
           position: "bottom-center",
@@ -41,6 +49,7 @@ const campaignSlice = createSlice({
 
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
+        state.error = "";
       } else {
         const updatedCampaignId = action.payload.data?.updatedCampaign.id;
 
@@ -54,7 +63,7 @@ const campaignSlice = createSlice({
         });
 
         state.alreadyExistsError = null;
-
+        state.error = "";
         toast.success("Campaign details updated !", {
           position: "bottom-center",
           autoClose: 3000,
@@ -68,6 +77,8 @@ const campaignSlice = createSlice({
       state.campaigns = state.campaigns.filter(
         (campaign) => campaign.id !== deletedCampaignId
       );
+
+      state.error = "";
 
       toast.error("Campaign has been removed !", {
         position: "bottom-center",

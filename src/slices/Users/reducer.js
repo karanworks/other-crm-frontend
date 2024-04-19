@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 export const initialState = {
   users: [], // list of all users
   alreadyRegisteredError: null, // if user with same email, mobile number already registered
+  error: "",
 };
 
 const usersSlice = createSlice({
@@ -13,15 +14,23 @@ const usersSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getUsers.fulfilled, (state, action) => {
-      state.users = action.payload?.data.users;
+      if (action.payload.status === "failure") {
+        console.log("yes there is a error in user page");
+        state.error = action.payload.message;
+      } else {
+        state.users = action.payload?.data.users;
+        state.error = "";
+      }
     });
 
     builder.addCase(createUser.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
+        state.error = "";
       } else {
         state.users = [...state.users, action.payload.data];
         state.alreadyRegisteredError = null;
+        state.error = "";
         toast.success("User has been added !", {
           position: "bottom-center",
           autoClose: 3000,
@@ -37,7 +46,7 @@ const usersSlice = createSlice({
     builder.addCase(removeUser.fulfilled, (state, action) => {
       const deletedUserId = action.payload.id;
       state.users = state.users.filter((user) => user.id !== deletedUserId);
-
+      state.error = "";
       toast.error("User has been removed !", {
         position: "bottom-center",
         autoClose: 3000,
@@ -48,7 +57,9 @@ const usersSlice = createSlice({
     builder.addCase(updateUser.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyRegisteredError = action.payload.message;
+        state.error = "";
       } else {
+        console.log("updated user reducer ->", action.payload);
         const updatedUserId = action.payload.data.updatedUser.id;
         state.users = state.users.map((user) => {
           if (user.id == updatedUserId) {
@@ -60,6 +71,7 @@ const usersSlice = createSlice({
         });
 
         state.alreadyRegisteredError = null;
+        state.error = "";
 
         toast.success("User details updated !", {
           position: "bottom-center",

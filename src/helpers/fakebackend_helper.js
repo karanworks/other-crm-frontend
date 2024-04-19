@@ -180,8 +180,11 @@ export const removeDisposition = ({ campaignId, dispositionId }) => {
 // ***************************** CRM *******************************
 // *****************************************************************
 
+export const getCRMData = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/crm`);
+};
+
 export const createCrmFormData = (values) => {
-  console.log("values while creating form data in backend helper ->", values);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/crm/create`, values);
 };
 
@@ -189,8 +192,11 @@ export const createCrmFormData = (values) => {
 // ************************* MONITORING ****************************
 // *****************************************************************
 
+export const monitoringGet = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/monitoring`);
+};
+
 export const getMonitoringData = (selectedCampaigns) => {
-  console.log("campaigns after submit ->", selectedCampaigns);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/monitoring`, {
     campaigns: selectedCampaigns,
   });

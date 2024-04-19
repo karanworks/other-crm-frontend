@@ -13,6 +13,7 @@ export const initialState = {
   roles: [],
   menus: [],
   menusByRole: [],
+  error: "",
 };
 
 const rolesSlice = createSlice({
@@ -24,14 +25,22 @@ const rolesSlice = createSlice({
       state.roles = action.payload?.data;
     });
     builder.addCase(getMenus.fulfilled, (state, action) => {
-      state.menus = action.payload?.data;
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.menus = action.payload?.data;
+        state.error = "";
+      }
     });
     builder.addCase(getMenusByRole.fulfilled, (state, action) => {
       state.menusByRole = action.payload?.data;
+      state.error = "";
     });
 
     builder.addCase(createRole.fulfilled, (state, action) => {
       state.roles = [...state.roles, action.payload.data];
+
+      state.error = "";
 
       toast.success("Role has been added !", {
         position: "bottom-center",
@@ -52,6 +61,8 @@ const rolesSlice = createSlice({
         }
       });
 
+      state.error = "";
+
       toast.success("Role name updated !", {
         position: "bottom-center",
         autoClose: 3000,
@@ -62,6 +73,8 @@ const rolesSlice = createSlice({
     builder.addCase(removeRole.fulfilled, (state, action) => {
       const deletedRoleId = action.payload.data.id;
       state.roles = state.roles.filter((role) => role.id !== deletedRoleId);
+
+      state.error = "";
 
       toast.error("Role has been removed !", {
         position: "bottom-center",

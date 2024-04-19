@@ -13,6 +13,7 @@ export const initialState = {
   crmFields: null,
   alreadyExistsError: null,
   selectedCampaignId: null,
+  error: "",
 };
 
 const crmConfigurationSlice = createSlice({
@@ -55,17 +56,26 @@ const crmConfigurationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getCrmConfigurationData.fulfilled, (state, action) => {
-      state.crmConfigurationData = action.payload.data;
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.crmConfigurationData = action.payload.data;
+        state.error = "";
+      }
     });
 
     builder.addCase(createCrmField.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
+        state.error = "";
       } else if (action.payload.status === "positions-updated") {
         state.crmFields = action.payload.data;
         state.alreadyExistsError = null;
+        state.error = "";
       } else {
         state.crmFields = [...state.crmFields, action.payload.data];
+
+        state.error = "";
 
         toast.success("CRM Field added !", {
           position: "bottom-center",
@@ -78,9 +88,11 @@ const crmConfigurationSlice = createSlice({
     builder.addCase(updateCrmField.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
+        state.error = "";
       } else {
         state.crmFields = action.payload.data;
         state.alreadyExistsError = null;
+        state.error = "";
 
         toast.success("Crm Field updated !", {
           position: "bottom-center",
@@ -93,9 +105,11 @@ const crmConfigurationSlice = createSlice({
     builder.addCase(removeCrmField.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
+        state.error = "";
       } else {
         state.crmFields = action.payload.data;
         state.alreadyExistsError = null;
+        state.error = "";
 
         toast.error("CRM Field removed !", {
           position: "bottom-center",

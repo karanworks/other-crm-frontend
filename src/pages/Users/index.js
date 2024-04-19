@@ -26,6 +26,9 @@ import {
   removeUser,
   updateUser,
 } from "../../slices/Users/thunk";
+import { getCampaigns } from "../../slices/Campaigns/thunk";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../slices/auth/login/thunk";
 
 const Users = () => {
   // register / edit user modal state whether modal is open or not
@@ -38,14 +41,23 @@ const Users = () => {
   const [listUserId, setListUserId] = useState(null);
   // fetching all the roles
   const [roles, setRoles] = useState([]);
-  // fetching all the campaigns
-  const [campaigns, setCampaigns] = useState([]);
   // campaigns that a user is in
   const [selectedCampaigns, setSelectedCampaigns] = useState(null);
 
-  const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+  const { campaigns } = useSelector((state) => state.Campaigns);
+  const { users, alreadyRegisteredError, error } = useSelector(
+    (state) => state.Users
+  );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
 
   // toggles register / edit user modal
   function tog_list() {
@@ -58,7 +70,7 @@ const Users = () => {
     setmodal_delete(!modal_delete);
   }
 
-  const campaignOptions = campaigns.map((campaign) => {
+  const campaignOptions = campaigns?.map((campaign) => {
     return { value: campaign.id, label: campaign.campaignName };
   });
 
@@ -73,16 +85,6 @@ const Users = () => {
       .catch((error) => {
         console.log("error while fetching roles ->", error);
       });
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/campaigns`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setCampaigns(res.data.campaigns);
-      })
-      .catch((error) => {
-        console.log("error while fetching roles ->", error);
-      });
   }, []);
 
   useEffect(() => {
@@ -93,6 +95,7 @@ const Users = () => {
 
   useEffect(() => {
     dispatch(getUsers());
+    dispatch(getCampaigns());
   }, [dispatch]);
 
   // formik setup

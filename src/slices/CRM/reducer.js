@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createCrmFormData } from "./thunk";
+import { createCrmFormData, getCRMData } from "./thunk";
 
 export const initialState = {
   crmFormData: null,
+  error: "",
 };
 
 const crmSlice = createSlice({
@@ -10,9 +11,17 @@ const crmSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(getCRMData.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.crmFormData = action.payload;
+        state.error = "";
+      }
+    });
     builder.addCase(createCrmFormData.fulfilled, (state, action) => {
-      console.log("action payload in crm form data ->", action.payload);
       state.crmFormData = action.payload;
+      state.error = "";
     });
   },
 });

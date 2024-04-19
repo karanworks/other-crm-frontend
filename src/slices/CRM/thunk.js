@@ -1,6 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createCrmFormData as createCrmFormDataApi } from "../../helpers/fakebackend_helper";
+import {
+  createCrmFormData as createCrmFormDataApi,
+  getCRMData as getCRMDataApi,
+} from "../../helpers/fakebackend_helper";
 
+export const getCRMData = createAsyncThunk("crm/getCRMData", async (values) => {
+  try {
+    const response = await getCRMDataApi();
+    return response;
+  } catch (error) {
+    console.log("error in get crm data thunk ->", error);
+  }
+});
 export const createCrmFormData = createAsyncThunk(
   "crm/createCrmFormData",
   async (values) => {

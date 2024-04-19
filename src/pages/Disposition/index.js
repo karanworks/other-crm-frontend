@@ -28,7 +28,9 @@ import {
   removeDisposition,
 } from "../../slices/Disposition/thunk";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { changeCampaign } from "../../slices/Disposition/reducer";
+import { logoutUser } from "../../slices/auth/login/thunk";
 
 const Disposition = () => {
   // modal for crm field
@@ -53,11 +55,18 @@ const Disposition = () => {
     alreadyExistsError,
   } = useSelector((state) => state.CRMConfiguration);
 
-  const { dispositions, dispositionsData, selectedCampaignId } = useSelector(
-    (state) => state.Disposition
-  );
+  const { dispositions, dispositionsData, selectedCampaignId, error } =
+    useSelector((state) => state.Disposition);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
 
   // to toggle modal for crm field
   function tog_list() {

@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Row } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import TeamStatus from "./TeamStatus";
 import LiveData from "./LiveData";
 import LiveStatus from "./LiveStatus";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../../slices/auth/login/thunk";
+import { monitoringGet } from "../../slices/UserStatus/thunk";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const UserStatus = () => {
   document.title = "User Status";
+
+  const { error } = useSelector((state) => state.Monitoring);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (error) {
+      dispatch(logoutUser());
+      navigate("/login");
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    dispatch(monitoringGet());
+  }, [dispatch]);
 
   return (
     <React.Fragment>

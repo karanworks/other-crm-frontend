@@ -1,18 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMonitoringData } from "./thunk";
+import { getMonitoringData, monitoringGet } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
   monitoringData: [],
   campaignUsers: null,
+  error: "",
 };
 const monitoringSlice = createSlice({
-  name: "monitoring",
+  name: "userStatus",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(monitoringGet.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.campaignUsers = action.payload.data.users;
+        state.error = "";
+      }
+    });
     builder.addCase(getMonitoringData.fulfilled, (state, action) => {
       state.campaignUsers = action.payload.data.users;
+      state.error = "";
     });
   },
 });
