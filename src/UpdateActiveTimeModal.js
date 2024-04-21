@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import alertIcon from "./alert.png";
+import { useSelector } from "react-redux";
 
 const UpdateActiveTimeModal = () => {
-  const [modal_backdrop, setmodal_backdrop] = useState(true);
+  const [modal_backdrop, setmodal_backdrop] = useState(false);
+
+  let timeoutId;
+
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
+
+  timeoutId = setTimeout(() => {
+    setmodal_backdrop(true);
+    console.log("Timeout completed, showing modal");
+  }, 5000);
+
   function tog_backdrop() {
+    console.log("backdrop function called");
     setmodal_backdrop(!modal_backdrop);
   }
 
@@ -31,11 +46,11 @@ const UpdateActiveTimeModal = () => {
             {" "}
             You have been inactive for some time.
           </p>
-          <h4 className="text-muted mb-4">
+          <h5 className="text-muted mb-4">
             {" "}
             If you are active please click the button below, otherwise you will
             be logged out of the system.
-          </h4>
+          </h5>
         </div>
 
         <Button color="primary">Yes I am active!</Button>

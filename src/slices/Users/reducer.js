@@ -6,6 +6,7 @@ export const initialState = {
   users: [], // list of all users
   alreadyRegisteredError: null, // if user with same email, mobile number already registered
   error: "",
+  lastActiveTime: "",
 };
 
 const usersSlice = createSlice({
@@ -15,10 +16,10 @@ const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getUsers.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
-        console.log("yes there is a error in user page");
         state.error = action.payload.message;
       } else {
         state.users = action.payload?.data.users;
+        state.lastActiveTime = action.payload?.data.lastActiveTime;
         state.error = "";
       }
     });
@@ -38,10 +39,6 @@ const usersSlice = createSlice({
         });
       }
     });
-
-    // builder.addCase(createUser.fulfilled, (state, action) => {
-    //   state.users = [...state.users, action.payload];
-    // });
 
     builder.addCase(removeUser.fulfilled, (state, action) => {
       const deletedUserId = action.payload.id;

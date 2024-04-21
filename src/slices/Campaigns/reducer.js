@@ -11,6 +11,7 @@ export const initialState = {
   campaigns: [],
   alreadyExistsError: null,
   error: "",
+  lastActiveTime: "",
 };
 
 const campaignSlice = createSlice({
@@ -23,6 +24,7 @@ const campaignSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.campaigns = action.payload?.data.campaigns;
+        state.lastActiveTime = action.payload?.data.lastActiveTime;
         state.error = "";
       }
     });
