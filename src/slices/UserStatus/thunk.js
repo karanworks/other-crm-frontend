@@ -8,7 +8,6 @@ export const monitoringGet = createAsyncThunk(
   "monitoring/monitoringGet",
   async () => {
     try {
-      console.log("yes yes monitoring is being called");
       const response = await monitoringGetApi();
       return response;
     } catch (error) {

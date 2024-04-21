@@ -48,9 +48,9 @@ const Campaign = () => {
 
   useEffect(() => {
     if (error) {
-      console.log("error caught in use effect inside users page");
       dispatch(logoutUser());
       navigate("/login");
+      window.location.reload();
     }
   }, [dispatch, error]);
 

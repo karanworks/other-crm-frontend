@@ -34,6 +34,7 @@ const CRM = () => {
     if (error) {
       dispatch(logoutUser());
       navigate("/login");
+      window.location.reload();
     }
   }, [dispatch, error]);
 
