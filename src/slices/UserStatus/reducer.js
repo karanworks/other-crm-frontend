@@ -13,7 +13,9 @@ const monitoringSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(monitoringGet.fulfilled, (state, action) => {
-      if (action.payload.status === "failure") {
+      console.log("monitoring slice ->", action);
+
+      if (action?.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.campaignUsers = action.payload.data.users;

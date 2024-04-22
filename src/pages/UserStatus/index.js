@@ -22,6 +22,7 @@ const UserStatus = () => {
     if (error) {
       dispatch(logoutUser());
       navigate("/login");
+      window.location.reload();
     }
   }, [dispatch, error]);
 
