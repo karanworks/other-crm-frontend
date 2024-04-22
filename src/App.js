@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 //import Scss
 import "./assets/scss/themes.scss";
 
 //imoprt Route
 import Route from "./Routes";
-
 // Import Firebase Configuration file
 // import { initFirebaseBackend } from "./helpers/firebase_helper";
 
-// Fake Backend
 import fakeBackend from "./helpers/AuthType/fakeBackend";
 import UpdateActiveTimeModal from "./UpdateActiveTimeModal";
+import { useLocation } from "react-router-dom";
+import { updateSession } from "./helpers/fakebackend_helper";
 
 // Activating fake backend
 fakeBackend();
@@ -31,8 +31,37 @@ fakeBackend();
 // initFirebaseBackend(firebaseConfig);
 
 function App() {
+  const location = useLocation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setModalVisible(true);
+    }, 10000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [location]);
+
+  function tog_modal() {
+    setModalVisible(!modalVisible);
+  }
+
+  async function handleUpdateSession() {
+    const response = await updateSession();
+    console.log("update session response ->", response);
+
+    setModalVisible(!modalVisible);
+  }
+
   return (
     <React.Fragment>
+      <UpdateActiveTimeModal
+        modalVisible={modalVisible}
+        tog_modal={tog_modal}
+        handleUpdateSession={handleUpdateSession}
+      />
       <Route />
     </React.Fragment>
   );

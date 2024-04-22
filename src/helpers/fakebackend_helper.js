@@ -202,6 +202,13 @@ export const getMonitoringData = (selectedCampaigns) => {
   });
 };
 
+// *****************************************************************
+// ****************** UPDATE SESSION (ACTIVE TIME) *****************
+// *****************************************************************
+export const updateSession = () => {
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/update-session`);
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

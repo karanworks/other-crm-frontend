@@ -148,7 +148,7 @@ const Navdata = () => {
     };
   };
 
-  const dynamicMenuData = menuDataOfUser.map((menu) => {
+  const dynamicMenuData = menuDataOfUser?.map((menu) => {
     // menuLableId me "label" ki spelling galat hai database me glt thi to testing ke liye galat likh kar hi check kr rha
     const updatedMenu = {
       ...menu,

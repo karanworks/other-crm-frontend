@@ -1,43 +1,22 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import alertIcon from "./alert.png";
-import { useSelector } from "react-redux";
+import { updateSession } from "./helpers/fakebackend_helper";
 
-const UpdateActiveTimeModal = () => {
-  const [modal_backdrop, setmodal_backdrop] = useState(false);
-
-  let timeoutId;
-
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-    timeoutId = null;
-  }
-
-  timeoutId = setTimeout(() => {
-    setmodal_backdrop(true);
-    console.log("Timeout completed, showing modal");
-  }, 5000);
-
-  function tog_backdrop() {
-    console.log("backdrop function called");
-    setmodal_backdrop(!modal_backdrop);
-  }
-
+const UpdateActiveTimeModal = ({
+  modalVisible,
+  tog_modal,
+  handleUpdateSession,
+}) => {
   return (
     <Modal
-      isOpen={modal_backdrop}
-      toggle={() => {
-        tog_backdrop();
-      }}
+      isOpen={modalVisible}
+      toggle={tog_modal}
       backdrop={"static"}
       id="staticBackdrop"
       centered
     >
-      <ModalHeader
-        toggle={() => {
-          tog_backdrop();
-        }}
-      ></ModalHeader>
+      <ModalHeader toggle={tog_modal}></ModalHeader>
       <div className="modal-body text-center p-5">
         <div>
           <img src={alertIcon} style={{ height: "100px", width: "100px" }} />
@@ -49,11 +28,14 @@ const UpdateActiveTimeModal = () => {
           <h5 className="text-muted mb-4">
             {" "}
             If you are active please click the button below, otherwise you will
-            be logged out of the system.
+            be logged out.
           </h5>
         </div>
 
-        <Button color="primary">Yes I am active!</Button>
+        {/* update session */}
+        <Button color="primary" onClick={handleUpdateSession}>
+          Yes I am active!
+        </Button>
       </div>
     </Modal>
   );
