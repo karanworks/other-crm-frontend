@@ -35,13 +35,15 @@ function App() {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setModalVisible(true);
-    }, 10000);
+    if (location.pathname !== "/login") {
+      const timeoutId = setTimeout(() => {
+        setModalVisible(true);
+      }, 3600000);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [location]);
 
   function tog_modal() {
@@ -49,10 +51,8 @@ function App() {
   }
 
   async function handleUpdateSession() {
-    const response = await updateSession();
-    console.log("update session response ->", response);
-
     setModalVisible(!modalVisible);
+    updateSession();
   }
 
   return (

@@ -21,6 +21,7 @@ import Mapping from "../pages/Mapping";
 import CRM from "../pages/CRM";
 import Disposition from "../pages/Disposition";
 import UserStatus from "../pages/UserStatus";
+import SearchRecording from "../pages/SearchRecording";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
@@ -31,6 +32,7 @@ const authProtectedRoutes = [
   { path: "/crm", component: <CRM /> },
   { path: "/disposition", component: <Disposition /> },
   { path: "/user-status", component: <UserStatus /> },
+  { path: "/search-recording", component: <SearchRecording /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

@@ -1,0 +1,3 @@
+.recording-audio-element::-webkit-media-controls-panel {
+  background: transparent !important;
+}

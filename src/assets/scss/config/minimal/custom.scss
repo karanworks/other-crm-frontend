@@ -46,3 +46,11 @@ File: Custom Css File
     }
   }
 }
+
+.recording-audio-element::-webkit-media-controls-panel {
+  background: green;
+}
+
+// .recording-audio-element::-webkit-media-controls-mute-button {
+//   background-color: green;
+// }

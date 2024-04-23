@@ -5,7 +5,7 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 export const monitoringGet = createAsyncThunk(
-  "monitoring/monitoringGet",
+  "userStatus/monitoringGet",
   async () => {
     try {
       const response = await monitoringGetApi();
@@ -16,7 +16,7 @@ export const monitoringGet = createAsyncThunk(
   }
 );
 export const getMonitoringData = createAsyncThunk(
-  "monitoring/getMonitoringData",
+  "userStatus/getMonitoringData",
   async (selectedCampaigns) => {
     try {
       const response = await getMonitoringDataApi(selectedCampaigns);

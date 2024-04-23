@@ -60,6 +60,8 @@ function LiveStatus() {
     }
   }
 
+  console.log("campaignUsersOptions ->", campaignUsers);
+
   useEffect(() => {
     setCampaignUsersOptions(campaignUsers);
   }, [campaignUsers]);
