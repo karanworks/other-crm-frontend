@@ -1,18 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMonitoringData, monitoringGet } from "./thunk";
-import { toast } from "react-toastify";
+import { loginHistoryGet, loginHistoryData } from "./thunk";
 
 export const initialState = {
-  monitoringData: [],
   campaignUsers: null,
   error: "",
 };
-const monitoringSlice = createSlice({
-  name: "userStatus",
+
+const loginHistoryDataSlice = createSlice({
+  name: "loginHistory",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(monitoringGet.fulfilled, (state, action) => {
+    builder.addCase(loginHistoryGet.fulfilled, (state, action) => {
       if (action?.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
@@ -20,11 +19,11 @@ const monitoringSlice = createSlice({
         state.error = "";
       }
     });
-    builder.addCase(getMonitoringData.fulfilled, (state, action) => {
+    builder.addCase(loginHistoryData.fulfilled, (state, action) => {
       state.campaignUsers = action.payload.data.users;
       state.error = "";
     });
   },
 });
 
-export default monitoringSlice.reducer;
+export default loginHistoryDataSlice.reducer;

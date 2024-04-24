@@ -22,6 +22,8 @@ import CRM from "../pages/CRM";
 import Disposition from "../pages/Disposition";
 import UserStatus from "../pages/UserStatus";
 import SearchRecording from "../pages/SearchRecording";
+import LoginHistory from "../pages/LoginHistory";
+import CallHistory from "../pages/CallHistory";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
@@ -33,6 +35,8 @@ const authProtectedRoutes = [
   { path: "/disposition", component: <Disposition /> },
   { path: "/user-status", component: <UserStatus /> },
   { path: "/search-recording", component: <SearchRecording /> },
+  { path: "/login-history", component: <LoginHistory /> },
+  { path: "/call-history", component: <CallHistory /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

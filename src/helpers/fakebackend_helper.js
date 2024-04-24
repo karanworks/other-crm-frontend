@@ -209,6 +209,20 @@ export const updateSession = () => {
   return api.update(`${process.env.REACT_APP_SERVER_URL}/update-session`);
 };
 
+// *****************************************************************
+// ************************* LOGIN HISTORY ************************
+// *****************************************************************
+
+export const loginHistoryGet = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/login-activity`);
+};
+export const loginHistoryData = ({ campaignIds: campaigns }) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/login-activity`,
+    campaigns
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

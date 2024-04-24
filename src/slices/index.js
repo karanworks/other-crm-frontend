@@ -11,6 +11,7 @@ import CRMConfigurationReducer from "./CRMConfiguration/reducer";
 import MappingReducer from "./Mapping/reducer";
 import DispositionReducer from "./Disposition/reducer";
 import MonitoringReducer from "./UserStatus/reducer";
+import LoginHistoryReducer from "./LoginHistory/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   CRMConfiguration: CRMConfigurationReducer,
   Disposition: DispositionReducer,
   Monitoring: MonitoringReducer,
+  LoginHistory: LoginHistoryReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
