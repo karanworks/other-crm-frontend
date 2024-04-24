@@ -10,8 +10,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCampaigns } from "../../slices/Campaigns/thunk";
 import { getMonitoringData } from "../../slices/UserStatus/thunk";
 import { useEffect, useState } from "react";
+import FeatherIcon from "feather-icons-react";
 
-function LiveStatus() {
+function SearchRecordingFilters({ tog_backdrop }) {
   const [selectedCampaigns, setSelectedCampaigns] = useState([]);
   const [campaignUsersOptions, setCampaignUsersOptions] = useState([]);
   const [isSelectCampaignsDropdownOpen, setIsSelectCampaignsDropdownOpen] =
@@ -198,6 +199,13 @@ function LiveStatus() {
             </UncontrolledDropdown>
           </ButtonGroup>
         </div>
+        {/* <button
+          type="button"
+          className="btn btn-primary waves-effect waves-light"
+        >
+          <i className="ri-search-line align-middle me-1"></i>
+          Search{" "}
+        </button> */}
       </div>
 
       <table className="table align-middle table-nowrap" id="customerTable">
@@ -213,39 +221,23 @@ function LiveStatus() {
                 />
               </div>
             </th>
-            <th className="sort" data-sort="agent_name">
+            <th className="sort" data-sort="agent-name">
               Agent Name
             </th>
-            <th className="sort" data-sort="campaigns">
-              Id
+            <th className="sort" data-sort="campaign-name">
+              Campaign Name
             </th>
-            <th className="sort" data-sort="campaigns">
-              Campaign
+            <th className="sort" data-sort="call-duration">
+              Call Duration
             </th>
-            <th className="sort" data-sort="state">
-              Mode
-            </th>
-            <th className="sort" data-sort="time">
-              Duration
-            </th>
-
-            <th className="sort" data-sort="action">
-              Status
-            </th>
-            <th className="sort" data-sort="action">
-              Cust Phone
-            </th>
-            <th className="sort" data-sort="action">
-              DID/TFN
-            </th>
-            <th className="sort" data-sort="action">
-              Talk Time
+            <th className="sort" data-sort="play">
+              Play
             </th>
           </tr>
         </thead>
         <tbody className="list form-check-all">
-          {users?.map((user) => (
-            <tr key={user?.userId}>
+          {users?.map((user, key) => (
+            <tr key={key}>
               <th scope="row">
                 <div className="form-check">
                   <input
@@ -256,9 +248,8 @@ function LiveStatus() {
                   />
                 </div>
               </th>
-              <td className="campaign-name">{user.name}</td>
-              <td className="campaign-description">9827348</td>
-              <td className="campaign-description ">
+              <td className="agent-name">{user?.name}</td>
+              <td className="campaign-name">
                 {" "}
                 {user.campaignName?.map((campaign) => (
                   <span
@@ -269,17 +260,22 @@ function LiveStatus() {
                   </span>
                 ))}
               </td>
-              <td className="campaign-callback">
-                <span className="badge bg-danger"> Manual</span>
+
+              <td className="call-duration">00:12:53</td>
+
+              <td className="play">
+                <button
+                  type="button"
+                  className="btn btn-primary waves-effect waves-light"
+                  onClick={() => tog_backdrop()}
+                >
+                  <FeatherIcon
+                    icon="play"
+                    className="icon-dual"
+                    style={{ color: "white" }}
+                  />
+                </button>
               </td>
-              <td className="campaign-dnc">00:12:53</td>
-              <td className="campaign-dnc">
-                {" "}
-                <span className="badge bg-success"> Ready</span>
-              </td>
-              <td className="campaign-dnc"> 9982837483 </td>
-              <td className="campaign-dnc">127878333</td>
-              <td className="campaign-dnc">00:12:53</td>
             </tr>
           ))}
         </tbody>
@@ -288,4 +284,4 @@ function LiveStatus() {
   );
 }
 
-export default LiveStatus;
+export default SearchRecordingFilters;

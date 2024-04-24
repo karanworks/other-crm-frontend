@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardBody, Modal, ModalBody, ModalHeader } from "reactstrap";
 import RecordingVisualizer from "./RecordingVisualizer";
 import audioFile from "./audio.mp3";
-import "./audio.css";
 
 const PlayRecordingModal = ({
   modal_backdrop,

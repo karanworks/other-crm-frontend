@@ -4,6 +4,7 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import FeatherIcon from "feather-icons-react";
 import Select from "react-select";
 import PlayRecordingModal from "./PlayRecordingModal";
+import SearchRecordingFilters from "./SearchRecordingFilters";
 
 const SearchRecording = () => {
   document.title = "Search Recording";
@@ -32,12 +33,11 @@ const SearchRecording = () => {
           <BreadCrumb title="Search Recording" pageTitle="Quality" />
           <Row>
             <Col xs={12}>
-              <div className="table-card mt-3 mb-1">
-                <div
+              {/* <div
                   className="d-flex align-items-center"
                   style={{ marginBottom: " 10px", gap: "10px" }}
-                >
-                  <Select
+                > */}
+              {/* <Select
                     value={selectedSingle}
                     onChange={() => {
                       handleSelectSingle();
@@ -53,27 +53,11 @@ const SearchRecording = () => {
                     options={SingleOptions}
                     placeholder="Select Disposition"
                     style={{ flex: 1 }}
-                  />
-                  <Select
-                    value={selectedSingle}
-                    onChange={() => {
-                      handleSelectSingle();
-                    }}
-                    options={SingleOptions}
-                    placeholder="Select User"
-                    style={{ flex: 1 }}
-                  />
+                  /> */}
+              <SearchRecordingFilters tog_backdrop={tog_backdrop} />
+              {/* </div> */}
 
-                  <button
-                    type="button"
-                    className="btn btn-primary waves-effect waves-light"
-                  >
-                    <i className="ri-search-line align-middle me-1"></i>
-                    Search{" "}
-                  </button>
-                </div>
-
-                <table
+              {/* <table
                   className="table align-middle table-nowrap"
                   id="customerTable"
                 >
@@ -135,8 +119,7 @@ const SearchRecording = () => {
                       </td>
                     </tr>
                   </tbody>
-                </table>
-              </div>
+                </table> */}
             </Col>
           </Row>
         </Container>

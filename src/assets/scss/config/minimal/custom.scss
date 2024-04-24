@@ -7,10 +7,6 @@ File: Custom Css File
 */
 
 //************************* DIALPAD *************************
-// .dialpad-input-container {
-//   height: 50px;
-//   background-color: "gray";
-// }
 
 .dialpad-container {
   margin-top: 10px;
@@ -47,10 +43,8 @@ File: Custom Css File
   }
 }
 
-.recording-audio-element::-webkit-media-controls-panel {
-  background: green;
-}
+//************************* PLAY RECORDING MODAL *************************
 
-// .recording-audio-element::-webkit-media-controls-mute-button {
-//   background-color: green;
-// }
+.recording-audio-element::-webkit-media-controls-panel {
+  background: white;
+}
