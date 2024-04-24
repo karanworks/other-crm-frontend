@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCampaigns } from "../../slices/Campaigns/thunk";
 import { useEffect, useState } from "react";
 import { loginHistoryData } from "../../slices/LoginHistory/thunk";
+import { functionalUpdate } from "@tanstack/react-table";
 
 function LoginHistoryFilter() {
   const [selectedCampaigns, setSelectedCampaigns] = useState([]);
@@ -72,7 +73,7 @@ function LoginHistoryFilter() {
     setIsSelectCampaignsDropdownOpen(false);
   }
 
-  function handleDateTime(dateTime) {
+  function handleTime(dateTime) {
     const time = new Date(dateTime);
 
     const hour = time.getHours() % 12 || 12; // Convert hour to 12-hour format
@@ -80,22 +81,27 @@ function LoginHistoryFilter() {
     const second = time.getSeconds().toString().padStart(2, "0"); // Add leading zero if singular
     const period = time.getHours() < 12 ? "AM" : "PM"; // Determine AM or PM
 
-    const timeString =
-      time.getDate().toString().padStart(2, "0") +
-      "-" +
-      (time.getMonth() + 1).toString().padStart(2, "0") +
-      "-" +
-      time.getFullYear() +
-      "  " +
+    return (
       hour.toString().padStart(2, "0") +
-      ":" +
+      " : " +
       minute +
-      ":" +
+      " : " +
       second +
       " " +
-      period;
+      period
+    );
+  }
 
-    return timeString;
+  function handleDate(dateTime) {
+    const time = new Date(dateTime);
+
+    return (
+      time.getDate().toString().padStart(2, "0") +
+      " - " +
+      (time.getMonth() + 1).toString().padStart(2, "0") +
+      " - " +
+      time.getFullYear()
+    );
   }
 
   const usersData = [
@@ -286,19 +292,53 @@ function LoginHistoryFilter() {
               <td className="campaign-dnc">
                 {" "}
                 <span
-                  className={`badge ${
-                    user?.logoutTime ? "bg-danger" : "bg-success"
-                  }`}
+                  className={`badge  ${
+                    user?.logoutTime
+                      ? "bg-danger"
+                      : user?.loginTime
+                      ? "bg-success"
+                      : "bg-danger"
+                  } `}
                 >
                   {" "}
-                  {user?.logoutTime ? "No" : "Yes"}
+                  {user?.logoutTime ? "No" : user?.loginTime ? "Yes" : "No"}
                 </span>
               </td>
               <td className="campaign-callback">
-                {user?.loginTime ? handleDateTime(user?.loginTime) : "--"}
+                {user?.loginTime ? (
+                  <>
+                    <p style={{ marginBottom: "2px" }}>
+                      <span className="badge bg-dark">
+                        {handleTime(user?.loginTime)}
+                      </span>
+                    </p>
+                    <p style={{ marginBottom: "2px" }}>
+                      <span className="badge bg-dark">
+                        {handleDate(user?.loginTime)}
+                      </span>
+                    </p>
+                  </>
+                ) : (
+                  <span style={{ fontWeight: "bold" }}>- -</span>
+                )}
               </td>
               <td className="campaign-dnc">
-                {user?.logoutTime ? handleDateTime(user?.logoutTime) : "--"}
+                {user?.logoutTime ? (
+                  <>
+                    <p style={{ marginBottom: "2px" }}>
+                      <span className="badge bg-dark">
+                        {handleTime(user?.logoutTime)}
+                      </span>
+                    </p>
+                    <p style={{ marginBottom: "2px" }}>
+                      <span className="badge bg-dark">
+                        {handleDate(user?.logoutTime)}
+                      </span>
+                    </p>
+                  </>
+                ) : (
+                  <span style={{ fontWeight: "bold" }}>- -</span>
+                )}
               </td>
             </tr>
           ))}
