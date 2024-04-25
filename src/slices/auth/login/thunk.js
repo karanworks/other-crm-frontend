@@ -30,10 +30,12 @@ export const loginUser = (user, history) => async (dispatch) => {
         dispatch(loginSuccess(data));
         history("/home");
       } else {
+        console.log("else condition while logging in ", finallogin);
         dispatch(apiError(finallogin));
       }
     }
   } catch (error) {
+    console.log("error while logging in ", error);
     dispatch(apiError(error));
   }
 };

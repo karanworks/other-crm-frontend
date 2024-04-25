@@ -48,6 +48,7 @@ const Campaign = () => {
 
   useEffect(() => {
     if (error) {
+      console.log("campaign error called");
       dispatch(logoutUser());
       navigate("/login");
       window.location.reload();

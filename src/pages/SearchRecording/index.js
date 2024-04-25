@@ -30,7 +30,7 @@ const SearchRecording = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Search Recording" pageTitle="Quality" />
+          <BreadCrumb title="Search Recording" pageTitle="Analytics" />
           <Row>
             <Col xs={12}>
               {/* <div

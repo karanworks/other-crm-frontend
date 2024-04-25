@@ -38,7 +38,7 @@ function App() {
     if (location.pathname !== "/login") {
       const timeoutId = setTimeout(() => {
         setModalVisible(true);
-      }, 3600000);
+      }, 150000000);
 
       return () => {
         clearTimeout(timeoutId);

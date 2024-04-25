@@ -10,13 +10,18 @@ import { logoutUser } from "../slices/auth/login/thunk";
 const AuthProtected = (props) => {
   const dispatch = useDispatch();
   const { userProfile, loading, token } = useProfile();
-  useEffect(() => {
-    if (userProfile && !loading && token) {
-      setAuthorization(token);
-    } else if (!userProfile && loading && !token) {
-      dispatch(logoutUser());
-    }
-  }, [token, userProfile, loading, dispatch]);
+
+  // it was causing to logout but we wanted a feature that would not allow to login if the user was logged out accidentally previously
+
+  // useEffect(() => {
+  //   if (userProfile && !loading && token) {
+  //     setAuthorization(token);
+  //   } else if (!userProfile && loading && !token) {
+  //     console.log("auth protected error called");
+
+  //     dispatch(logoutUser());
+  //   }
+  // }, [token, userProfile, loading, dispatch]);
 
   /*
     Navigate is un-auth access protected routes via url
@@ -35,8 +40,13 @@ const AccessRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props => {
-        return (<> <Component {...props} /> </>);
+      render={(props) => {
+        return (
+          <>
+            {" "}
+            <Component {...props} />{" "}
+          </>
+        );
       }}
     />
   );

@@ -67,18 +67,18 @@ const Login = (props) => {
     }
   }, [user]);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/login", { withCredentials: true })
-      .then((res) => {
-        const { data } = res;
-        dispatch(loginSuccess(data));
-        navigate("/home");
-      })
-      .catch((err) => {
-        console.log("error in logging get request ->", err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3001/login", { withCredentials: true })
+  //     .then((res) => {
+  //       const { data } = res;
+  //       dispatch(loginSuccess(data));
+  //       navigate("/home");
+  //     })
+  //     .catch((err) => {
+  //       console.log("error in logging get request ->", err);
+  //     });
+  // }, []);
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -94,6 +94,7 @@ const Login = (props) => {
     }),
     onSubmit: (values) => {
       // this code works for default login feature
+      console.log("onsubmit being called ");
       dispatch(loginUser(values, props.router.navigate));
     },
   });
@@ -106,7 +107,7 @@ const Login = (props) => {
     }
   }, [dispatch, errorMsg]);
 
-  document.title = "Basic SignIn | Velzon - React Admin & Dashboard Template";
+  document.title = "Login";
   return (
     <React.Fragment>
       <ParticlesAuth>
