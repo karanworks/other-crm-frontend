@@ -62,6 +62,7 @@ function App() {
         tog_modal={tog_modal}
         handleUpdateSession={handleUpdateSession}
       />
+
       <Route />
     </React.Fragment>
   );

@@ -41,7 +41,7 @@ function TeamStatus() {
 
   return (
     // removed the "table-responsive" because it was restricting the actions button's list element's overflow
-    <div className="table-card mt-3 mb-1">
+    <div className="table-card mt-3 mb-1" style={{ paddingLeft: "15px" }}>
       <div
         className="d-flex align-items-center"
         style={{ marginBottom: " 10px" }}

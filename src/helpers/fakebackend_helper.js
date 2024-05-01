@@ -168,11 +168,7 @@ export const updateDisposition = ({
 };
 export const removeDisposition = ({ campaignId, dispositionId }) => {
   return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/disposition/${dispositionId}/delete`,
-    {
-      campaignId,
-      dispositionId,
-    }
+    `${process.env.REACT_APP_SERVER_URL}/campaign/${campaignId}/disposition/${dispositionId}/delete`
   );
 };
 
@@ -220,6 +216,69 @@ export const loginHistoryData = ({ campaignIds: campaigns }) => {
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/login-activity`,
     campaigns
+  );
+};
+
+// *****************************************************************
+// *********************** IVR CAMPAIGNS ***************************
+// *****************************************************************
+export const getIVRCampaigns = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/ivr-campaign`);
+};
+
+export const createIVRCampaign = (data) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/create`,
+    data
+  );
+};
+export const removeIVRCampaign = (ivrCampaignId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/delete`
+  );
+};
+
+export const updateIVRCampaign = (ivrCampaignId, data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/edit`,
+    data
+  );
+};
+
+// *****************************************************************
+// **************************** NUMBER *****************************
+// *****************************************************************
+
+export const getNumbers = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/number`);
+};
+export const createNumber = ({ name, number, department, ivrCampaignId }) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/number/create`, {
+    name,
+    number,
+    department,
+    ivrCampaignId,
+  });
+};
+export const updateNumber = ({
+  ivrCampaignId,
+  numberId,
+  name,
+  number,
+  department,
+}) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/number/${numberId}/edit`,
+    {
+      name,
+      number,
+      department,
+    }
+  );
+};
+export const removeNumber = ({ ivrCampaignId, numberId }) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/number/${numberId}/delete`
   );
 };
 

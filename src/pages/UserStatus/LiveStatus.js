@@ -113,7 +113,7 @@ function LiveStatus() {
 
   return (
     // removed the "table-responsive" because it was restricting the table's height
-    <div className="table-card mt-3 mb-1">
+    <div className="table-card mt-3 mb-1" style={{ paddingLeft: "15px" }}>
       <div
         className="d-flex align-items-center"
         style={{ marginBottom: " 10px" }}

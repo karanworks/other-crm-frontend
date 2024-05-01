@@ -12,6 +12,8 @@ import MappingReducer from "./Mapping/reducer";
 import DispositionReducer from "./Disposition/reducer";
 import MonitoringReducer from "./UserStatus/reducer";
 import LoginHistoryReducer from "./LoginHistory/reducer";
+import IVRCampaignReducer from "./IVRCampaign/reducer";
+import NumberReducer from "./Number/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -29,6 +31,8 @@ const rootReducer = combineReducers({
   Disposition: DispositionReducer,
   Monitoring: MonitoringReducer,
   LoginHistory: LoginHistoryReducer,
+  IVRCampaign: IVRCampaignReducer,
+  Number: NumberReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });

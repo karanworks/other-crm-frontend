@@ -26,6 +26,9 @@ import LoginHistory from "../pages/LoginHistory";
 import CallHistory from "../pages/CallHistory";
 import CRMReport from "../pages/CRMReport";
 import CDRReport from "../pages/CDRReport";
+import IVRCampaign from "../pages/IVRCampaign";
+import Number from "../pages/Number";
+import Speech from "../pages/Speech";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
@@ -41,6 +44,9 @@ const authProtectedRoutes = [
   { path: "/call-history", component: <CallHistory /> },
   { path: "/crm-report", component: <CRMReport /> },
   { path: "/cdr-report", component: <CDRReport /> },
+  { path: "/ivr-campaign", component: <IVRCampaign /> },
+  { path: "/ivr-number", component: <Number /> },
+  { path: "/ivr-speech", component: <Speech /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

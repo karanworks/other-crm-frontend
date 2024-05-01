@@ -120,42 +120,36 @@ function LiveData() {
   ];
 
   return (
-    <div className="col-xl-12">
-      <div className="card crm-widget">
-        <div className="card-body p-0">
-          <div
-            className="d-flex align-items-center row row-cols-md-6 row-cols-md-3 row-cols-1 g-0 flex-wrap"
-            style={{ gap: "5px", padding: "10px" }}
-          >
-            {crmWidgets.map((widget, index) => (
-              <div
-                className="col"
-                key={index}
-                style={{
-                  border: "1px solid #e9ebec",
-                  width: "250px",
-                }}
-              >
-                <div className="py-4 px-3">
-                  <h5 className="text-muted fs-15">{widget.label}</h5>
-                  <div className="d-flex align-items-center">
-                    <div className="flex-shrink-0">
-                      <i className={widget.icon + " display-6 text-muted"}></i>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <h1 className="mb-0">
-                        <span className="counter-value" data-target="197">
-                          {widget.counter}
-                        </span>
-                      </h1>
-                    </div>
-                  </div>
-                </div>
+    <div
+      className="d-flex align-items-center row row-cols-md-6 row-cols-md-3 row-cols-1 g-0 flex-wrap"
+      style={{ gap: "5px", padding: "10px", paddingLeft: "0" }}
+    >
+      {crmWidgets.map((widget, index) => (
+        <div
+          className="col"
+          key={index}
+          style={{
+            border: "1px solid #e9ebec",
+            width: "250px",
+          }}
+        >
+          <div className="py-4 px-3">
+            <h5 className="text-muted fs-15">{widget.label}</h5>
+            <div className="d-flex align-items-center">
+              <div className="flex-shrink-0">
+                <i className={widget.icon + " display-6 text-muted"}></i>
               </div>
-            ))}
+              <div className="flex-grow-1 ms-3">
+                <h1 className="mb-0">
+                  <span className="counter-value" data-target="197">
+                    {widget.counter}
+                  </span>
+                </h1>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

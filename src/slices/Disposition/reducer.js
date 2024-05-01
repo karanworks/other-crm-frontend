@@ -11,6 +11,8 @@ export const initialState = {
   dispositionsData: null,
   dispositions: null,
   error: "",
+  selectedCampaignId: null, //added this line later
+  alreadyExistsError: null,
 };
 
 const dispositionSlice = createSlice({

@@ -23,6 +23,8 @@ const Navdata = () => {
   const [isQuality, setIsQuality] = useState(false);
   const [isAnalytics, setIsAnalytics] = useState(false);
   const [isWork, setIsWork] = useState(false);
+  const [isIVRAdmin, setIsIVRAdmin] = useState(false);
+  const [isIVR, setIsIVR] = useState(false);
 
   //
   const [isAuth, setIsAuth] = useState(false);
@@ -74,6 +76,12 @@ const Navdata = () => {
     if (iscurrentState !== "Work") {
       setIsWork(false);
     }
+    if (iscurrentState !== "IVRAdmin") {
+      setIsIVRAdmin(false);
+    }
+    if (iscurrentState !== "IVR") {
+      setIsIVR(false);
+    }
 
     if (iscurrentState !== "Auth") {
       setIsAuth(false);
@@ -93,6 +101,8 @@ const Navdata = () => {
     isQuality,
     isAnalytics,
     isWork,
+    isIVRAdmin,
+    isIVR,
     isAuth,
     isPages,
   ]);
@@ -106,6 +116,8 @@ const Navdata = () => {
     Quality: isQuality,
     Analytics: isAnalytics,
     Work: isWork,
+    IVRAdmin: isIVRAdmin,
+    IVR: isIVR,
   };
 
   const handleClick = (menuLabelId) => {
@@ -142,6 +154,14 @@ const Navdata = () => {
           updateIconSidebar(e);
         case "Work":
           setIsWork(!isWork);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "IVRAdmin":
+          setIsIVRAdmin(!isIVRAdmin);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "IVR":
+          setIsIVR(!isIVR);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }

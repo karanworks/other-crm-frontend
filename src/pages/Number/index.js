@@ -18,43 +18,39 @@ import { Link } from "react-router-dom";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import DispositionFormModal from "./DispositionFormModal";
-import CRMFieldRemoveModal from "./DispositionRemoveModal";
+import CreateNumberFormModal from "./CreateNumberFormModal";
+import NumberRemoveModal from "./NumberRemoveModal";
 
 import {
-  getDispositions,
-  createDisposition,
-  updateDisposition,
-  removeDisposition,
-} from "../../slices/Disposition/thunk";
+  getNumbers,
+  createNumber,
+  updateNumber,
+  removeNumber,
+} from "../../slices/Number/thunk";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { changeCampaign } from "../../slices/Disposition/reducer";
+import { changeIvrCampaign } from "../../slices/Number/reducer";
 import { logoutUser } from "../../slices/auth/login/thunk";
 
-const Disposition = () => {
-  // modal for crm field
+const Number = () => {
+  // modal for create number
   const [modal_list, setmodal_list] = useState(false);
-  // modal for crm form (form that is shown after show crm button is clicked)
-  const [crmFormModalList, setCrmFormModalList] = useState(false);
-  // modal for deleting a crm field
+
+  // modal for deleting a number
   const [modal_delete, setmodal_delete] = useState(false);
-  // id of crm field made this to store the id of crm field that is going to be deleted or edited
-  // const [listCrmFieldId, setListCrmFieldId] = useState("");
-  const [listDispositionId, setListDispositionId] = useState("");
-  // to check whether a crm field is in editing state (it helps in changing the behaviour of submit method of form if a field is being edited then submit method to edit field will be called otherwise submit method to create crm field will be called)
-  // const [isEditingCrmField, setIsEditingCrmField] = useState(false);
-  const [isEditingDisposition, setIsEditingDisposition] = useState(false);
-  // badges
-  const [inputBadges, setInputBadges] = useState([]);
+
+  const [listNumberId, setListNumberId] = useState("");
+
+  const [isEditingNumber, setIsEditingNumber] = useState(false);
 
   const {
-    dispositions,
-    dispositionsData,
-    selectedCampaignId,
+    numbers,
+    numbersData,
+    selectedIvrCampaignId,
     error,
     alreadyExistsError,
-  } = useSelector((state) => state.Disposition);
+  } = useSelector((state) => state.Number);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -70,7 +66,7 @@ const Disposition = () => {
   // to toggle modal for crm field
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingDisposition(false);
+    setIsEditingNumber(false);
   }
 
   // toggles delete crmField confirmation modal
@@ -85,114 +81,104 @@ const Disposition = () => {
   }, [alreadyExistsError]);
 
   useEffect(() => {
-    dispatch(getDispositions());
+    dispatch(getNumbers());
   }, [dispatch]);
 
   // formik setup
-  const dispositionFormValidation = useFormik({
+  const numberValidation = useFormik({
     initialValues: {
-      dispositionName: "",
-      options: "",
+      name: "",
+      number: "",
+      department: "",
     },
     validationSchema: Yup.object({
-      dispositionName: Yup.string().required("Disposition name is required"),
-      options: Yup.array(),
+      name: Yup.string().required("Name is required"),
+      number: Yup.string().required("Numbr is required"),
+      department: Yup.string().required("Department is required"),
     }),
     onSubmit: (values) => {
-      const { dispositionName } = values;
+      const { name, number, department } = values;
 
-      isEditingDisposition
+      console.log("number form values ->", values);
+
+      isEditingNumber
         ? dispatch(
-            updateDisposition({
-              selectedCampaignId,
-              listDispositionId,
-              dispositionName,
-              options: inputBadges,
+            updateNumber({
+              selectedIvrCampaignId,
+              listNumberId,
+              name,
+              number,
+              department,
             })
           )
         : dispatch(
-            createDisposition({
-              selectedCampaignId,
-              dispositionName,
-              options: inputBadges,
+            createNumber({
+              selectedIvrCampaignId,
+              name,
+              number,
+              department,
             })
           );
 
-      console.log("disposition form submit called");
-      dispositionFormValidation.resetForm();
-      setInputBadges([]);
+      numberValidation.resetForm();
       setmodal_list(!modal_list);
     },
   });
 
-  // formik for campaign (that is selected inside select element)
-  const campaignTypeValidation = useFormik({
+  // formik for ivrcampaign (that is selected inside select element)
+  const ivrCampaignValidation = useFormik({
     initialValues: {
-      campaignName: "",
+      ivrCampaignName: "",
     },
     validationSchema: Yup.object({
-      campaignName: Yup.string().required(),
+      ivrCampaignName: Yup.string().required(),
     }),
     onSubmit: (values) => {},
   });
 
-  function handleDispositionFormSubmit(e) {
+  function handleNumberFormSubmit(e) {
     e.preventDefault();
-    console.log(
-      "handle disposition form validation",
-      dispositionFormValidation
-    );
-    dispositionFormValidation.handleSubmit();
+
+    numberValidation.handleSubmit();
 
     return false;
   }
 
-  // to update list of crm field when campaign is changed in select element
   function handleChange(e) {
-    campaignTypeValidation.setFieldValue("campaignName", e.target.value);
-    dispatch(changeCampaign(e.target.value));
+    ivrCampaignValidation.setFieldValue("ivrCampaignName", e.target.value);
+    dispatch(changeIvrCampaign(e.target.value));
   }
 
   function showCampaignFormHandleSubmit(e) {
     e.preventDefault();
-    campaignTypeValidation.handleSubmit();
+    ivrCampaignValidation.handleSubmit();
 
     return false;
   }
 
-  // to update the values of crmField form when editing the crmField
-  function handleEditCrmField(dispositionData) {
-    setIsEditingDisposition(true);
+  function handleEditNumber(numberData) {
+    setIsEditingNumber(true);
     setmodal_list(!modal_list);
-    setListDispositionId(dispositionData.id);
+    setListNumberId(numberData.id);
 
-    setInputBadges(JSON.parse(dispositionData.options));
-
-    console.log("options in edit form", dispositionData.options);
-
-    dispositionFormValidation.setValues({
-      dispositionName: dispositionData.dispositionName,
-      options: JSON.parse(dispositionData.options),
+    numberValidation.setValues({
+      name: numberData.name,
+      number: numberData.number,
+      department: numberData.department,
     });
-
-    // Clear option input values
-    dispositionFormValidation.setFieldValue("options", "");
   }
 
-  document.title = "Disposition";
+  document.title = "Number";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb
-            title="Campaign Management"
-            pageTitle="Operational Configuration"
-          />
+          <BreadCrumb title="Number" pageTitle="IVR Admin" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Disposition</h4>
+                  <h4 className="card-title mb-0">Number</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -201,12 +187,6 @@ const Disposition = () => {
                       <Col className="col-sm-auto">
                         <Form
                           style={{ display: "flex", gap: "10px" }}
-                          // onSubmit={(e) =>
-                          //   showCampaignFormHandleSubmit(
-                          //     e,
-                          //     campaignTypeValidation.caption
-                          //   )
-                          // }
                           onSubmit={showCampaignFormHandleSubmit}
                         >
                           <div className="mb-2">
@@ -217,35 +197,36 @@ const Disposition = () => {
                               placeholder="Enter Campaign Type"
                               type="select"
                               onChange={handleChange}
-                              onBlur={campaignTypeValidation.handleBlur}
+                              onBlur={ivrCampaignValidation.handleBlur}
                               value={
-                                campaignTypeValidation.values.campaignName || ""
+                                ivrCampaignValidation.values.ivrCampaignName ||
+                                ""
                               }
                               invalid={
-                                campaignTypeValidation.touched.campaignName &&
-                                campaignTypeValidation.errors.campaignName
+                                ivrCampaignValidation.touched.ivrCampaignName &&
+                                ivrCampaignValidation.errors.ivrCampaignName
                                   ? true
                                   : false
                               }
                             >
                               <option value="" disabled>
-                                Select Campaign Type
+                                Select IVR Campaign Type
                               </option>
 
-                              {dispositionsData?.campaigns?.map((campaign) => (
+                              {numbersData?.ivrCampaigns?.map((campaign) => (
                                 <option
-                                  value={campaign?.campaignName}
+                                  value={campaign?.ivrCampaignName}
                                   key={campaign.id}
                                 >
-                                  {campaign?.campaignName}
+                                  {campaign?.ivrCampaignName}
                                 </option>
                               ))}
                             </Input>
 
-                            {campaignTypeValidation.touched.campaignType &&
-                            campaignTypeValidation.errors.campaignType ? (
+                            {ivrCampaignValidation.touched.campaignType &&
+                            ivrCampaignValidation.errors.campaignType ? (
                               <FormFeedback type="invalid">
-                                {campaignTypeValidation.errors.campaignType}
+                                {ivrCampaignValidation.errors.campaignType}
                               </FormFeedback>
                             ) : null}
                           </div>
@@ -263,10 +244,10 @@ const Disposition = () => {
                             className="add-btn me-1"
                             onClick={() => tog_list()}
                             id="create-btn"
-                            disabled={!selectedCampaignId} // if no campaign is selected button will remain disabled
+                            disabled={!selectedIvrCampaignId} // if no campaign is selected button will remain disabled
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Disposition
+                            Add Number
                           </Button>
                         </div>
                       </Col>
@@ -290,28 +271,23 @@ const Disposition = () => {
                               </div>
                             </th>
                             <th className="sort" data-sort="caption">
-                              Disposition Name
+                              Name
                             </th>
                             <th className="sort" data-sort="type">
-                              Options
+                              Number
                             </th>
-                            {/* <th className="sort" data-sort="required">
-                              Required
+                            <th className="sort" data-sort="type">
+                              Department
                             </th>
-                            <th className="sort" data-sort="readOnly">
-                              Read Only
-                            </th>
-                            <th className="sort" data-sort="position">
-                              Position
-                            </th> */}
+
                             <th className="sort" data-sort="action">
                               Action
                             </th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {dispositions?.map((disposition) => (
-                            <tr key={disposition.id}>
+                          {numbers?.map((number) => (
+                            <tr key={number.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -322,29 +298,10 @@ const Disposition = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="dispositionName">
-                                {disposition?.dispositionName}
-                              </td>
-                              <td className="options">
-                                {disposition?.options &&
-                                Array.isArray(JSON.parse(disposition.options))
-                                  ? JSON.parse(disposition.options).map(
-                                      (option, index) => (
-                                        <span
-                                          key={index}
-                                          className="d-inline-block bg-primary fs-12 rounded"
-                                          style={{
-                                            padding: "5px",
-                                            margin: "2px",
-                                            color: "white",
-                                          }}
-                                        >
-                                          {option}
-                                        </span>
-                                      )
-                                    )
-                                  : null}
-                              </td>
+                              <td>{number?.name}</td>
+                              <td>{number?.number}</td>
+
+                              <td>{number?.department}</td>
 
                               <td>
                                 <div className="d-flex gap-2">
@@ -353,9 +310,7 @@ const Disposition = () => {
                                       className="btn btn-sm btn-primary edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() =>
-                                        handleEditCrmField(disposition)
-                                      }
+                                      onClick={() => handleEditNumber(number)}
                                     >
                                       Edit
                                     </button>
@@ -366,7 +321,7 @@ const Disposition = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
-                                        setListDispositionId(disposition.id);
+                                        setListNumberId(number.id);
                                         setmodal_delete(true);
                                       }}
                                     >
@@ -403,26 +358,21 @@ const Disposition = () => {
         </Container>
         <ToastContainer />
       </div>
-      <DispositionFormModal
+      <CreateNumberFormModal
         modal_list={modal_list}
         tog_list={tog_list}
-        dispositionFormValidation={dispositionFormValidation}
-        isEditingDisposition={isEditingDisposition}
-        handleDispositionFormSubmit={handleDispositionFormSubmit}
-        selectedCampaignId={selectedCampaignId}
+        numberValidation={numberValidation}
+        isEditingNumber={isEditingNumber}
+        handleNumberFormSubmit={handleNumberFormSubmit}
+        selectedIvrCampaignId={selectedIvrCampaignId}
         alreadyExistsError={alreadyExistsError}
-        inputBadges={inputBadges}
-        setInputBadges={setInputBadges}
       />
-      {/* crm field remove modal */}
-      <CRMFieldRemoveModal
+      <NumberRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteDisposition={() => {
-          dispatch(
-            removeDisposition({ selectedCampaignId, listDispositionId })
-          );
+        handleDeleteNumber={() => {
+          dispatch(removeNumber({ selectedIvrCampaignId, listNumberId }));
           setmodal_delete(false);
         }}
       />
@@ -430,4 +380,4 @@ const Disposition = () => {
   );
 };
 
-export default Disposition;
+export default Number;
