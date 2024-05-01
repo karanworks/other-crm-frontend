@@ -94,7 +94,6 @@ function CreateNumberFormModal({
               className="form-control"
               placeholder="Enter Number"
               type="number"
-              maxLength={10}
               onChange={numberValidation.handleChange}
               onBlur={numberValidation.handleBlur}
               value={numberValidation.values.number || ""}

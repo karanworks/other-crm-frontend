@@ -55,6 +55,26 @@ const dispositionSlice = createSlice({
     builder.addCase(createDisposition.fulfilled, (state, action) => {
       state.dispositions = [...state.dispositions, action.payload.data];
 
+      const campaignIndex = state.dispositionsData.campaigns.findIndex(
+        (campaign) => campaign.id === state.selectedCampaignId
+      );
+      if (campaignIndex !== -1) {
+        state.dispositionsData = {
+          ...state.dispositionsData,
+          campaigns: [
+            ...state.dispositionsData.campaigns.slice(0, campaignIndex),
+            {
+              ...state.dispositionsData.campaigns[campaignIndex],
+              dispositions: [
+                ...state.dispositionsData.campaigns[campaignIndex].dispositions,
+                action.payload.data,
+              ],
+            },
+            ...state.dispositionsData.campaigns.slice(campaignIndex + 1),
+          ],
+        };
+      }
+
       state.error = "";
 
       toast.success("Disposition has been added !", {

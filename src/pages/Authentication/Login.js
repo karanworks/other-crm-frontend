@@ -14,7 +14,7 @@ import {
   Spinner,
 } from "reactstrap";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
-import webwersLogo from "../../assets/images/webwersLogo.jpg";
+import webwersLogo from "../../assets/images/webwersLogo.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 

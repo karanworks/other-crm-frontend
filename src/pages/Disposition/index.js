@@ -39,11 +39,9 @@ const Disposition = () => {
   const [crmFormModalList, setCrmFormModalList] = useState(false);
   // modal for deleting a crm field
   const [modal_delete, setmodal_delete] = useState(false);
-  // id of crm field made this to store the id of crm field that is going to be deleted or edited
-  // const [listCrmFieldId, setListCrmFieldId] = useState("");
+
   const [listDispositionId, setListDispositionId] = useState("");
-  // to check whether a crm field is in editing state (it helps in changing the behaviour of submit method of form if a field is being edited then submit method to edit field will be called otherwise submit method to create crm field will be called)
-  // const [isEditingCrmField, setIsEditingCrmField] = useState(false);
+
   const [isEditingDisposition, setIsEditingDisposition] = useState(false);
   // badges
   const [inputBadges, setInputBadges] = useState([]);

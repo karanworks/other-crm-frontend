@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownMenu, DropdownToggle, Form } from "reactstrap";
-import webwersLogo from "../assets/images/webwersLogo.jpg";
+import webwersLogo from "../assets/images/webwersLogo.png";
 
 //import images
 import logoSm from "../assets/images/logo-sm.png";
@@ -87,7 +87,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                     <img src={logoSm} alt="" height="22" />
                   </span>
                   <span className="logo-lg">
-                    <img src={logoDark} alt="" height="17" />
+                    <img src={logoDark} alt="" />
                   </span>
                 </Link>
 
