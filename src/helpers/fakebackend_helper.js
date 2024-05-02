@@ -282,6 +282,48 @@ export const removeNumber = ({ ivrCampaignId, numberId }) => {
   );
 };
 
+// *****************************************************************
+// **************************** SPEECH *****************************
+// *****************************************************************
+
+export const getSpeeches = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/speech`);
+};
+export const createSpeech = ({
+  title,
+  speechText,
+  speechAudio,
+  ivrCampaignId,
+}) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/speech/create`, {
+    title,
+    speechText,
+    speechAudio,
+    ivrCampaignId,
+  });
+};
+export const updateSpeech = ({
+  ivrCampaignId,
+  speechId,
+  title,
+  speechText,
+  speechAudio,
+}) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/speech/${speechId}/edit`,
+    {
+      title,
+      speechText,
+      speechAudio,
+    }
+  );
+};
+export const removeSpeech = ({ ivrCampaignId, speechId }) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/speech/${speechId}/delete`
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

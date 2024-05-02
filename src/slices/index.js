@@ -14,6 +14,7 @@ import MonitoringReducer from "./UserStatus/reducer";
 import LoginHistoryReducer from "./LoginHistory/reducer";
 import IVRCampaignReducer from "./IVRCampaign/reducer";
 import NumberReducer from "./Number/reducer";
+import SpeechReducer from "./Speech/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   LoginHistory: LoginHistoryReducer,
   IVRCampaign: IVRCampaignReducer,
   Number: NumberReducer,
+  Speech: SpeechReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
