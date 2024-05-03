@@ -1,6 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-// import { getNumbers, createNumber, updateNumber, removeNumber } from "./thunk";
 import { getSpeeches, createSpeech, updateSpeech, removeSpeech } from "./thunk";
 
 export const initialState = {
@@ -27,14 +26,14 @@ const speechSlice = createSlice({
           (campaign) => campaign.id === state.selectedIvrCampaignId
         );
 
-        if (numbersOfIvrCamapaign && numbersOfIvrCamapaign.numbers) {
-          state.numbers = numbersOfIvrCamapaign.numbers;
+        if (numbersOfIvrCamapaign && numbersOfIvrCamapaign.speeches) {
+          state.speeches = numbersOfIvrCamapaign.speeches;
         } else {
-          state.numbers = [];
+          state.speeches = [];
         }
       } else {
         state.selectedIvrCampaignId = null;
-        state.numbers = [];
+        state.speeches = [];
       }
     },
   },
@@ -52,28 +51,56 @@ const speechSlice = createSlice({
       if (action.payload.status === "failure") {
         state.alreadyExistsError = action.payload.message;
       } else {
-        state.speeches = [...state.speeches, action.payload.data];
+        if (action.payload.data.ivrCampaignId === state.selectedIvrCampaignId) {
+          state.speeches = [...state.speeches, action.payload.data];
+        } else {
+          const newSpeech = action.payload.data;
 
-        const ivrCampaignIndex = state.speechesData.ivrCampaigns.findIndex(
-          (campaign) => campaign.id === state.selectedIvrCampaignId
-        );
-        if (ivrCampaignIndex !== -1) {
-          // Create a new state object to trigger immutability handling
-          state.speechesData = {
-            ...state.speechesData,
-            ivrCampaigns: [
-              ...state.speechesData.ivrCampaigns.slice(0, ivrCampaignIndex),
-              {
-                ...state.speechesData.ivrCampaigns[ivrCampaignIndex],
-                speeches: [
-                  ...state.speechesData.ivrCampaigns[ivrCampaignIndex].speeches,
-                  action.payload.data,
-                ],
-              },
-              ...state.speechesData.ivrCampaigns.slice(ivrCampaignIndex + 1),
-            ],
-          };
+          // Find the IVR campaign with the matching ID
+          const ivrCampaignToUpdate = state.speechesData.ivrCampaigns.find(
+            (campaign) => campaign.id === newSpeech.ivrCampaignId
+          );
+
+          if (ivrCampaignToUpdate) {
+            // Update the speeches property of the found IVR campaign
+            ivrCampaignToUpdate.speeches = [
+              ...ivrCampaignToUpdate.speeches,
+              newSpeech,
+            ];
+
+            // Update the state.speechesData with the modified IVR campaigns
+            state.speechesData = {
+              ...state.speechesData,
+              ivrCampaigns: state.speechesData.ivrCampaigns.map((campaign) => {
+                if (campaign.ivrCampaignId === newSpeech.ivrCampaignId) {
+                  return ivrCampaignToUpdate;
+                }
+                return campaign;
+              }),
+            };
+          }
         }
+
+        // const ivrCampaignIndex = state.speechesData.ivrCampaigns.findIndex(
+        //   (campaign) => campaign.id === state.selectedIvrCampaignId
+        // );
+        // if (ivrCampaignIndex !== -1) {
+        //   // Create a new state object to trigger immutability handling
+        //   state.speechesData = {
+        //     ...state.speechesData,
+        //     ivrCampaigns: [
+        //       ...state.speechesData.ivrCampaigns.slice(0, ivrCampaignIndex),
+        //       {
+        //         ...state.speechesData.ivrCampaigns[ivrCampaignIndex],
+        //         speeches: [
+        //           ...state.speechesData.ivrCampaigns[ivrCampaignIndex].speeches,
+        //           action.payload.data,
+        //         ],
+        //       },
+        //       ...state.speechesData.ivrCampaigns.slice(ivrCampaignIndex + 1),
+        //     ],
+        //   };
+        // }
 
         state.error = "";
         state.alreadyExistsError = null;

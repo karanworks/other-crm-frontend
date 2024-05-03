@@ -29,6 +29,7 @@ import CDRReport from "../pages/CDRReport";
 import IVRCampaign from "../pages/IVRCampaign";
 import Number from "../pages/Number";
 import Speech from "../pages/Speech";
+import Design from "../pages/Design";
 
 const authProtectedRoutes = [
   { path: "/home", component: <Home /> },
@@ -47,6 +48,7 @@ const authProtectedRoutes = [
   { path: "/ivr-campaign", component: <IVRCampaign /> },
   { path: "/ivr-number", component: <Number /> },
   { path: "/ivr-speech", component: <Speech /> },
+  { path: "/ivr-design", component: <Design /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

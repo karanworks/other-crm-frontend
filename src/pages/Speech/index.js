@@ -44,6 +44,13 @@ const Speech = () => {
 
   const [isEditingSpeech, setIsEditingSpeech] = useState(false);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const [ivrCampaignsOptions, setIvrCampaignsOptions] = useState(null);
+
+  const [selectedSingleIvrCampaign, setSelectedSingleIvrCampaign] =
+    useState(null);
+
   const {
     speeches,
     speechesData,
@@ -73,6 +80,17 @@ const Speech = () => {
   }
 
   useEffect(() => {
+    const campaignOptions = speechesData.ivrCampaigns?.map((campaign) => {
+      return {
+        value: campaign.id,
+        label: campaign.ivrCampaignName,
+      };
+    });
+
+    setIvrCampaignsOptions(campaignOptions);
+  }, [speechesData]);
+
+  useEffect(() => {
     if (alreadyExistsError) {
       setmodal_list(!modal_list);
     }
@@ -88,33 +106,39 @@ const Speech = () => {
       title: "",
       speechText: "",
       speechAudio: "",
+      speechAudioName: "",
+      ivrCampaignId: "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
       speechText: Yup.string(),
       speechAudio: Yup.string(),
+      speechAudioName: Yup.string(),
+      ivrCampaignId: Yup.string().required("Select an IVR campaign"),
     }),
     onSubmit: (values) => {
-      const { title, speechText, speechAudio } = values;
-
-      console.log("speech form values ->", values);
+      const { title, speechText, speechAudio, speechAudioName, ivrCampaignId } =
+        values;
+      console.log("speech form values ->", ivrCampaignId);
 
       isEditingSpeech
         ? dispatch(
             updateSpeech({
-              selectedIvrCampaignId,
+              ivrCampaignId,
               listSpeechId,
               title,
               speechText,
               speechAudio,
+              speechAudioName,
             })
           )
         : dispatch(
             createSpeech({
-              selectedIvrCampaignId,
+              ivrCampaignId,
               title,
               speechText,
               speechAudio,
+              speechAudioName,
             })
           );
 
@@ -164,6 +188,10 @@ const Speech = () => {
       speechText: speechData.speechText,
       speechAudio: speechData.speechAudio,
     });
+  }
+
+  function handleSelectSingle(selectedSingle) {
+    setSelectedSingleIvrCampaign(selectedSingle);
   }
 
   document.title = "Speech";
@@ -242,7 +270,6 @@ const Speech = () => {
                             className="add-btn me-1"
                             onClick={() => tog_list()}
                             id="create-btn"
-                            disabled={!selectedIvrCampaignId} // if no campaign is selected button will remain disabled
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             Add Speech
@@ -294,7 +321,30 @@ const Speech = () => {
                                 </div>
                               </th>
                               <td>{speech?.title}</td>
-                              <td>{speech?.speechText}</td>
+                              <td>
+                                {speech.speechText ? (
+                                  <div>{speech.speechText}</div>
+                                ) : null}
+                                {speech.speechAudioBlob ? (
+                                  <audio controls>
+                                    <source
+                                      src={URL.createObjectURL(
+                                        new Blob(
+                                          [
+                                            convertDataURIToBinary(
+                                              `data:audio/wav;base64,${speech.speechAudioBlob}`
+                                            ),
+                                          ],
+                                          { type: "audio/wav" }
+                                        )
+                                      )}
+                                      type="audio/wav"
+                                    />
+                                    Your browser does not support the audio
+                                    element.
+                                  </audio>
+                                ) : null}
+                              </td>
 
                               <td>
                                 <div className="d-flex gap-2">
@@ -359,6 +409,11 @@ const Speech = () => {
         handleSpeechFormSubmit={handleSpeechFormSubmit}
         selectedIvrCampaignId={selectedIvrCampaignId}
         alreadyExistsError={alreadyExistsError}
+        selectedFile={selectedFile}
+        setSelectedFile={setSelectedFile}
+        selectedSingleIvrCampaign={selectedSingleIvrCampaign}
+        handleSelectSingle={handleSelectSingle}
+        ivrCampaignsOptions={ivrCampaignsOptions}
       />
       <SpeechRemoveModal
         modal_delete={modal_delete}

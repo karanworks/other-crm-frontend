@@ -81,13 +81,23 @@ class APIClient {
   };
 
   create = (url, data) => {
-    return axios.post(url, data, { withCredentials: true });
+    return axios.post(url, data, {
+      withCredentials: true,
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
+    });
   };
   /**
    * Updates data
    */
   update = (url, data) => {
-    return axios.patch(url, data, { withCredentials: true });
+    return axios.patch(url, data, {
+      withCredentials: true,
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
+    });
   };
 
   put = (url, data) => {

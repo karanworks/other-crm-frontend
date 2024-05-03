@@ -8,13 +8,21 @@ import {
 
 export const createSpeech = createAsyncThunk(
   "speech/createSpeech",
-  async ({ selectedIvrCampaignId, title, speechText, speechAudio }) => {
+  async ({
+    // selectedIvrCampaignId,
+    title,
+    speechText,
+    speechAudio,
+    speechAudioName,
+    ivrCampaignId,
+  }) => {
     try {
       const response = await createSpeechApi({
-        ivrCampaignId: selectedIvrCampaignId,
+        ivrCampaignId,
         title,
         speechText,
         speechAudio,
+        speechAudioName,
       });
 
       console.log("create speech reponse in thunk ->", response);
@@ -27,19 +35,21 @@ export const createSpeech = createAsyncThunk(
 export const updateSpeech = createAsyncThunk(
   "speech/updateSpeech",
   async ({
-    selectedIvrCampaignId,
+    ivrCampaignId,
     listSpeechId,
     title,
     speechText,
     speechAudio,
+    speechAudioName,
   }) => {
     try {
       const response = await updateSpeechApi({
-        ivrCampaignId: selectedIvrCampaignId,
+        ivrCampaignId,
         speechId: listSpeechId,
         title,
         speechText,
         speechAudio,
+        speechAudioName,
       });
 
       console.log("update speech reponse in thunk ->", response);

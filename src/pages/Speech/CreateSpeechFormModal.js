@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Dropzone from "react-dropzone";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Select from "react-select";
 
 function CreateSpeechFormModal({
   modal_list,
@@ -23,15 +24,21 @@ function CreateSpeechFormModal({
   speechValidation,
   isEditingSpeech,
   alreadyExistsError,
+  selectedFile,
+  setSelectedFile,
+  selectedSingleIvrCampaign,
+  handleSelectSingle,
+  ivrCampaignsOptions,
 }) {
-  const [selectedFile, setSelectedFile] = useState(null);
-
   function handleAcceptedFile(file) {
     Object.assign(file, {
       preview: URL.createObjectURL(file),
       formattedSize: formatBytes(file.size),
     });
     setSelectedFile(file);
+    speechValidation.setFieldValue("speechAudio", file);
+    console.log("file goes here ->", file);
+    speechValidation.setFieldValue("speechAudioName", file.path);
   }
 
   function handleFileDelete() {
@@ -106,6 +113,32 @@ function CreateSpeechFormModal({
           </div>
 
           <div className="mb-2">
+            <Label htmlFor="ivrCampaignId" className="form-label">
+              Select IVR Campaign
+            </Label>
+            <Select
+              id="ivrCampaignId"
+              name="ivrCampaignId"
+              value={selectedSingleIvrCampaign}
+              onChange={(value) => {
+                console.log("selected ivr campaign >", value);
+                handleSelectSingle();
+                speechValidation.setFieldValue("ivrCampaignId", value.value);
+              }}
+              options={ivrCampaignsOptions}
+              placeholder="Select IVR Campaign"
+              style={{ border: "2px solid red" }}
+            />
+
+            {speechValidation.touched.ivrCampaignId &&
+            speechValidation.errors.ivrCampaignId ? (
+              <FormFeedback type="invalid">
+                {speechValidation.errors.ivrCampaignId}
+              </FormFeedback>
+            ) : null}
+          </div>
+
+          <div className="mb-2">
             <Label htmlFor="number" className="form-label">
               Speech Text
             </Label>
@@ -138,10 +171,12 @@ function CreateSpeechFormModal({
           </div>
 
           <div className="mb-2 ">
-            <Label htmlFor="number" className="form-label">
+            <Label htmlFor="speechAudio" className="form-label">
               Speech Audio
             </Label>
             <Dropzone
+              id="speechAudio"
+              name="speechAudio"
               onDrop={(acceptedFiles) => {
                 handleAcceptedFile(acceptedFiles[0]);
               }}

@@ -14,6 +14,8 @@ export const loginUser = (user, history) => async (dispatch) => {
   try {
     let response;
 
+    console.log("inside thunk ->", user);
+
     response = postLogin({
       email: user.email,
       password: user.password,

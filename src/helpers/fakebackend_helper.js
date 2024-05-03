@@ -24,8 +24,11 @@ export const postFakeRegister = (data) =>
 // export const postFakeLogin = data => api.create(url.POST_FAKE_LOGIN, data);
 
 // Login Method
-export const postLogin = (data) => api.create(url.POST_LOGIN, data);
+export const postLogin = (data) => {
+  console.log("post login data ->", data);
 
+  return api.create(url.POST_LOGIN, data);
+};
 // *****************************************************************
 // *************************** USERS *******************************
 // *****************************************************************
@@ -246,7 +249,7 @@ export const updateIVRCampaign = (ivrCampaignId, data) => {
 };
 
 // *****************************************************************
-// **************************** NUMBER *****************************
+// ************************ IVR NUMBER *****************************
 // *****************************************************************
 
 export const getNumbers = () => {
@@ -283,7 +286,7 @@ export const removeNumber = ({ ivrCampaignId, numberId }) => {
 };
 
 // *****************************************************************
-// **************************** SPEECH *****************************
+// ************************ IVR SPEECH *****************************
 // *****************************************************************
 
 export const getSpeeches = () => {
@@ -293,12 +296,14 @@ export const createSpeech = ({
   title,
   speechText,
   speechAudio,
+  speechAudioName,
   ivrCampaignId,
 }) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/speech/create`, {
     title,
     speechText,
     speechAudio,
+    speechAudioName,
     ivrCampaignId,
   });
 };
@@ -308,6 +313,7 @@ export const updateSpeech = ({
   title,
   speechText,
   speechAudio,
+  speechAudioName,
 }) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/speech/${speechId}/edit`,
@@ -315,6 +321,7 @@ export const updateSpeech = ({
       title,
       speechText,
       speechAudio,
+      speechAudioName,
     }
   );
 };
@@ -322,6 +329,14 @@ export const removeSpeech = ({ ivrCampaignId, speechId }) => {
   return api.delete(
     `${process.env.REACT_APP_SERVER_URL}/ivr-campaign/${ivrCampaignId}/speech/${speechId}/delete`
   );
+};
+
+// *****************************************************************
+// ************************ IVR DESIGN *****************************
+// *****************************************************************
+
+export const getDesign = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/ivr-design`);
 };
 
 // postForgetPwd
