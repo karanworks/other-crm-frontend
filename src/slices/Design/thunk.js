@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getDesign as getDesignApi } from "../../helpers/fakebackend_helper";
 
-export const getDesign = createAsyncThunk("design/getIvrDesign", async () => {
+export const getDesign = createAsyncThunk("design/getDesign", async () => {
   try {
     const response = await getDesignApi();
     return response;

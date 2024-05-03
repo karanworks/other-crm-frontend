@@ -1,6 +1,6 @@
 import { Button } from "reactstrap";
 
-const Dialpad = ({ tog_list }) => {
+const DesignDialpad = ({ tog_list }) => {
   function handleNumber() {
     tog_list();
   }
@@ -121,4 +121,4 @@ const Dialpad = ({ tog_list }) => {
   );
 };
 
-export default Dialpad;
+export default DesignDialpad;
