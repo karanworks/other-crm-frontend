@@ -22,6 +22,8 @@ const Design = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [selectedDepartmentOption, setSelectedDepartmentOption] =
     useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const dispatch = useDispatch();
   const { designData, departments } = useSelector((state) => state.Design);
 
@@ -40,9 +42,11 @@ const Design = () => {
   const validation = useFormik({
     initialValues: {
       departmentName: "",
+      audioText: "",
     },
     validationSchema: Yup.object({
       departmentName: Yup.string().required("Please enter department name"),
+      audioText: Yup.string().required(),
     }),
     onSubmit: (values) => {
       //   isEditingCampaign
@@ -204,12 +208,968 @@ const Design = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="first">First</td>
-                              <td className="second">Second</td>
+                              <td className="first">
+                                <div
+                                  className="d-flex align-items"
+                                  style={{ gap: "10px" }}
+                                >
+                                  <span>Audio Text</span>
+                                  <div
+                                    className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                    style={{
+                                      width: "25px",
+                                      height: "25px",
+                                      border: "1px solid #32A6E4",
+                                    }}
+                                  >
+                                    1
+                                  </div>
 
-                              <td className="third">Third</td>
+                                  <div
+                                    className="d-flex"
+                                    style={{ gap: "2px" }}
+                                  >
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-phone-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-edit-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="second">
+                                <div
+                                  className="d-flex flex-column"
+                                  style={{ gap: "5px" }}
+                                >
+                                  <div
+                                    className="d-flex "
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      1
+                                    </div>
+                                    <div
+                                      className="d-flex"
+                                      style={{ gap: "2px" }}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-add-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-phone-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-edit-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-delete-bin-2-line"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div
+                                    className="d-flex align-items-center"
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      2
+                                    </div>
+                                    <div
+                                      className="d-flex"
+                                      style={{ gap: "2px" }}
+                                    >
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-add-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-phone-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-edit-line"></i>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                        }}
+                                      >
+                                        <i class="ri-delete-bin-2-line"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="third">
+                                <div
+                                  className="keys-info-container d-flex flex-column"
+                                  style={{ gap: "15px" }}
+                                >
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        1
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          1
+                                        </div>
+                                        <div
+                                          className="d-flex"
+                                          style={{ gap: "2px" }}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-add-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-phone-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-edit-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-delete-bin-2-line"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                        <div
+                                          className="d-flex"
+                                          style={{ gap: "2px" }}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-add-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-phone-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-edit-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-delete-bin-2-line"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        2
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          1
+                                        </div>
+                                        <div
+                                          className="d-flex"
+                                          style={{ gap: "2px" }}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-add-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-phone-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-edit-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-delete-bin-2-line"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                        <div
+                                          className="d-flex"
+                                          style={{ gap: "2px" }}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-add-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-phone-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-edit-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i class="ri-delete-bin-2-line"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
 
-                              <td className="fourth">Fourth</td>
+                              <td className="fourth">
+                                <div
+                                  className="keys-info-container d-flex flex-column"
+                                  style={{ gap: "15px" }}
+                                >
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        1
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "5px" }}
+                                      >
+                                        <span>Indumati -</span>
+                                        <span>9239823893</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          1
+                                        </div>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "5px" }}
+                                      >
+                                        <span>Chutki -</span>
+                                        <span>9239823893</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        1
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "5px" }}
+                                      >
+                                        <span>Bheem -</span>
+                                        <span>9239823893</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "5px" }}
+                                      >
+                                        <span>Kaliya -</span>
+                                        <span>9239823893</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">
+                                <div className="form-check">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    name="checkAll"
+                                    value="option1"
+                                  />
+                                </div>
+                              </th>
+                              <td className="first">
+                                <div
+                                  className="d-flex align-items-center"
+                                  style={{ gap: "10px" }}
+                                >
+                                  <span>Audio Text</span>
+                                  <div
+                                    className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                    style={{
+                                      width: "25px",
+                                      height: "25px",
+                                      border: "1px solid #32A6E4",
+                                    }}
+                                  >
+                                    2
+                                  </div>
+                                  <div
+                                    className="d-flex"
+                                    style={{ gap: "2px" }}
+                                  >
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-phone-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-edit-line"></i>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-delete-bin-2-line"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                              {/* <td className="second">
+                                <div
+                                  className="d-flex flex-column"
+                                  style={{ gap: "5px" }}
+                                >
+                                  <div
+                                    className="d-flex "
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      1
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                  </div>
+                                  <div
+                                    className="d-flex align-items-center"
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      2
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                  </div>
+                                  <div
+                                    className="d-flex align-items-center"
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      3
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                  </div>
+                                  <div
+                                    className="d-flex align-items-center"
+                                    style={{ gap: "10px" }}
+                                  >
+                                    <span>Audio Text</span>
+                                    <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      4
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                      style={{ width: "25px", height: "25px" }}
+                                    >
+                                      <i class="ri-add-line"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td> */}
+                              {/* <td className="third">
+                                <div
+                                  className="keys-info-container d-flex flex-column"
+                                  style={{ gap: "15px" }}
+                                >
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        1
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          1
+                                        </div>
+                                        <button
+                                          type="button"
+                                          className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                          }}
+                                        >
+                                          <i class="ri-add-line"></i>
+                                        </button>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                        <button
+                                          type="button"
+                                          className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                          }}
+                                        >
+                                          <i class="ri-add-line"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="single-key-info-container">
+                                    <div
+                                      className="key-heading d-flex mb-2 pb-2"
+                                      style={{
+                                        gap: "5px",
+                                        borderBottom: "1px solid #8F92A0",
+                                      }}
+                                    >
+                                      <span className="fw-bold">Key - </span>
+                                      <div
+                                        className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+                                        style={{
+                                          width: "25px",
+                                          height: "25px",
+                                          color: "white",
+                                        }}
+                                      >
+                                        2
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          1
+                                        </div>
+                                        <button
+                                          type="button"
+                                          className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                          }}
+                                        >
+                                          <i class="ri-add-line"></i>
+                                        </button>
+                                      </div>
+                                      <div
+                                        className="d-flex align-items-center"
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>Audio Text</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          2
+                                        </div>
+                                        <button
+                                          type="button"
+                                          className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                          }}
+                                        >
+                                          <i class="ri-add-line"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td> */}
+
+                              <td className="fourth">
+                                <div
+                                  className="d-flex flex-column"
+                                  style={{ gap: "5px" }}
+                                >
+                                  <div
+                                    className="d-flex align-items-center"
+                                    style={{ gap: "5px" }}
+                                  >
+                                    <span>Raju -</span>
+                                    <span>9239823893</span>
+                                    {/* <div
+                                      className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                      style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        border: "1px solid #32A6E4",
+                                      }}
+                                    >
+                                      1
+                                    </div> */}
+                                  </div>
+                                </div>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -230,6 +1190,8 @@ const Design = () => {
         departmentOptions={departmentOptions}
         selectedDepartmentOption={selectedDepartmentOption}
         handleSelectDepartmentOption={handleSelectDepartmentOption}
+        selectedFile={selectedFile}
+        setSelectedFile={setSelectedFile}
       />
     </React.Fragment>
   );
