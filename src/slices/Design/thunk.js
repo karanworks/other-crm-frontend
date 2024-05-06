@@ -1,5 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getDesign as getDesignApi } from "../../helpers/fakebackend_helper";
+import {
+  getDesign as getDesignApi,
+  createDesign as createDesignApi,
+} from "../../helpers/fakebackend_helper";
 
 export const getDesign = createAsyncThunk("design/getDesign", async () => {
   try {
@@ -9,3 +12,20 @@ export const getDesign = createAsyncThunk("design/getDesign", async () => {
     console.log("error inside get ivr design thunk", error);
   }
 });
+
+export const createDesign = createAsyncThunk(
+  "design/createDesign",
+  async ({ audioText, ivrCampaignId, key, parentId }) => {
+    try {
+      const response = await createDesignApi(
+        audioText,
+        ivrCampaignId,
+        key,
+        parentId
+      );
+      return response;
+    } catch (error) {
+      console.log("error inside get ivr design thunk", error);
+    }
+  }
+);

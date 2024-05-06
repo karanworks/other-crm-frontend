@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDesign } from "./thunk";
+import { getDesign, createDesign } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
   designData: [],
   departments: [],
+  design: [],
   alreadyExistsError: null,
   error: "",
   selectedIvrCampaignId: null,
@@ -54,6 +55,22 @@ const designSlice = createSlice({
       } else {
         state.designData = action.payload?.data;
         state.error = "";
+      }
+    });
+    builder.addCase(createDesign.fulfilled, (state, action) => {
+      if (action.payload.status == "failure") {
+        state.alreadyExistsError = action.payload.message;
+        state.error = "";
+      } else {
+        state.design = [...state.design, action.payload.data];
+        state.alreadyExistsError = null;
+        state.error = "";
+
+        toast.success("IVR Design has been added !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
     });
   },

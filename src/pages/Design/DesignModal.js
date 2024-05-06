@@ -10,7 +10,9 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
+
 import Dropzone from "react-dropzone";
+import { useState } from "react";
 
 function DesignModal({
   modal_list, // modal state
@@ -18,12 +20,31 @@ function DesignModal({
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
   alreadyExistsError,
-  departmentOptions,
   selectedFile,
   setSelectedFile,
-  selectedDepartmentOption,
-  handleSelectDepartmentOption,
+  layerId,
 }) {
+  const [selectedSingle, setSelectedSingle] = useState(null);
+
+  const SingleOptions = [
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "5", label: "5" },
+    { value: "6", label: "6" },
+    { value: "7", label: "4" },
+    { value: "8", label: "4" },
+    { value: "9", label: "9" },
+    { value: "0", label: "0" },
+    { value: "*", label: "*" },
+    { value: "#", label: "#" },
+  ];
+
+  function handleSelectSingle(selectedSingle) {
+    console.log("selected single ->", selectedSingle);
+    setSelectedSingle(selectedSingle);
+  }
+
   function handleAcceptedFile(file) {
     Object.assign(file, {
       preview: URL.createObjectURL(file),
@@ -76,20 +97,30 @@ function DesignModal({
               {alreadyExistsError}
             </Alert>
           )} */}
-          <div className="mb-2">
-            <Label htmlFor="department" className="form-label">
-              Department
-            </Label>
-            <Select
-              value={selectedDepartmentOption}
-              onChange={() => {
-                handleSelectDepartmentOption();
-              }}
-              options={departmentOptions}
-              placeholder="Select Department"
-              style={{ border: "2px solid red" }}
-            />
-          </div>
+
+          {layerId ? (
+            <div className="mb-2">
+              <Label htmlFor="choices-single-default" className="form-label ">
+                Key
+              </Label>
+
+              <Select
+                value={selectedSingle}
+                onChange={(key) => {
+                  handleSelectSingle(key);
+                  validation.setFieldValue("key", key);
+                }}
+                onBlur={validation.handleBlur}
+                placeholder="Select Key"
+                options={SingleOptions}
+              />
+              {validation.touched.key && validation.errors.key ? (
+                <FormFeedback type="invalid">
+                  {validation.errors.key}
+                </FormFeedback>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="mb-2">
             <Label htmlFor="number" className="form-label">

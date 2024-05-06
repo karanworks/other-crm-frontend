@@ -338,6 +338,14 @@ export const removeSpeech = ({ ivrCampaignId, speechId }) => {
 export const getDesign = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/ivr-design`);
 };
+export const createDesign = (audioText, ivrCampaignId, key, parentId) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/ivr-design/create`, {
+    audioText,
+    ivrCampaignId,
+    key,
+    parentId,
+  });
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
