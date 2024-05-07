@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
 import { changeDepartment } from "../../slices/Design/reducer";
 import { useDispatch } from "react-redux";
-
+import userIcon from "./user-icon.png";
 import { useState } from "react";
 
 function NumberModal({
@@ -114,8 +114,43 @@ function NumberModal({
                   >
                     Select Numbers <i className="mdi mdi-chevron-down"></i>
                   </DropdownToggle>
-                  <DropdownMenu className="dropdown-menu-sm p-2">
-                    <div className="mb-2">
+                  <DropdownMenu className="dropdown-menu-sm p-2 mt-1">
+                    {departmentNumbers?.map((departmentNumber) => (
+                      <div className="mb-2" key={departmentNumber.number}>
+                        <div className="form-check custom-checkbox">
+                          <Input
+                            type="checkbox"
+                            className="form-check-input"
+                            id={departmentNumber.number}
+                            name={departmentNumber.number}
+                            // onChange={() => {}}
+                          />
+                          <label className="form-check-label" htmlFor="number">
+                            <div
+                              className="d-flex"
+                              style={{
+                                padding: "0",
+                              }}
+                            >
+                              <img
+                                src={userIcon}
+                                alt=""
+                                className="avatar-xs rounded-3 me-2"
+                              />
+                              <div>
+                                <h5 className="fs-13 mb-0">
+                                  {departmentNumber.name}
+                                </h5>
+                                <p className="fs-12 mb-0 text-muted">
+                                  {departmentNumber.number}
+                                </p>
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                    {/* <div className="mb-2">
                       <div className="form-check custom-checkbox">
                         <Input
                           type="checkbox"
@@ -128,7 +163,7 @@ function NumberModal({
                           Number
                         </label>
                       </div>
-                    </div>
+                    </div> */}
                   </DropdownMenu>
                 </UncontrolledDropdown>
               </ButtonGroup>
