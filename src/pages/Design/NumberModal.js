@@ -7,6 +7,10 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
+  ButtonGroup,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
@@ -96,6 +100,39 @@ function NumberModal({
                 {numberValidation.errors.department}
               </FormFeedback>
             ) : null}
+          </div>
+
+          <div className="mb-2">
+            <Label className="form-label ">Select Number</Label>
+            <div>
+              <ButtonGroup>
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    // tag="button"
+                    className="btn text-muted"
+                    style={{ background: "white", border: "1px solid #e8e6e6" }}
+                  >
+                    Select Numbers <i className="mdi mdi-chevron-down"></i>
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-menu-sm p-2">
+                    <div className="mb-2">
+                      <div className="form-check custom-checkbox">
+                        <Input
+                          type="checkbox"
+                          className="form-check-input"
+                          id="number"
+                          name="number"
+                          // onChange={() => {}}
+                        />
+                        <label className="form-check-label" htmlFor="number">
+                          Number
+                        </label>
+                      </div>
+                    </div>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </ButtonGroup>
+            </div>
           </div>
 
           <div className="text-end">
