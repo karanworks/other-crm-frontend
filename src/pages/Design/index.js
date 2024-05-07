@@ -365,46 +365,62 @@ const Design = () => {
                                   </div>
                                 </td>
 
-                                {design?.items?.map((item) =>
+                                {design.items.map((item) =>
                                   item?.number ? (
-                                    <td key={item.id}>
-                                      {item.number?.map((number) => (
-                                        <div
-                                          className="d-flex align-items-center"
-                                          style={{
-                                            padding: "0",
-                                          }}
-                                        >
-                                          <img
-                                            src={userIcon}
-                                            alt=""
-                                            className="avatar-xs rounded-3 me-2"
-                                            style={{
-                                              width: "25px",
-                                              height: "25px",
-                                            }}
-                                          />
-                                          <div className="d-flex align-items-center">
-                                            <h5 className="fs-15 mb-0">
-                                              {number.name + " - "}
-                                            </h5>
-                                            <p className="fs-15 mb-0 ">
-                                              {"  "} {number.number}
-                                            </p>
+                                    <td>
+                                      <div key={item.id}>
+                                        {item.number.map((number) => (
+                                          <div key={number.id}>
+                                            {/* <div>
+                                              {item?.number.length !== 0
+                                                ? "true"
+                                                : "false"}
+                                            </div> */}
+                                            {/* <div>
+                                              {JSON.stringify(item?.number)}{" "}
+                                            </div> */}
+                                            <div
+                                              className="d-flex align-items-center"
+                                              key={number.id}
+                                              style={{ padding: "0" }}
+                                            >
+                                              <img
+                                                src={userIcon}
+                                                alt=""
+                                                className="avatar-xs rounded-3 me-2"
+                                                style={{
+                                                  width: "25px",
+                                                  height: "25px",
+                                                }}
+                                              />
+                                              <div className="d-flex align-items-center">
+                                                <h5 className="fs-15 mb-0">
+                                                  {number.name + " - "}
+                                                </h5>
+                                                <p className="fs-15 mb-0 ">
+                                                  {" "}
+                                                  {number.number}
+                                                </p>
+                                              </div>
+                                            </div>
                                           </div>
-                                        </div>
-                                      ))}
+                                        ))}
+                                      </div>
                                     </td>
-                                  ) : (
-                                    // design?.items?.map((item) => (
-                                    <td className="second" key={item.id}>
-                                      <div
-                                        className="d-flex flex-column"
-                                        style={{ gap: "5px" }}
-                                      >
+                                  ) : null
+                                )}
+
+                                <td>
+                                  <div
+                                    className="d-flex flex-column"
+                                    style={{ gap: "5px" }}
+                                  >
+                                    {design.items.map((item) =>
+                                      !item.number ? (
                                         <div
                                           className="d-flex "
                                           style={{ gap: "10px" }}
+                                          key={item.id}
                                         >
                                           <span>{item.audioText}</span>
                                           <div
@@ -428,6 +444,10 @@ const Design = () => {
                                                 width: "25px",
                                                 height: "25px",
                                               }}
+                                              onClick={() => {
+                                                setLayerId(design.id);
+                                                tog_list();
+                                              }}
                                             >
                                               <i className="ri-add-line"></i>
                                             </button>
@@ -439,7 +459,7 @@ const Design = () => {
                                                 height: "25px",
                                               }}
                                               onClick={() => {
-                                                setLayerId(design?.id);
+                                                setLayerId(design.id);
                                                 number_tog_list();
                                               }}
                                             >
@@ -467,26 +487,10 @@ const Design = () => {
                                             </button>
                                           </div>
                                         </div>
-                                      </div>
-                                    </td>
-                                    // ))
-                                  )
-                                )}
-
-                                {/* <td className="fourth">
-                                  <div
-                                    className="d-flex flex-column"
-                                    style={{ gap: "5px" }}
-                                  >
-                                    <div
-                                      className="d-flex align-items-center"
-                                      style={{ gap: "5px" }}
-                                    >
-                                      <span>Raju -</span>
-                                      <span>9239823893</span>
-                                    </div>
+                                      ) : null
+                                    )}
                                   </div>
-                                </td> */}
+                                </td>
                               </tr>
                             ))}
 
