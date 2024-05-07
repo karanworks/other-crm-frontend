@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { getDesign, createDesign } from "./thunk";
 import { toast } from "react-toastify";
 
@@ -9,6 +9,7 @@ export const initialState = {
   alreadyExistsError: null,
   error: "",
   selectedIvrCampaignId: null,
+  departmentNumbers: null,
 };
 
 const designSlice = createSlice({
@@ -47,6 +48,30 @@ const designSlice = createSlice({
         state.departments = [];
       }
     },
+
+    changeDepartment(state, action) {
+      console.log(
+        "results after changing department ->",
+        current(state.designData)
+      );
+
+      const selectedCampaign = state.designData.ivrCampaigns.find(
+        (campaign) => {
+          return campaign.id === state.selectedIvrCampaignId;
+        }
+      );
+
+      const numbers = selectedCampaign?.numbers
+        .map((number) => {
+          if (number.department === action.payload) {
+            return { name: number.name, number: number.number };
+          }
+        })
+        .filter((num) => num !== undefined);
+
+      state.departmentNumbers = numbers;
+      console.log("numbers for department inside changeDepartment ->", numbers);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getDesign.fulfilled, (state, action) => {
@@ -77,4 +102,4 @@ const designSlice = createSlice({
 });
 
 export default designSlice.reducer;
-export const { changeIvrCampaign } = designSlice.actions;
+export const { changeIvrCampaign, changeDepartment } = designSlice.actions;

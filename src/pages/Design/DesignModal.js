@@ -108,7 +108,8 @@ function DesignModal({
                 value={selectedSingle}
                 onChange={(key) => {
                   handleSelectSingle(key);
-                  validation.setFieldValue("key", key);
+                  console.log("selected key in select element ->", key);
+                  validation.setFieldValue("key", key.value);
                 }}
                 onBlur={validation.handleBlur}
                 placeholder="Select Key"

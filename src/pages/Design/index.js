@@ -17,9 +17,12 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createDesign, getDesign } from "../../slices/Design/thunk";
 import { changeIvrCampaign } from "../../slices/Design/reducer";
+import NumberModal from "./NumberModal";
 
 const Design = () => {
   const [modal_list, setmodal_list] = useState(false);
+
+  const [number_modal_list, set_number_modal_list] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -29,14 +32,14 @@ const Design = () => {
   const [layerId, setLayerId] = useState("");
 
   const dispatch = useDispatch();
-  const { designData, selectedIvrCampaignId } = useSelector(
-    (state) => state.Design
-  );
-
-  console.log("single design ->", designData.designs);
+  const { designData, selectedIvrCampaignId, departments, departmentNumbers } =
+    useSelector((state) => state.Design);
 
   function tog_list() {
     setmodal_list(!modal_list);
+  }
+  function number_tog_list() {
+    set_number_modal_list(!number_modal_list);
   }
 
   function handleDialpadBtn(key) {
@@ -64,9 +67,6 @@ const Design = () => {
       //     ? dispatch(updateCampaign({ values, listCampaignId }))
       //     : dispatch(createCampaign(values));
 
-      console.log("key from form ->", key);
-
-      console.log("form values ->", values);
       dispatch(
         createDesign({
           ivrCampaignId: selectedIvrCampaignId,
@@ -79,11 +79,41 @@ const Design = () => {
       setmodal_list(false);
     },
   });
+  const numberValidation = useFormik({
+    initialValues: {
+      departments: "",
+      number: "",
+    },
+    validationSchema: Yup.object({
+      departments: Yup.string().required(),
+      number: Yup.string().required(),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+
+      // dispatch(
+      //   createDesign({
+      //     ivrCampaignId: selectedIvrCampaignId,
+      //     key: clickedBtn || key,
+      //     audioText,
+      //     parentId: layerId,
+      //   })
+      // );
+
+      setmodal_list(false);
+    },
+  });
 
   function formHandleSubmit(e) {
     e.preventDefault();
     console.log("handle submit called while creating design");
     validation.handleSubmit();
+    return false;
+  }
+  function numberFromHandleSubmit(e) {
+    e.preventDefault();
+    console.log("handle submit called while adding number");
+    numbervalidation.handleSubmit();
     return false;
   }
 
@@ -248,7 +278,7 @@ const Design = () => {
                                         border: "1px solid #32A6E4",
                                       }}
                                     >
-                                      2
+                                      {design?.key}
                                     </div>
                                     <div
                                       className="d-flex"
@@ -274,6 +304,10 @@ const Design = () => {
                                         style={{
                                           width: "25px",
                                           height: "25px",
+                                        }}
+                                        onClick={() => {
+                                          setLayerId(design?.id);
+                                          number_tog_list();
                                         }}
                                       >
                                         <i className="ri-phone-line"></i>
@@ -302,7 +336,78 @@ const Design = () => {
                                   </div>
                                 </td>
 
-                                <td className="fourth">
+                                {design?.items?.map((item) => (
+                                  <td className="second" key={item.id}>
+                                    <div
+                                      className="d-flex flex-column"
+                                      style={{ gap: "5px" }}
+                                    >
+                                      <div
+                                        className="d-flex "
+                                        style={{ gap: "10px" }}
+                                      >
+                                        <span>{item.audioText}</span>
+                                        <div
+                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          style={{
+                                            width: "25px",
+                                            height: "25px",
+                                            border: "1px solid #32A6E4",
+                                          }}
+                                        >
+                                          {item.key}
+                                        </div>
+                                        <div
+                                          className="d-flex"
+                                          style={{ gap: "2px" }}
+                                        >
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i className="ri-add-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i className="ri-phone-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i className="ri-edit-line"></i>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          >
+                                            <i className="ri-delete-bin-2-line"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                ))}
+
+                                {/* <td className="fourth">
                                   <div
                                     className="d-flex flex-column"
                                     style={{ gap: "5px" }}
@@ -315,7 +420,7 @@ const Design = () => {
                                       <span>9239823893</span>
                                     </div>
                                   </div>
-                                </td>
+                                </td> */}
                               </tr>
                             ))}
 
@@ -1040,6 +1145,15 @@ const Design = () => {
         selectedFile={selectedFile}
         setSelectedFile={setSelectedFile}
         layerId={layerId}
+      />
+      <NumberModal
+        number_modal_list={number_modal_list}
+        number_tog_list={number_tog_list}
+        numberValidation={numberValidation}
+        numberFromHandleSubmit={numberFromHandleSubmit}
+        layerId={layerId}
+        departments={departments}
+        departmentNumbers={departmentNumbers}
       />
     </React.Fragment>
   );
