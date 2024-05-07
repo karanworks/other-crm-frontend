@@ -22,22 +22,16 @@ import { useState } from "react";
 function NumberModal({
   number_modal_list, // modal state
   number_tog_list, // to change modal state
-  formHandleSubmit, // submit function for form
+  numberFromHandleSubmit, // submit function for form
   numberValidation, // to get the values from formik
   alreadyExistsError,
   layerId,
   departments,
   departmentNumbers,
+  handleAddNumber,
+  selectedNumbers,
 }) {
   const [selectedSingle, setSelectedSingle] = useState(null);
-
-  // const SingleOptions = [
-  //   { value: "Choose 1", label: "Choose 1" },
-  //   { value: "Choose 2", label: "Choose 2" },
-  //   { value: "Choose 3", label: "Choose 3" },
-  // ];
-
-  console.log("department numbers inside number modal->", departmentNumbers);
 
   const dispatch = useDispatch();
 
@@ -69,7 +63,7 @@ function NumberModal({
       </ModalHeader>
       <Form
         className="tablelist-form"
-        onSubmit={(e) => formHandleSubmit(e, numberValidation.userId)}
+        onSubmit={(e) => numberFromHandleSubmit(e)}
       >
         <ModalBody style={{ paddingTop: "0px" }}>
           {/* {alreadyExistsError && (
@@ -91,6 +85,12 @@ function NumberModal({
                 numberValidation.setFieldValue("department", department.value);
               }}
               onBlur={numberValidation.handleBlur}
+              invalid={
+                numberValidation.touched.department &&
+                numberValidation.errors.department
+                  ? true
+                  : false
+              }
               placeholder="Select Department"
               options={departmentOptions}
             />
@@ -115,19 +115,40 @@ function NumberModal({
                     Select Numbers <i className="mdi mdi-chevron-down"></i>
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-menu-sm p-2 mt-1">
+                    <div className="form-check custom-checkbox mb-2">
+                      <Input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="selectAll"
+                        name="selectAll"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="selectAll"
+                        style={{ marginLeft: "7px" }}
+                      >
+                        Select All
+                      </label>
+                    </div>
                     {departmentNumbers?.map((departmentNumber) => (
                       <div className="mb-2" key={departmentNumber.number}>
-                        <div className="form-check custom-checkbox">
+                        <div
+                          className="form-check custom-checkbox d-flex align-items-center"
+                          style={{ gap: "7px" }}
+                        >
                           <Input
                             type="checkbox"
                             className="form-check-input"
                             id={departmentNumber.number}
                             name={departmentNumber.number}
-                            // onChange={() => {}}
+                            onChange={() => handleAddNumber(departmentNumber)}
                           />
-                          <label className="form-check-label" htmlFor="number">
+                          <label
+                            className="form-check-label d-flex align-items-center"
+                            htmlFor={departmentNumber.number}
+                          >
                             <div
-                              className="d-flex"
+                              className="d-flex align-items-center"
                               style={{
                                 padding: "0",
                               }}

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createDesign, getDesign } from "../../slices/Design/thunk";
 import { changeIvrCampaign } from "../../slices/Design/reducer";
 import NumberModal from "./NumberModal";
+import userIcon from "./user-icon.png";
 
 const Design = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -25,6 +26,8 @@ const Design = () => {
   const [number_modal_list, set_number_modal_list] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [selectedNumbers, setSelectedNumbers] = useState([]);
 
   // state for storing dialpad key
   const [clickedBtn, setClickedBtn] = useState("");
@@ -42,6 +45,8 @@ const Design = () => {
     set_number_modal_list(!number_modal_list);
   }
 
+  console.log("checking for number ->", designData?.designs);
+
   function handleDialpadBtn(key) {
     setLayerId("");
     setClickedBtn(key);
@@ -50,6 +55,29 @@ const Design = () => {
   useEffect(() => {
     dispatch(getDesign());
   }, [dispatch]);
+
+  function handleAddNumber(number) {
+    // const alreadyIncluded = selectedNumbers.includes(number.userId);
+
+    console.log("Number checked ->", number);
+    setSelectedNumbers((prev) => [...prev, number]);
+
+    // if (alreadyIncluded) {
+    // const filteredUsers = users.filter((u) => {
+    //   return u.userId !== user.userId;
+    // });
+
+    // console.log("already included", number);
+
+    // setUsers(filteredUsers);
+    // setSelectedNumbers(
+    //   selectedNumbers.filter((userId) => userId !== user.userId)
+    // );
+    // } else {
+    // setUsers((prev) => [...prev, number]);
+    // setSelectedNumbers((prev) => [...prev, number.number]);
+    // }
+  }
 
   const validation = useFormik({
     initialValues: {
@@ -79,26 +107,26 @@ const Design = () => {
       setmodal_list(false);
     },
   });
+
   const numberValidation = useFormik({
     initialValues: {
-      departments: "",
-      number: "",
+      department: "",
     },
     validationSchema: Yup.object({
-      departments: Yup.string().required(),
-      number: Yup.string().required(),
+      department: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      console.log("number validation being called ->", selectedNumbers);
 
-      // dispatch(
-      //   createDesign({
-      //     ivrCampaignId: selectedIvrCampaignId,
-      //     key: clickedBtn || key,
-      //     audioText,
-      //     parentId: layerId,
-      //   })
-      // );
+      dispatch(
+        createDesign({
+          ivrCampaignId: selectedIvrCampaignId,
+          // key: clickedBtn || key,
+          // audioText,
+          parentId: layerId,
+          number: selectedNumbers,
+        })
+      );
 
       setmodal_list(false);
     },
@@ -110,10 +138,11 @@ const Design = () => {
     validation.handleSubmit();
     return false;
   }
+
   function numberFromHandleSubmit(e) {
     e.preventDefault();
     console.log("handle submit called while adding number");
-    numbervalidation.handleSubmit();
+    numberValidation.handleSubmit();
     return false;
   }
 
@@ -336,76 +365,113 @@ const Design = () => {
                                   </div>
                                 </td>
 
-                                {design?.items?.map((item) => (
-                                  <td className="second" key={item.id}>
-                                    <div
-                                      className="d-flex flex-column"
-                                      style={{ gap: "5px" }}
-                                    >
-                                      <div
-                                        className="d-flex "
-                                        style={{ gap: "10px" }}
-                                      >
-                                        <span>{item.audioText}</span>
+                                {design?.items?.map((item) =>
+                                  item?.number ? (
+                                    <td key={item.id}>
+                                      {item.number?.map((number) => (
                                         <div
-                                          className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                                          className="d-flex align-items-center"
                                           style={{
-                                            width: "25px",
-                                            height: "25px",
-                                            border: "1px solid #32A6E4",
+                                            padding: "0",
                                           }}
                                         >
-                                          {item.key}
+                                          <img
+                                            src={userIcon}
+                                            alt=""
+                                            className="avatar-xs rounded-3 me-2"
+                                            style={{
+                                              width: "25px",
+                                              height: "25px",
+                                            }}
+                                          />
+                                          <div className="d-flex align-items-center">
+                                            <h5 className="fs-15 mb-0">
+                                              {number.name + " - "}
+                                            </h5>
+                                            <p className="fs-15 mb-0 ">
+                                              {"  "} {number.number}
+                                            </p>
+                                          </div>
                                         </div>
+                                      ))}
+                                    </td>
+                                  ) : (
+                                    // design?.items?.map((item) => (
+                                    <td className="second" key={item.id}>
+                                      <div
+                                        className="d-flex flex-column"
+                                        style={{ gap: "5px" }}
+                                      >
                                         <div
-                                          className="d-flex"
-                                          style={{ gap: "2px" }}
+                                          className="d-flex "
+                                          style={{ gap: "10px" }}
                                         >
-                                          <button
-                                            type="button"
-                                            className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                          <span>{item.audioText}</span>
+                                          <div
+                                            className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
                                             style={{
                                               width: "25px",
                                               height: "25px",
+                                              border: "1px solid #32A6E4",
                                             }}
                                           >
-                                            <i className="ri-add-line"></i>
-                                          </button>
-                                          <button
-                                            type="button"
-                                            className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
-                                            style={{
-                                              width: "25px",
-                                              height: "25px",
-                                            }}
+                                            {item.key}
+                                          </div>
+                                          <div
+                                            className="d-flex"
+                                            style={{ gap: "2px" }}
                                           >
-                                            <i className="ri-phone-line"></i>
-                                          </button>
-                                          <button
-                                            type="button"
-                                            className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
-                                            style={{
-                                              width: "25px",
-                                              height: "25px",
-                                            }}
-                                          >
-                                            <i className="ri-edit-line"></i>
-                                          </button>
-                                          <button
-                                            type="button"
-                                            className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
-                                            style={{
-                                              width: "25px",
-                                              height: "25px",
-                                            }}
-                                          >
-                                            <i className="ri-delete-bin-2-line"></i>
-                                          </button>
+                                            <button
+                                              type="button"
+                                              className="d-flex justify-content-center align-items-center  btn btn-primary waves-effect waves-light"
+                                              style={{
+                                                width: "25px",
+                                                height: "25px",
+                                              }}
+                                            >
+                                              <i className="ri-add-line"></i>
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="d-flex justify-content-center align-items-center  btn btn-success waves-effect waves-light"
+                                              style={{
+                                                width: "25px",
+                                                height: "25px",
+                                              }}
+                                              onClick={() => {
+                                                setLayerId(design?.id);
+                                                number_tog_list();
+                                              }}
+                                            >
+                                              <i className="ri-phone-line"></i>
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+                                              style={{
+                                                width: "25px",
+                                                height: "25px",
+                                              }}
+                                            >
+                                              <i className="ri-edit-line"></i>
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+                                              style={{
+                                                width: "25px",
+                                                height: "25px",
+                                              }}
+                                            >
+                                              <i className="ri-delete-bin-2-line"></i>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </td>
-                                ))}
+                                    </td>
+                                    // ))
+                                  )
+                                )}
 
                                 {/* <td className="fourth">
                                   <div
@@ -1154,6 +1220,8 @@ const Design = () => {
         layerId={layerId}
         departments={departments}
         departmentNumbers={departmentNumbers}
+        selectedNumbers={selectedNumbers}
+        handleAddNumber={handleAddNumber}
       />
     </React.Fragment>
   );
