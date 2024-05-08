@@ -6,9 +6,8 @@ function ThirdLayerKeysLayout({
   number_tog_list,
   setLayerId,
 }) {
-  console.log("items in third layer", items);
   return (
-    <>
+    <div className="d-flex flex-column" style={{ gap: "10px" }}>
       {items && items.length !== 0 && (
         <div
           className="key-heading d-flex pb-2"
@@ -33,7 +32,7 @@ function ThirdLayerKeysLayout({
       {items?.map(
         (item) =>
           !item.number && (
-            <div className="single-key-info-container">
+            <div className="single-key-info-container" key={item.id}>
               <div className="d-flex flex-column" style={{ gap: "5px" }}>
                 <div
                   className="d-flex align-items-center"
@@ -48,7 +47,7 @@ function ThirdLayerKeysLayout({
                       border: "1px solid #32A6E4",
                     }}
                   >
-                    1
+                    {item.key}
                   </div>
                   <div className="d-flex" style={{ gap: "2px" }}>
                     {/* <button
@@ -133,7 +132,7 @@ function ThirdLayerKeysLayout({
               </div>
             ))
         )}
-    </>
+    </div>
   );
 }
 export default ThirdLayerKeysLayout;

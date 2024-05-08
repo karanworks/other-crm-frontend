@@ -320,10 +320,7 @@ const Design = () => {
                                 />
 
                                 <td className="third">
-                                  <div
-                                    className="keys-info-container d-flex flex-column"
-                                    style={{ gap: "10px" }}
-                                  >
+                                  <div className="keys-info-container ">
                                     {design?.items?.map((item) => {
                                       return (
                                         <ThirdLayerKeysLayout
@@ -331,10 +328,36 @@ const Design = () => {
                                           parentKey={item.key}
                                           number_tog_list={number_tog_list}
                                           setLayerId={setLayerId}
+                                          key={item.id}
                                         />
                                       );
                                     })}
                                   </div>
+                                </td>
+
+                                <td className="fourth">
+                                  <div
+                                    className="keys-info-container d-flex flex-column"
+                                    style={{ gap: "15px" }}
+                                  >
+                                    {design?.items?.map((item) => {
+                                      if (item.items.length !== 0) {
+                                        return item.items.map((item2) => {
+                                          if (item2.items.length !== 0) {
+                                            return item2.items.map((item3) => (
+                                              <FourthLayer
+                                                key={item3.id}
+                                                designItems={item3}
+                                                parentKey={item2.key}
+                                              />
+                                            ));
+                                          }
+                                          return null; // Added return statement
+                                        });
+                                      }
+                                      return null; // Added return statement
+                                    })}
+                                  </div>{" "}
                                 </td>
                               </tr>
                             ))}
@@ -532,9 +555,9 @@ const Design = () => {
                                 </div>
                               </td>
 
-                              <ThirdLayerKeysLayout />
+                              {/* <ThirdLayerKeysLayout />
 
-                              <FourthLayer />
+                              <FourthLayer /> */}
                             </tr>
                             {/* <tr style={{ borderBottom: "1px solid #e9ebec" }}>
                               <th scope="row">
