@@ -1,6 +1,6 @@
 import userIcon from "./user-icon.png";
 
-function NumberLayout({ item, tog_delete }) {
+function NumberLayout({ item, tog_delete, setListDesignId }) {
   return (
     <td>
       <div>
@@ -9,7 +9,7 @@ function NumberLayout({ item, tog_delete }) {
             <div
               className="d-flex align-items-center"
               key={number.id}
-              style={{ padding: "0" }}
+              style={{ padding: "0", marginTop: "5px" }}
             >
               <img
                 src={userIcon}
@@ -45,7 +45,10 @@ function NumberLayout({ item, tog_delete }) {
                       width: "25px",
                       height: "25px",
                     }}
-                    onClick={tog_delete}
+                    onClick={() => {
+                      tog_delete();
+                      setListDesignId(number.id);
+                    }}
                   >
                     <i className="ri-delete-bin-2-line"></i>
                   </button>

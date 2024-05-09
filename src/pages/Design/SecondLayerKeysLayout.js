@@ -4,6 +4,7 @@ function SecondLayerKeysLayout({
   setLayerId,
   number_tog_list,
   tog_delete,
+  setListDesignId,
 }) {
   return (
     <td>
@@ -68,7 +69,10 @@ function SecondLayerKeysLayout({
                     width: "25px",
                     height: "25px",
                   }}
-                  onClick={tog_delete}
+                  onClick={() => {
+                    tog_delete();
+                    setListDesignId(item.id);
+                  }}
                 >
                   <i className="ri-delete-bin-2-line"></i>
                 </button>

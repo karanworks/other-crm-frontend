@@ -1,4 +1,9 @@
-function FourthLayer({ designItems, grandParentKey, tog_delete }) {
+function FourthLayer({
+  designItems,
+  grandParentKey,
+  tog_delete,
+  setListDesignId,
+}) {
   return (
     <>
       <div
@@ -57,7 +62,10 @@ function FourthLayer({ designItems, grandParentKey, tog_delete }) {
                 width: "25px",
                 height: "25px",
               }}
-              onClick={tog_delete}
+              onClick={() => {
+                tog_delete();
+                setListDesignId(number.id);
+              }}
             >
               <i className="ri-delete-bin-2-line"></i>
             </button>

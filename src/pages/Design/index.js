@@ -15,7 +15,11 @@ import DesignModal from "./DesignModal";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { createDesign, getDesign } from "../../slices/Design/thunk";
+import {
+  createDesign,
+  getDesign,
+  removeDesign,
+} from "../../slices/Design/thunk";
 import { changeIvrCampaign } from "../../slices/Design/reducer";
 import NumberModal from "./NumberModal";
 import userIcon from "./user-icon.png";
@@ -36,6 +40,8 @@ const Design = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const [selectedNumbers, setSelectedNumbers] = useState([]);
+
+  const [listDesignId, setListDesignId] = useState("");
 
   // state for storing dialpad key
   const [clickedBtn, setClickedBtn] = useState("");
@@ -104,6 +110,10 @@ const Design = () => {
       //   isEditingCampaign
       //     ? dispatch(updateCampaign({ values, listCampaignId }))
       //     : dispatch(createCampaign(values));
+
+      if (key) {
+        setClickedBtn("");
+      }
 
       dispatch(
         createDesign({
@@ -311,6 +321,7 @@ const Design = () => {
                                     setLayerId={setLayerId}
                                     number_tog_list={number_tog_list}
                                     tog_delete={tog_delete}
+                                    setListDesignId={setListDesignId}
                                   />
                                 )}
 
@@ -320,6 +331,7 @@ const Design = () => {
                                       item={item}
                                       key={item.id}
                                       tog_delete={tog_delete}
+                                      setListDesignId={setListDesignId}
                                     />
                                   ) : null
                                 )}
@@ -330,6 +342,7 @@ const Design = () => {
                                   setLayerId={setLayerId}
                                   number_tog_list={number_tog_list}
                                   tog_delete={tog_delete}
+                                  setListDesignId={setListDesignId}
                                 />
 
                                 <td className="third">
@@ -343,6 +356,7 @@ const Design = () => {
                                           setLayerId={setLayerId}
                                           key={item.id}
                                           tog_delete={tog_delete}
+                                          setListDesignId={setListDesignId}
                                         />
                                       );
                                     })}
@@ -365,6 +379,9 @@ const Design = () => {
                                                   designItems={item3}
                                                   grandParentKey={item.key}
                                                   tog_delete={tog_delete}
+                                                  setListDesignId={
+                                                    setListDesignId
+                                                  }
                                                 />
                                               )
                                             );
@@ -413,7 +430,8 @@ const Design = () => {
       <RemoveModal
         modal_delete={modal_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteCampaign={() => {
+        handleDeleteDesign={() => {
+          dispatch(removeDesign(listDesignId));
           setmodal_delete(false);
         }}
       />

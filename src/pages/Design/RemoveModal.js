@@ -3,7 +3,7 @@ import { Button, Modal, ModalBody } from "reactstrap";
 function RemoveModal({
   modal_delete, // delete user confirmation modal
   setmodal_delete, // change user confirmation modal state
-  handleDeleteCampaign, // function to delete a user
+  handleDeleteDesign, // function to delete a user
 }) {
   return (
     <Modal
@@ -26,7 +26,7 @@ function RemoveModal({
       <ModalBody>
         <div className="mt-2 text-center">
           <lord-icon
-            src="https://cdn.lordicon.com/gsqxdxog.json"
+            src="https://cdn.lordicon.com/xekbkxul.json"
             trigger="loop"
             colors="primary:#25a0e2,secondary:#00bd9d"
             style={{ width: "100px", height: "100px" }}
@@ -50,7 +50,7 @@ function RemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteCampaign}
+            onClick={handleDeleteDesign}
           >
             Yes, Delete It!
           </button>

@@ -4,6 +4,7 @@ function FirstLayer({
   setLayerId,
   number_tog_list,
   tog_delete,
+  setListDesignId,
 }) {
   return (
     <td className="first">
@@ -65,7 +66,10 @@ function FirstLayer({
               width: "25px",
               height: "25px",
             }}
-            onClick={tog_delete}
+            onClick={() => {
+              tog_delete();
+              setListDesignId(design?.id);
+            }}
           >
             <i className="ri-delete-bin-2-line"></i>
           </button>
