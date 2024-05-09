@@ -345,7 +345,6 @@ export const createDesign = (
   parentId,
   number
 ) => {
-  console.log("number receing in backend helper ->", number);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/ivr-design/create`, {
     audioText,
     ivrCampaignId,

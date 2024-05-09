@@ -5,6 +5,7 @@ function ThirdLayerKeysLayout({
   parentKey,
   number_tog_list,
   setLayerId,
+  tog_delete,
 }) {
   return (
     <div className="d-flex flex-column" style={{ gap: "10px" }}>
@@ -91,6 +92,7 @@ function ThirdLayerKeysLayout({
                         width: "25px",
                         height: "25px",
                       }}
+                      tog_delete={tog_delete}
                     >
                       <i className="ri-delete-bin-2-line"></i>
                     </button>

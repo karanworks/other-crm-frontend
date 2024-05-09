@@ -1,5 +1,4 @@
-function FourthLayer({ designItems, parentKey }) {
-  console.log("RENDERING FROM FOURTH LAYER ->", designItems);
+function FourthLayer({ designItems, grandParentKey, tog_delete }) {
   return (
     <>
       <div
@@ -18,12 +17,12 @@ function FourthLayer({ designItems, parentKey }) {
             color: "white",
           }}
         >
-          {parentKey}
+          {grandParentKey}
         </div>
       </div>
 
       {designItems?.number?.map((number) => (
-        <div className="single-key-info-container">
+        <div className="single-key-info-container d-flex" key={number.id}>
           <div className="d-flex flex-column" style={{ gap: "5px" }}>
             <div className="d-flex align-items-center" style={{ gap: "5px" }}>
               <span>{number.name} -</span>
@@ -39,6 +38,29 @@ function FourthLayer({ designItems, parentKey }) {
                 1
               </div>
             </div>
+          </div>
+          <div className="d-flex" style={{ gap: "3px", marginLeft: "5px" }}>
+            <button
+              type="button"
+              className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
+              style={{
+                width: "25px",
+                height: "25px",
+              }}
+            >
+              <i className="ri-edit-line"></i>
+            </button>
+            <button
+              type="button"
+              className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
+              style={{
+                width: "25px",
+                height: "25px",
+              }}
+              onClick={tog_delete}
+            >
+              <i className="ri-delete-bin-2-line"></i>
+            </button>
           </div>
         </div>
       ))}

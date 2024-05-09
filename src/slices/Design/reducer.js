@@ -70,7 +70,6 @@ const designSlice = createSlice({
         .filter((num) => num !== undefined);
 
       state.departmentNumbers = numbers;
-      console.log("numbers for department inside changeDepartment ->", numbers);
     },
   },
   extraReducers: (builder) => {
@@ -83,19 +82,73 @@ const designSlice = createSlice({
       }
     });
     builder.addCase(createDesign.fulfilled, (state, action) => {
-      if (action.payload.status == "failure") {
+      if (action.payload.status === "failure") {
         state.alreadyExistsError = action.payload.message;
         state.error = "";
       } else {
-        state.design = [...state.design, action.payload.data];
         state.alreadyExistsError = null;
         state.error = "";
 
-        toast.success("IVR Design has been added !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+        console.log(
+          "GETTING THIS DATA IN REDUCER AFTER ADDING NUMBER ->",
+          action.payload.data
+        );
+
+        const newItem = action.payload.data; // Assuming action.payload.data contains the new item returned from the backend
+
+        const parentId = newItem.parentId; // Assuming the parent ID is included in the new item
+
+        // Check if designs array exists in designData
+        if (state.designData.designs) {
+          // If parentId is null, push the new item directly into designs array
+          if (parentId === null) {
+            state.designData.designs.push(newItem);
+          } else {
+            // Find the parent item
+            const findParent = (items) => {
+              for (let i = 0; i < items.length; i++) {
+                if (items[i].id === parentId) {
+                  return items[i];
+                } else if (items[i].items.length > 0) {
+                  const parent = findParent(items[i].items);
+                  if (parent) return parent;
+                }
+              }
+              return null;
+            };
+
+            // Find the parent
+            const parent = findParent(state.designData.designs);
+
+            // If parent is found
+            if (parent) {
+              // If the new item is a number
+              if (newItem.isNumber) {
+                // Check if parent.number is null
+                if (parent.number === null) {
+                  parent.number = []; // Initialize as an empty array
+                }
+                parent.number.push(newItem); // Push the new item
+              } else {
+                // Otherwise, add it to the items array
+                if (parent.items === null) {
+                  parent.items = []; // Initialize as an empty array
+                }
+                parent.items.push(newItem);
+              }
+
+              toast.success("IVR Design has been added !", {
+                position: "bottom-center",
+                autoClose: 3000,
+                theme: "colored",
+              });
+            } else {
+              console.log("Parent not found!");
+            }
+          }
+        } else {
+          console.log("Designs array not found!");
+        }
       }
     });
   },

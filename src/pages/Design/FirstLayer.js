@@ -1,4 +1,10 @@
-function FirstLayer({ design, tog_list, setLayerId, number_tog_list }) {
+function FirstLayer({
+  design,
+  tog_list,
+  setLayerId,
+  number_tog_list,
+  tog_delete,
+}) {
   return (
     <td className="first">
       <div className="d-flex align-items-center" style={{ gap: "10px" }}>
@@ -59,6 +65,7 @@ function FirstLayer({ design, tog_list, setLayerId, number_tog_list }) {
               width: "25px",
               height: "25px",
             }}
+            onClick={tog_delete}
           >
             <i className="ri-delete-bin-2-line"></i>
           </button>

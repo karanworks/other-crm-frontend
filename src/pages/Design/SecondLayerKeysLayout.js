@@ -3,11 +3,12 @@ function SecondLayerKeysLayout({
   tog_list,
   setLayerId,
   number_tog_list,
+  tog_delete,
 }) {
   return (
     <td>
       <div className="d-flex flex-column" style={{ gap: "5px" }}>
-        {designItems.map((item) =>
+        {designItems?.map((item) =>
           !item.number ? (
             <div className="d-flex " style={{ gap: "10px" }} key={item.id}>
               <span>{item.audioText}</span>
@@ -67,6 +68,7 @@ function SecondLayerKeysLayout({
                     width: "25px",
                     height: "25px",
                   }}
+                  onClick={tog_delete}
                 >
                   <i className="ri-delete-bin-2-line"></i>
                 </button>
