@@ -140,43 +140,18 @@ const designSlice = createSlice({
     builder.addCase(removeDesign.fulfilled, (state, action) => {
       state.error = "";
 
-      const deletedItem = action.payload.data.deletedParent;
+      const deletedItemId = action.payload.data.deletedParent.id;
 
-      console.log("STATE DESIGNS ->", current(state.designData.designs));
-
-      if (!deletedItem.parentId) {
-        state.designData = {
-          ...state.designData,
-          designs: state.designData.designs.filter(
-            (design) => design.id !== deletedItem.id
-          ),
-        };
-      } else {
-        state.designData = {
-          ...state.designData,
-          designs: state.designData.designs.map((design) => {
-            const result = updateItems(design.items, deletedItem.id);
-            console.log("RESULT WHILE REMOVING ITEM ->", result);
-            const updatedItems = result ? result.updatedItems : design.items;
-            const shouldRemove = result ? result.shouldRemove : false;
-
-            if (shouldRemove) {
-              // Remove the item from its parent's items array
-              return {
-                ...design,
-                items: design.items.filter(
-                  (item) => item.id !== deletedItem.id
-                ),
-              };
-            } else {
-              return {
-                ...design,
-                items: updatedItems,
-              };
-            }
-          }),
-        };
-      }
+      state.designData = {
+        ...state.designData,
+        designs: state.designData.designs.map((design) => {
+          const updatedItems = removeItemFromDesign(
+            design.items,
+            deletedItemId
+          );
+          return { ...design, items: updatedItems };
+        }),
+      };
 
       toast.error("Design has been removed!", {
         position: "bottom-center",
@@ -187,32 +162,23 @@ const designSlice = createSlice({
   },
 });
 
-// this function is for removeDesign reducer
-function updateItems(items, deletedId) {
-  let shouldRemove = false;
-  const updatedItems = items.map((item) => {
-    console.log("ITEMS IN UPDATE ITEMS FUNCTION LOOP ->", current(item));
-    const updatedItem = { ...item };
-    if (item.id === deletedId) {
-      console.log("DELETE ID MATCHED CONDITION APPLIED ->", deletedId);
-      shouldRemove = true; // Set the flag to remove the item from its parent's items array
-      updatedItem.items = []; // Empty the items array
-    } else if (item.items) {
-      console.log(
-        "ITEMS IN UPDATE ITEMS FUNCTION ELSE CONDITION->",
-        current(item.items)
-      );
-      const result = updateItems(item.items, deletedId);
-      const nestedItems = result ? result.updatedItems : item.items;
-      const nestedShouldRemove = result ? result.shouldRemove : false;
-      updatedItem.items = nestedItems; // Recursively update nested items
-      shouldRemove = shouldRemove || nestedShouldRemove; // Propagate the flag upwards
-    }
+function removeItemFromDesign(items, deleteId) {
+  return items
+    .map((item) => {
+      // If the current item's ID matches the deleteId, remove it
+      if (item.id === deleteId) {
+        return null; // returning null will filter out this item
+      }
 
-    return updatedItem;
-  });
+      // If the current item has child items, recursively remove from them
+      if (item.items && item.items.length !== 0) {
+        const updatedChildItems = removeItemFromDesign(item.items, deleteId);
+        return { ...item, items: updatedChildItems };
+      }
 
-  return { updatedItems, shouldRemove };
+      return item; // if not deleted, return the item as is
+    })
+    .filter(Boolean); // filter out null items (deleted items)
 }
 
 export default designSlice.reducer;
