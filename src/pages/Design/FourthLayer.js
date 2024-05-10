@@ -28,6 +28,7 @@ function FourthLayer({
 
       {designItems?.number?.map((number) => (
         <div className="single-key-info-container d-flex" key={number.id}>
+          {console.log("NUMBER INSIDE FOURTH LAYER ->", number)}
           <div className="d-flex flex-column" style={{ gap: "5px" }}>
             <div className="d-flex align-items-center" style={{ gap: "5px" }}>
               <span>{number.name} -</span>
@@ -63,6 +64,10 @@ function FourthLayer({
                 height: "25px",
               }}
               onClick={() => {
+                console.log(
+                  "NUMBER ID WHILE DELETING NUMBER IN FOURTH LAYER ->",
+                  number.id
+                );
                 tog_delete();
                 setListDesignId(number.id);
               }}
