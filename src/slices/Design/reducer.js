@@ -140,24 +140,33 @@ const designSlice = createSlice({
     builder.addCase(removeDesign.fulfilled, (state, action) => {
       state.error = "";
 
-      const deletedItemId = action.payload.data.deletedParent.id;
+      const deletedItem = action.payload.data.deletedParent;
 
-      state.designData = {
-        ...state.designData,
-        designs: state.designData.designs.map((design) => {
-          const updatedItems = removeItemFromDesign(
-            design.items,
-            deletedItemId
-          );
-          return { ...design, items: updatedItems };
-        }),
-      };
+      if (!deletedItem.parentId) {
+        state.designData = {
+          ...state.designData,
+          designs: state.designData.designs.filter(
+            (design) => design.id !== deletedItem.id
+          ),
+        };
+      } else {
+        state.designData = {
+          ...state.designData,
+          designs: state.designData.designs.map((design) => {
+            const updatedItems = removeItemFromDesign(
+              design.items,
+              deletedItem.id
+            );
+            return { ...design, items: updatedItems };
+          }),
+        };
 
-      toast.error("Design has been removed!", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
+        toast.error("Design has been removed!", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
     });
   },
 });
