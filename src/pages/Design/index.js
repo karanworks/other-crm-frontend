@@ -136,8 +136,6 @@ const Design = () => {
       department: Yup.string().required(),
     }),
     onSubmit: (values) => {
-      console.log("number validation being called ->", selectedNumbers);
-
       dispatch(
         createDesign({
           ivrCampaignId: selectedIvrCampaignId,
@@ -346,7 +344,7 @@ const Design = () => {
                                 />
 
                                 <td className="third">
-                                  <div className="keys-info-container ">
+                                  <div className="keys-info-container">
                                     {design?.items?.map((item) => {
                                       return (
                                         <ThirdLayerKeysLayout
@@ -372,19 +370,31 @@ const Design = () => {
                                       if (item?.items?.length !== 0) {
                                         return item?.items?.map((item2) => {
                                           if (item2?.items?.length !== 0) {
-                                            return item2?.items?.map(
-                                              (item3) => (
-                                                <FourthLayer
-                                                  key={item3.id}
-                                                  designItems={item3}
-                                                  grandParentKey={item.key}
-                                                  tog_delete={tog_delete}
-                                                  setListDesignId={
-                                                    setListDesignId
-                                                  }
-                                                />
-                                              )
+                                            console.log("WHAT IS ITEM2", item2);
+                                            return (
+                                              <FourthLayer
+                                                key={item2.id}
+                                                designItems={item2.items}
+                                                grandParentKey={item.key}
+                                                tog_delete={tog_delete}
+                                                setListDesignId={
+                                                  setListDesignId
+                                                }
+                                              />
                                             );
+                                            // return item2?.items?.map(
+                                            //   (item3) => (
+                                            //     <FourthLayer
+                                            //       key={item3.id}
+                                            //       designItems={item3}
+                                            //       grandParentKey={item.key}
+                                            //       tog_delete={tog_delete}
+                                            //       setListDesignId={
+                                            //         setListDesignId
+                                            //       }
+                                            //     />
+                                            //   )
+                                            // );
                                           }
                                           return null; // Added return statement
                                         });

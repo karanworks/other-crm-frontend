@@ -9,7 +9,7 @@ function ThirdLayerKeysLayout({
   setListDesignId,
 }) {
   return (
-    <div className="d-flex flex-column" style={{ gap: "10px" }}>
+    <div className="d-flex flex-column mt-3" style={{ gap: "10px" }}>
       {items && items.length !== 0 && (
         <div
           className="key-heading d-flex pb-2"
