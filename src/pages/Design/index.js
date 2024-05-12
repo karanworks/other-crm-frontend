@@ -19,6 +19,7 @@ import {
   createDesign,
   getDesign,
   removeDesign,
+  updateDesign,
 } from "../../slices/Design/thunk";
 import { changeIvrCampaign } from "../../slices/Design/reducer";
 import NumberModal from "./NumberModal";
@@ -43,7 +44,8 @@ const Design = () => {
 
   const [listDesignId, setListDesignId] = useState("");
 
-  // state for storing dialpad key
+  const [isEditingDesign, setIsEditingDesign] = useState(false);
+
   const [clickedBtn, setClickedBtn] = useState("");
 
   const [layerId, setLayerId] = useState("");
@@ -54,6 +56,7 @@ const Design = () => {
 
   function tog_list() {
     setmodal_list(!modal_list);
+    setIsEditingDesign(false);
   }
   function number_tog_list() {
     set_number_modal_list(!number_modal_list);
@@ -73,26 +76,18 @@ const Design = () => {
   }, [dispatch]);
 
   function handleAddNumber(number) {
-    // const alreadyIncluded = selectedNumbers.includes(number.userId);
+    const alreadyIncluded = selectedNumbers.some(
+      (n) => n.number == number.number
+    );
 
-    console.log("Number checked ->", number);
-    setSelectedNumbers((prev) => [...prev, number]);
-
-    // if (alreadyIncluded) {
-    // const filteredUsers = users.filter((u) => {
-    //   return u.userId !== user.userId;
-    // });
-
-    // console.log("already included", number);
-
-    // setUsers(filteredUsers);
-    // setSelectedNumbers(
-    //   selectedNumbers.filter((userId) => userId !== user.userId)
-    // );
-    // } else {
-    // setUsers((prev) => [...prev, number]);
-    // setSelectedNumbers((prev) => [...prev, number.number]);
-    // }
+    if (alreadyIncluded) {
+      const filteredNumbers = selectedNumbers.filter((n) => {
+        return n.number !== number.number;
+      });
+      setSelectedNumbers(filteredNumbers);
+    } else {
+      setSelectedNumbers((prev) => [...prev, number]);
+    }
   }
 
   const validation = useFormik({
@@ -115,14 +110,16 @@ const Design = () => {
         setClickedBtn("");
       }
 
-      dispatch(
-        createDesign({
-          ivrCampaignId: selectedIvrCampaignId,
-          key: clickedBtn || key,
-          audioText,
-          parentId: layerId,
-        })
-      );
+      isEditingDesign
+        ? dispatch(updateDesign({ listDesignId, ...values }))
+        : dispatch(
+            createDesign({
+              ivrCampaignId: selectedIvrCampaignId,
+              key: clickedBtn || key,
+              audioText,
+              parentId: layerId,
+            })
+          );
 
       setmodal_list(false);
     },
@@ -177,6 +174,16 @@ const Design = () => {
   function handleChange(e) {
     ivrCampaignValidation.setFieldValue("ivrCampaignName", e.target.value);
     dispatch(changeIvrCampaign(e.target.value));
+  }
+
+  function handleEditDesign(design) {
+    setIsEditingDesign(true);
+    setmodal_list(!modal_list);
+    setListDesignId(design.id);
+    setLayerId(design.id);
+
+    validation.values.audioText = design.audioText;
+    validation.values.key = design.key;
   }
 
   document.title = "IVR Design";
@@ -320,6 +327,7 @@ const Design = () => {
                                     number_tog_list={number_tog_list}
                                     tog_delete={tog_delete}
                                     setListDesignId={setListDesignId}
+                                    handleEditDesign={handleEditDesign}
                                   />
                                 )}
 
@@ -341,6 +349,7 @@ const Design = () => {
                                   number_tog_list={number_tog_list}
                                   tog_delete={tog_delete}
                                   setListDesignId={setListDesignId}
+                                  handleEditDesign={handleEditDesign}
                                 />
 
                                 <td className="third">
@@ -370,7 +379,6 @@ const Design = () => {
                                       if (item?.items?.length !== 0) {
                                         return item?.items?.map((item2) => {
                                           if (item2?.items?.length !== 0) {
-                                            console.log("WHAT IS ITEM2", item2);
                                             return (
                                               <FourthLayer
                                                 key={item2.id}

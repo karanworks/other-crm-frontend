@@ -109,15 +109,13 @@ function ThirdLayerKeysLayout({
       {items &&
         items.length !== 0 &&
         items?.map(
-          (item) =>
-            item.number &&
-            item.number.length !== 0 &&
-            item.number.map((number, idx) => (
+          (item, idx) =>
+            item.number && (
               <div>
                 <div key={idx}>
                   <div
                     className="d-flex align-items-center"
-                    key={number.id}
+                    key={item.id}
                     style={{ padding: "0" }}
                   >
                     <img
@@ -130,8 +128,8 @@ function ThirdLayerKeysLayout({
                       }}
                     />
                     <div className="d-flex align-items-center">
-                      <h5 className="fs-15 mb-0">{number.name + " - "}</h5>
-                      <p className="fs-15 mb-0 "> {number.number}</p>
+                      <h5 className="fs-15 mb-0">{item.number.name + " - "}</h5>
+                      <p className="fs-15 mb-0 "> {item.number.number}</p>
                       <div
                         className="d-flex"
                         style={{ gap: "3px", marginLeft: "5px" }}
@@ -155,7 +153,7 @@ function ThirdLayerKeysLayout({
                           }}
                           onClick={() => {
                             tog_delete();
-                            setListDesignId(number.id);
+                            setListDesignId(item.id);
                           }}
                         >
                           <i className="ri-delete-bin-2-line"></i>
@@ -165,7 +163,7 @@ function ThirdLayerKeysLayout({
                   </div>
                 </div>
               </div>
-            ))
+            )
         )}
     </div>
   );

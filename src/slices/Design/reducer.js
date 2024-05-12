@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { getDesign, createDesign, removeDesign } from "./thunk";
+import { getDesign, createDesign, removeDesign, updateDesign } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
@@ -147,6 +147,24 @@ const designSlice = createSlice({
         } else {
           console.log("Designs array not found!");
         }
+      }
+    });
+
+    builder.addCase(updateDesign.fulfilled, (state, action) => {
+      if (action.payload.status == "failure") {
+        state.alreadyExistsError = action.payload.message;
+        state.error = "";
+      } else {
+        const updatedDesign = action.payload.data;
+        console.log("DESIGN AFTER UPDATION", updatedDesign);
+
+        state.alreadyExistsError = null;
+        state.error = "";
+        toast.success("Design details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
     });
 

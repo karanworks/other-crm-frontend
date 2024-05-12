@@ -5,6 +5,7 @@ function FirstLayer({
   number_tog_list,
   tog_delete,
   setListDesignId,
+  handleEditDesign,
 }) {
   return (
     <td className="first">
@@ -55,6 +56,9 @@ function FirstLayer({
             style={{
               width: "25px",
               height: "25px",
+            }}
+            onClick={() => {
+              handleEditDesign(design);
             }}
           >
             <i className="ri-edit-line"></i>

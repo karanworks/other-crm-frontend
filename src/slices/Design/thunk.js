@@ -3,6 +3,7 @@ import {
   getDesign as getDesignApi,
   createDesign as createDesignApi,
   removeDesign as removeDesignApi,
+  updateDesign as updateDesignApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getDesign = createAsyncThunk("design/getDesign", async () => {
@@ -32,6 +33,28 @@ export const createDesign = createAsyncThunk(
     }
   }
 );
+
+export const updateDesign = createAsyncThunk(
+  "design/updateDesign",
+  async ({ listDesignId, audioText }) => {
+    try {
+      console.log(
+        "DATA RECEIVED IN UPDATION THUNK ->",
+        listDesignId,
+        audioText
+      );
+      const response = await updateDesignApi({
+        designId: listDesignId,
+        audioText,
+      });
+      console.log("response while updating design", response);
+      return response;
+    } catch (error) {
+      console.log("error inside update design thunk", error);
+    }
+  }
+);
+
 export const removeDesign = createAsyncThunk(
   "design/removeDesign",
   async (listDesignId) => {
