@@ -5,6 +5,7 @@ function SecondLayerKeysLayout({
   number_tog_list,
   tog_delete,
   setListDesignId,
+  handleEditDesign,
 }) {
   return (
     <td>
@@ -58,6 +59,9 @@ function SecondLayerKeysLayout({
                   style={{
                     width: "25px",
                     height: "25px",
+                  }}
+                  onClick={() => {
+                    handleEditDesign(item);
                   }}
                 >
                   <i className="ri-edit-line"></i>

@@ -332,7 +332,7 @@ export const removeSpeech = ({ ivrCampaignId, speechId }) => {
 };
 
 // *****************************************************************
-// ************************ IVR DESIGN *****************************
+// *************************** DESIGN ******************************
 // *****************************************************************
 
 export const getDesign = () => {
@@ -352,6 +352,15 @@ export const createDesign = (
     parentId,
     number,
   });
+};
+export const updateDesign = ({ designId, audioText }) => {
+  console.log("FRONTEND API CALL ->", designId, audioText);
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/ivr-design/${designId}/edit`,
+    {
+      audioText,
+    }
+  );
 };
 
 export const removeDesign = ({ designId }) => {

@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { getDesign, createDesign, removeDesign } from "./thunk";
+import { getDesign, createDesign, removeDesign, updateDesign } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
@@ -91,6 +91,8 @@ const designSlice = createSlice({
 
         const newItem = action.payload.data; // Assuming action.payload.data contains the new item returned from the backend
 
+        console.log("NUMBER ADD RESPONSE ->", action.payload.data);
+
         const parentId = newItem.parentId; // Assuming the parent ID is included in the new item
 
         // Check if designs array exists in designData
@@ -115,12 +117,23 @@ const designSlice = createSlice({
             // Find the parent
             const parent = findParent(state.designData.designs);
 
+            console.log("PARENT FINDING RESULT ->", parent);
+
+            console.log("IS ARRAY CONDITION TRIGGERED", Array.isArray(newItem));
+
             // If parent is found
             if (parent) {
               if (parent.items === null) {
                 parent.items = [];
               }
-              parent.items.push(newItem);
+
+              if (Array.isArray(newItem.numbers)) {
+                newItem.numbers.forEach((item) => {
+                  parent.items.push(item);
+                });
+              } else {
+                parent.items.push(newItem);
+              }
 
               toast.success("IVR Design has been added !", {
                 position: "bottom-center",
@@ -134,6 +147,24 @@ const designSlice = createSlice({
         } else {
           console.log("Designs array not found!");
         }
+      }
+    });
+
+    builder.addCase(updateDesign.fulfilled, (state, action) => {
+      if (action.payload.status == "failure") {
+        state.alreadyExistsError = action.payload.message;
+        state.error = "";
+      } else {
+        const updatedDesign = action.payload.data;
+        console.log("DESIGN AFTER UPDATION", updatedDesign);
+
+        state.alreadyExistsError = null;
+        state.error = "";
+        toast.success("Design details updated !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
       }
     });
 
