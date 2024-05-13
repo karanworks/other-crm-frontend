@@ -151,12 +151,33 @@ const designSlice = createSlice({
     });
 
     builder.addCase(updateDesign.fulfilled, (state, action) => {
-      if (action.payload.status == "failure") {
+      if (action.payload.status === "failure") {
         state.alreadyExistsError = action.payload.message;
         state.error = "";
       } else {
-        const updatedDesign = action.payload.data;
+        const updatedDesign = action.payload.data.updatedDesign;
         console.log("DESIGN AFTER UPDATION", updatedDesign);
+
+        if (updatedDesign.parentId === null) {
+          state.designData = {
+            ...state.designData,
+            designs: state.designData.designs.map((design) => {
+              if (design.id === updatedDesign.id) {
+                return updatedDesign;
+              } else {
+                return design;
+              }
+            }),
+          };
+        } else {
+          state.designData = {
+            ...state.designData,
+            designs: updateParentWithUpdatedChildren(
+              state.designData.designs,
+              updatedDesign
+            ),
+          };
+        }
 
         state.alreadyExistsError = null;
         state.error = "";
@@ -201,6 +222,39 @@ const designSlice = createSlice({
     });
   },
 });
+
+function updateParentWithUpdatedChildren(designs, updatedItem) {
+  return designs.map((design) => {
+    if (design.id === updatedItem.parentId) {
+      return {
+        ...design,
+        items: updateChildren(design.items, updatedItem),
+      };
+    } else if (design.items) {
+      return {
+        ...design,
+        items: updateParentWithUpdatedChildren(design.items, updatedItem),
+      };
+    } else {
+      return design;
+    }
+  });
+}
+
+function updateChildren(items, updatedItem) {
+  return items.map((item) => {
+    if (item.id === updatedItem.id) {
+      return updatedItem;
+    } else if (item.items) {
+      return {
+        ...item,
+        items: updateChildren(item.items, updatedItem),
+      };
+    } else {
+      return item;
+    }
+  });
+}
 
 function removeItemFromDesign(items, deleteId) {
   return items

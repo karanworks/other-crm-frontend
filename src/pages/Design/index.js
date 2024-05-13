@@ -364,6 +364,7 @@ const Design = () => {
                                           key={item.id}
                                           tog_delete={tog_delete}
                                           setListDesignId={setListDesignId}
+                                          handleEditDesign={handleEditDesign}
                                         />
                                       );
                                     })}

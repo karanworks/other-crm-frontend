@@ -4,30 +4,31 @@ function FourthLayer({
   tog_delete,
   setListDesignId,
 }) {
-  console.log("DESIGN ITEMS RECEIVED IN FOURTH LAYER ->", designItems);
   return (
     <>
-      <div
-        className="key-heading d-flex mb-2 pb-2"
-        style={{
-          gap: "5px",
-          borderBottom: "1px solid #8F92A0",
-        }}
-      >
-        <span className="fw-bold">Key - </span>
+      {designItems && (
         <div
-          className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+          className="key-heading d-flex mb-2 pb-2"
           style={{
-            width: "25px",
-            height: "25px",
-            color: "white",
+            gap: "5px",
+            borderBottom: "1px solid #8F92A0",
           }}
         >
-          {grandParentKey}
+          <span className="fw-bold">Key - </span>
+          <div
+            className="bg-secondary d-flex justify-content-center align-items-center rounded-2"
+            style={{
+              width: "25px",
+              height: "25px",
+              color: "white",
+            }}
+          >
+            {grandParentKey}
+          </div>
         </div>
-      </div>
+      )}
 
-      {designItems.map((item) => (
+      {designItems?.map((item) => (
         <div className="single-key-info-container d-flex" key={item.id}>
           <div className="d-flex flex-column" style={{ gap: "5px" }}>
             <div className="d-flex align-items-center" style={{ gap: "5px" }}>
@@ -46,16 +47,19 @@ function FourthLayer({
             </div>
           </div>
           <div className="d-flex" style={{ gap: "3px", marginLeft: "5px" }}>
-            <button
+            {/* <button
               type="button"
               className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
               style={{
                 width: "25px",
                 height: "25px",
               }}
+              onClick={() => {
+                handleEditDesign(item);
+              }}
             >
               <i className="ri-edit-line"></i>
-            </button>
+            </button> */}
             <button
               type="button"
               className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"
