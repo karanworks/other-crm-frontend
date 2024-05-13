@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import {
   Card,
   CardBody,
@@ -441,6 +442,7 @@ const Design = () => {
             </Col>
           </Row>
         </Container>
+        <ToastContainer />
       </div>
       <DesignModal
         modal_list={modal_list}
