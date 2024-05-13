@@ -18,7 +18,6 @@ export const getDesign = createAsyncThunk("design/getDesign", async () => {
 export const createDesign = createAsyncThunk(
   "design/createDesign",
   async ({ audioText, ivrCampaignId, key, parentId, number }) => {
-    console.log("parent id while creating design ->", parentId);
     try {
       const response = await createDesignApi(
         audioText,

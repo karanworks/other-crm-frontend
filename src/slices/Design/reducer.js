@@ -91,8 +91,6 @@ const designSlice = createSlice({
 
         const newItem = action.payload.data; // Assuming action.payload.data contains the new item returned from the backend
 
-        console.log("NUMBER ADD RESPONSE ->", action.payload.data);
-
         const parentId = newItem.parentId; // Assuming the parent ID is included in the new item
 
         // Check if designs array exists in designData
@@ -116,10 +114,6 @@ const designSlice = createSlice({
 
             // Find the parent
             const parent = findParent(state.designData.designs);
-
-            console.log("PARENT FINDING RESULT ->", parent);
-
-            console.log("IS ARRAY CONDITION TRIGGERED", Array.isArray(newItem));
 
             // If parent is found
             if (parent) {

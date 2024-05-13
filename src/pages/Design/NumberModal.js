@@ -33,8 +33,28 @@ function NumberModal({
   handleAddAllNumbers,
 }) {
   const [selectedSingle, setSelectedSingle] = useState(null);
+  const [selectedKey, setSelectedKey] = useState(null);
 
   const dispatch = useDispatch();
+
+  const keyOptions = [
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "4", label: "4" },
+    { value: "5", label: "5" },
+    { value: "6", label: "6" },
+    { value: "7", label: "7" },
+    { value: "8", label: "8" },
+    { value: "9", label: "9" },
+    { value: "0", label: "0" },
+    { value: "*", label: "*" },
+    { value: "#", label: "#" },
+  ];
+
+  function handleSelectKey(selectedKey) {
+    setSelectedKey(selectedKey);
+  }
 
   const departmentOptions = departments?.map((department) => {
     return { value: department, label: department };
@@ -72,6 +92,28 @@ function NumberModal({
               {alreadyExistsError}
             </Alert>
           )} */}
+
+          <div className="mb-2">
+            <Label htmlFor="choices-single-default" className="form-label ">
+              Key
+            </Label>
+
+            <Select
+              value={selectedKey}
+              onChange={(key) => {
+                handleSelectKey(key);
+                numberValidation.setFieldValue("key", key.value);
+              }}
+              onBlur={numberValidation.handleBlur}
+              placeholder="Select Key"
+              options={keyOptions}
+            />
+            {numberValidation.touched.key && numberValidation.errors.key ? (
+              <FormFeedback type="invalid">
+                {numberValidation.errors.key}
+              </FormFeedback>
+            ) : null}
+          </div>
 
           <div className="mb-2">
             <Label htmlFor="choices-single-default" className="form-label ">
@@ -122,6 +164,9 @@ function NumberModal({
                         className="form-check-input"
                         id="selectAll"
                         name="selectAll"
+                        checked={
+                          departmentNumbers?.length === selectedNumbers.length
+                        }
                         onChange={handleAddAllNumbers}
                       />
                       <label

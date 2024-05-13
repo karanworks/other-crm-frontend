@@ -23,6 +23,7 @@ function DesignModal({
   selectedFile,
   setSelectedFile,
   layerId,
+  isEditingDesign,
 }) {
   const [selectedSingle, setSelectedSingle] = useState(null);
 
@@ -213,7 +214,7 @@ function DesignModal({
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
-              Create IVR
+              {isEditingDesign ? "Update IVR" : "Create IVR"}
             </button>
           </div>
         </ModalBody>

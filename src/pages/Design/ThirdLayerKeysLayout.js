@@ -127,27 +127,33 @@ function ThirdLayerKeysLayout({
                       alt=""
                       className="avatar-xs rounded-3 me-2"
                       style={{
-                        width: "25px",
-                        height: "25px",
+                        width: "30px",
+                        height: "30px",
                       }}
                     />
-                    <div className="d-flex align-items-center">
-                      <h5 className="fs-15 mb-0">{item.number.name + " - "}</h5>
-                      <p className="fs-15 mb-0 "> {item.number.number}</p>
+                    <div
+                      className="d-flex align-items-center"
+                      style={{ gap: "8px" }}
+                    >
+                      <div>
+                        <h5 className="fs-15 mb-0">{item.number.name}</h5>
+                        <p className="fs-15 mb-0 "> {item.number.number}</p>
+                      </div>
+                      <div
+                        className="bg-primary-subtle d-flex justify-content-center align-items-center rounded-2"
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          border: "1px solid #32A6E4",
+                        }}
+                      >
+                        {item.key}
+                      </div>
+
                       <div
                         className="d-flex"
                         style={{ gap: "3px", marginLeft: "5px" }}
                       >
-                        <button
-                          type="button"
-                          className="d-flex justify-content-center align-items-center  btn btn-warning waves-effect waves-light"
-                          style={{
-                            width: "25px",
-                            height: "25px",
-                          }}
-                        >
-                          <i className="ri-edit-line"></i>
-                        </button>
                         <button
                           type="button"
                           className="d-flex justify-content-center align-items-center  btn btn-danger waves-effect waves-light"

@@ -76,7 +76,6 @@ const Design = () => {
   }, [dispatch]);
 
   function handleAddNumber(number) {
-    console.log("THIS IS HOW SINGLE NUMBER LOOKS LIKE ->", number);
     const alreadyIncluded = selectedNumbers.some(
       (n) => n.number == number.number
     );
@@ -137,11 +136,15 @@ const Design = () => {
   const numberValidation = useFormik({
     initialValues: {
       department: "",
+      key: "",
     },
     validationSchema: Yup.object({
       department: Yup.string().required(),
+      key: Yup.string(),
     }),
     onSubmit: (values) => {
+      const { key } = values;
+
       dispatch(
         createDesign({
           ivrCampaignId: selectedIvrCampaignId,
@@ -149,6 +152,7 @@ const Design = () => {
           // audioText,
           parentId: layerId,
           number: selectedNumbers,
+          key,
         })
       );
       setSelectedNumbers([]);
@@ -341,26 +345,29 @@ const Design = () => {
                                   />
                                 )}
 
-                                {design?.items?.map((item) =>
-                                  item?.number ? (
-                                    <NumberLayout
-                                      item={item}
-                                      key={item.id}
-                                      tog_delete={tog_delete}
-                                      setListDesignId={setListDesignId}
-                                    />
-                                  ) : null
-                                )}
-
-                                <SecondLayerKeysLayout
-                                  designItems={design.items}
-                                  tog_list={tog_list}
-                                  setLayerId={setLayerId}
-                                  number_tog_list={number_tog_list}
-                                  tog_delete={tog_delete}
-                                  setListDesignId={setListDesignId}
-                                  handleEditDesign={handleEditDesign}
-                                />
+                                <td>
+                                  {design?.items?.map((item) =>
+                                    item?.number ? (
+                                      <NumberLayout
+                                        item={item}
+                                        key={item.id}
+                                        tog_delete={tog_delete}
+                                        setListDesignId={setListDesignId}
+                                      />
+                                    ) : (
+                                      <SecondLayerKeysLayout
+                                        item={item}
+                                        key={item.id}
+                                        tog_list={tog_list}
+                                        setLayerId={setLayerId}
+                                        number_tog_list={number_tog_list}
+                                        tog_delete={tog_delete}
+                                        setListDesignId={setListDesignId}
+                                        handleEditDesign={handleEditDesign}
+                                      />
+                                    )
+                                  )}
+                                </td>
 
                                 <td className="third">
                                   <div className="keys-info-container">
@@ -443,6 +450,7 @@ const Design = () => {
         selectedFile={selectedFile}
         setSelectedFile={setSelectedFile}
         layerId={layerId}
+        isEditingDesign={isEditingDesign}
       />
       <NumberModal
         number_modal_list={number_modal_list}
