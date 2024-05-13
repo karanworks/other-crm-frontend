@@ -30,6 +30,7 @@ function NumberModal({
   departmentNumbers,
   handleAddNumber,
   selectedNumbers,
+  handleAddAllNumbers,
 }) {
   const [selectedSingle, setSelectedSingle] = useState(null);
 
@@ -121,6 +122,7 @@ function NumberModal({
                         className="form-check-input"
                         id="selectAll"
                         name="selectAll"
+                        onChange={handleAddAllNumbers}
                       />
                       <label
                         className="form-check-label"
@@ -141,6 +143,9 @@ function NumberModal({
                             className="form-check-input"
                             id={departmentNumber.number}
                             name={departmentNumber.number}
+                            checked={selectedNumbers.some(
+                              (num) => num.number === departmentNumber.number
+                            )}
                             onChange={() => handleAddNumber(departmentNumber)}
                           />
                           <label

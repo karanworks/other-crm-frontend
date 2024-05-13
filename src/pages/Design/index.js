@@ -76,6 +76,7 @@ const Design = () => {
   }, [dispatch]);
 
   function handleAddNumber(number) {
+    console.log("THIS IS HOW SINGLE NUMBER LOOKS LIKE ->", number);
     const alreadyIncluded = selectedNumbers.some(
       (n) => n.number == number.number
     );
@@ -87,6 +88,14 @@ const Design = () => {
       setSelectedNumbers(filteredNumbers);
     } else {
       setSelectedNumbers((prev) => [...prev, number]);
+    }
+  }
+
+  function handleAddAllNumbers() {
+    if (departmentNumbers.length === selectedNumbers.length) {
+      setSelectedNumbers([]);
+    } else {
+      setSelectedNumbers(departmentNumbers);
     }
   }
 
@@ -142,6 +151,7 @@ const Design = () => {
           number: selectedNumbers,
         })
       );
+      setSelectedNumbers([]);
       number_tog_list();
       setmodal_list(false);
     },
@@ -444,6 +454,7 @@ const Design = () => {
         departmentNumbers={departmentNumbers}
         selectedNumbers={selectedNumbers}
         handleAddNumber={handleAddNumber}
+        handleAddAllNumbers={handleAddAllNumbers}
       />
 
       <RemoveModal
