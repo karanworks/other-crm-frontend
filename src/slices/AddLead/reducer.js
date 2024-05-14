@@ -1,44 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  getIVRCampaigns,
-  createIVRCampaign,
-  removeIVRCampaign,
-  updateIVRCampaign,
-} from "./thunk";
+import { getLeads, createLead, removeLead, updateLead } from "./thunk";
+
+// import {
+//   getCampaigns,
+//   createCampaign,
+//   removeCampaign,
+//   updateCampaign,
+// } from "./thunk";
+
 import { toast } from "react-toastify";
 
 export const initialState = {
-  ivrCampaigns: [],
+  leads: [],
   alreadyExistsError: null,
   error: "",
-  lastActiveTime: "",
 };
 
-const ivrCampaignSlice = createSlice({
-  name: "ivrCampaigns",
+const leadSlice = createSlice({
+  name: "leads",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getIVRCampaigns.fulfilled, (state, action) => {
+    builder.addCase(getLeads.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.ivrCampaigns = action.payload?.data.ivrCampaigns;
-        state.lastActiveTime = action.payload?.data.lastActiveTime;
+        state.campaigns = action.payload?.data.campaigns;
         state.error = "";
       }
     });
 
-    builder.addCase(createIVRCampaign.fulfilled, (state, action) => {
+    builder.addCase(createLead.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.alreadyExistsError = action.payload.message;
         state.error = "";
       } else {
-        state.ivrCampaigns = [...state.ivrCampaigns, action.payload.data];
+        state.campaigns = [...state.campaigns, action.payload.data];
         state.alreadyExistsError = null;
         state.error = "";
 
-        toast.success("IVR Campaign has been added !", {
+        toast.success("Lead has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -46,7 +47,7 @@ const ivrCampaignSlice = createSlice({
       }
     });
 
-    builder.addCase(updateIVRCampaign.fulfilled, (state, action) => {
+    builder.addCase(updateLead.fulfilled, (state, action) => {
       console.log("action payload while updating", action.payload);
 
       if (action.payload.status == "failure") {
@@ -55,7 +56,7 @@ const ivrCampaignSlice = createSlice({
       } else {
         const updatedCampaignId = action.payload.data?.updatedCampaign.id;
 
-        state.ivrCampaigns = state.ivrCampaigns.map((campaign) => {
+        state.campaigns = state.campaigns.map((campaign) => {
           if (campaign.id == updatedCampaignId) {
             campaign = action.payload.data.updatedCampaign;
             return campaign;
@@ -66,7 +67,7 @@ const ivrCampaignSlice = createSlice({
 
         state.alreadyExistsError = null;
         state.error = "";
-        toast.success("IVR Campaign details updated !", {
+        toast.success("Lead details updated !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -74,15 +75,15 @@ const ivrCampaignSlice = createSlice({
       }
     });
 
-    builder.addCase(removeIVRCampaign.fulfilled, (state, action) => {
+    builder.addCase(removeLead.fulfilled, (state, action) => {
       const deletedCampaignId = action.payload.id;
-      state.ivrCampaigns = state.ivrCampaigns.filter(
+      state.campaigns = state.campaigns.filter(
         (campaign) => campaign.id !== deletedCampaignId
       );
 
       state.error = "";
 
-      toast.error("IVR Campaign has been removed !", {
+      toast.error("Lead has been removed !", {
         position: "bottom-center",
         autoClose: 3000,
         theme: "colored",
@@ -91,4 +92,4 @@ const ivrCampaignSlice = createSlice({
   },
 });
 
-export default ivrCampaignSlice.reducer;
+export default leadSlice.reducer;

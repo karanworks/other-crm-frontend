@@ -16,8 +16,8 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import CampaignFormModal from "./CampaignFormModal";
-import CampaignRemoveModal from "./CampaignRemoveModal";
+import InvoiceModal from "./InvoiceModal";
+import InvoiceRemoveModal from "./InvoiceRemoveModal";
 import { useDispatch } from "react-redux";
 import {
   getCampaigns,
@@ -29,7 +29,7 @@ import { logoutUser } from "../../slices/auth/login/thunk";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const Campaign = () => {
+const Invoice = () => {
   // register / edit campaign modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
   // this state triggers when editing the campaign
@@ -124,15 +124,12 @@ const Campaign = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb
-            title="Campaign Management"
-            pageTitle="Operational Configuration"
-          />
+          <BreadCrumb title="Add Invoice" pageTitle="Payment" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Create a campaign</h4>
+                  <h4 className="card-title mb-0">Create Invoice</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -147,7 +144,7 @@ const Campaign = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add Campaign
+                            Add Invoice
                           </Button>
                         </div>
                       </Col>
@@ -184,30 +181,28 @@ const Campaign = () => {
                               </div>
                             </th>
                             <th className="sort" data-sort="campaign_name">
-                              Campaign Name
+                              Amount
+                            </th>
+                            <th className="sort" data-sort="callback">
+                              Balance
                             </th>
                             <th
                               className="sort"
                               data-sort="campaign_description"
                             >
-                              Campaign Description
-                            </th>
-                            <th className="sort" data-sort="callback">
-                              Callback
+                              Payment Date
                             </th>
                             <th className="sort" data-sort="dnc">
-                              DNC
+                              Due Date
                             </th>
-                            <th className="sort" data-sort="amd">
-                              AMD
-                            </th>
+
                             <th className="sort" data-sort="action">
                               Action
                             </th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {campaigns?.map((campaign) => (
+                          {/* {campaigns?.map((campaign) => (
                             <tr key={campaign?.id}>
                               <th scope="row">
                                 <div className="form-check">
@@ -260,7 +255,7 @@ const Campaign = () => {
                                 </div>
                               </td>
                             </tr>
-                          ))}
+                          ))} */}
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>
@@ -304,7 +299,7 @@ const Campaign = () => {
       </div>
 
       {/* Add Modal */}
-      <CampaignFormModal
+      <InvoiceModal
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
@@ -314,7 +309,7 @@ const Campaign = () => {
       />
 
       {/* Remove Modal */}
-      <CampaignRemoveModal
+      <InvoiceRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
@@ -327,4 +322,4 @@ const Campaign = () => {
   );
 };
 
-export default Campaign;
+export default Invoice;

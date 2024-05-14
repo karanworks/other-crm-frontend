@@ -4,53 +4,75 @@ import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
   Row,
+  Input,
+  Button,
+  ButtonGroup,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledDropdown,
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import IVRCampaignFormModal from "./IVRCampaignFormModal";
-import IVRCampaignRemoveModal from "./IVRCampaignRemoveModal";
+import AddLeadModal from "./AddLeadModal";
+import LeadRemoveModal from "./LeadRemoveModal";
 import { useDispatch } from "react-redux";
 import {
-  getIVRCampaigns,
-  createIVRCampaign,
-  removeIVRCampaign,
-  updateIVRCampaign,
-} from "../../slices/IVRCampaign/thunk";
+  getCampaigns,
+  createCampaign,
+  removeCampaign,
+  updateCampaign,
+} from "../../slices/Campaigns/thunk";
+import {
+  getLeads,
+  createLead,
+  removeLead,
+  updateLead,
+} from "../../slices/AddLead/thunk";
 import { logoutUser } from "../../slices/auth/login/thunk";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Select from "react-select";
 
-const IVRCampaign = () => {
-  // register / edit campaign modal state whether modal is open or not
+const AddLead = () => {
   const [modal_list, setmodal_list] = useState(false);
-  // this state triggers when editing the campaign
-  const [isEditingCampaign, setIsEditingCampaign] = useState(false);
-  // delete campaign confirmation modal state
+
+  // const [isEditingCampaign, setIsEditingCampaign] = useState(false);
+  const [isEditingLead, setIsEditingLead] = useState(false);
+
   const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete campaign button this state stores that campaign's id, had to make this state because I needed to have that campaign's id to make changes to it
-  const [listCampaignId, setListCampaignId] = useState(null);
+
+  // const [listCampaignId, setListCampaignId] = useState(null);
+  const [listLeadId, setListLeadId] = useState(null);
+
+  const [singleCategoryOption, setSingleCategoryOption] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { ivrCampaigns, alreadyExistsError, error } = useSelector(
-    (state) => state.IVRCampaign
-  );
+  // const { campaigns, alreadyExistsError, error } = useSelector(
+  //   (state) => state.Campaigns
+  // );
+  const { leads, error } = useSelector((state) => state.AddLead);
 
-  console.log();
+  const projectCategoryOptions = [
+    { value: "Project Genre", label: "Project Genre" },
+    { value: "Project Status", label: "Project Status" },
+  ];
+
+  function handleSelectSingle(selectedSingle) {
+    setSingleCategoryOption(selectedSingle);
+  }
 
   useEffect(() => {
     if (error) {
-      console.log("campaign error called");
       dispatch(logoutUser());
       navigate("/login");
       window.location.reload();
@@ -60,7 +82,7 @@ const IVRCampaign = () => {
   // toggles register / edit campaign modal
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingCampaign(false);
+    setIsEditingLead(false);
   }
 
   // toggles delete campaign confirmation modal
@@ -68,34 +90,43 @@ const IVRCampaign = () => {
     setmodal_delete(!modal_delete);
   }
 
-  useEffect(() => {
-    if (alreadyExistsError) {
-      setmodal_list(!modal_list);
-    }
-  }, [alreadyExistsError]);
+  // useEffect(() => {
+  //   if (alreadyExistsError) {
+  //     setmodal_list(!modal_list);
+  //   }
+  // }, [alreadyExistsError]);
+
+  // useEffect(() => {
+  //   dispatch(getCampaigns());
+  // }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getIVRCampaigns());
+    dispatch(getLeads());
   }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
     initialValues: {
-      // campaignName: "",
-      ivrCampaignName: "",
-      // campaignDescription: "",
-      ivrCampaignDescription: "",
+      clientName: "",
+      projectGenre: "",
+      projectStatus: "",
+      projectDueDate: "",
+      youtubeLink: "",
     },
     validationSchema: Yup.object({
-      ivrCampaignName: Yup.string().required("Please enter campaign name"),
-      ivrCampaignDescription: Yup.string().required(
-        "Please enter campaign description"
-      ),
+      clientName: Yup.string().required("Please enter client name"),
+      projectGenre: Yup.string().required("Please enter project genre"),
+      projectStatus: Yup.string().required("Please select project status"),
+      projectDueDate: Yup.string(),
+      // .required("Please select project due date"),
+      youtubeLink: Yup.string(),
     }),
     onSubmit: (values) => {
-      isEditingCampaign
-        ? dispatch(updateIVRCampaign({ values, listCampaignId }))
-        : dispatch(createIVRCampaign(values));
+      console.log("ADD LEAD FORM ->", values);
+
+      isEditingLead
+        ? dispatch(updateLead({ values, listLeadId }))
+        : dispatch(createLead(values));
 
       setmodal_list(false);
     },
@@ -110,42 +141,94 @@ const IVRCampaign = () => {
 
   // to update the values of register form when editing the campaign
   function handleEditCampaign(campaignData) {
-    setIsEditingCampaign(true);
+    setIsEditingLead(true);
     setmodal_list(!modal_list);
-    setListCampaignId(campaignData.id);
+    setListLeadId(campaignData.id);
 
-    validation.values.ivrCampaignName = campaignData.ivrCampaignName;
-    validation.values.ivrCampaignDescription =
-      campaignData.ivrCampaignDescription;
+    validation.values.campaignName = campaignData.campaignName;
+    validation.values.campaignDescription = campaignData.campaignDescription;
+    validation.values.campaignType = campaignData.campaignType;
   }
 
-  document.title = "IVR Campaign";
+  document.title = "Add Lead";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="IVR Campaign" pageTitle="IVR Admin" />
+          <BreadCrumb title="Add Lead" pageTitle="Lead Management" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Create a IVR campaign</h4>
+                  <h4 className="card-title mb-0">Create Lead</h4>
                 </CardHeader>
 
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
                     <Row className="g-4 mb-3">
                       <Col className="col-sm-auto">
-                        <div>
-                          <Button
-                            color="primary"
-                            className="add-btn me-1"
-                            onClick={() => tog_list()}
-                            id="create-btn"
-                          >
-                            <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add IVR Campaign
-                          </Button>
+                        <div className="d-flex">
+                          <div>
+                            <Button
+                              color="primary"
+                              className="add-btn me-1"
+                              onClick={() => tog_list()}
+                              id="create-btn"
+                            >
+                              <i className="ri-add-line align-bottom me-1"></i>{" "}
+                              Add Lead
+                            </Button>
+                          </div>
+                          <ButtonGroup>
+                            <UncontrolledDropdown>
+                              <DropdownToggle
+                                tag="button"
+                                className="btn btn-primary"
+                              >
+                                Add Dropdown{" "}
+                                <i className="mdi mdi-chevron-down"></i>
+                              </DropdownToggle>
+                              <DropdownMenu className="dropdown-menu-md p-4">
+                                <form>
+                                  <div className="mb-2">
+                                    <label
+                                      className="form-label"
+                                      htmlFor="exampleDropdownFormEmail"
+                                    >
+                                      Dropdown Category
+                                    </label>
+                                    <Select
+                                      value={singleCategoryOption}
+                                      onChange={handleSelectSingle}
+                                      options={projectCategoryOptions}
+                                      placeholder="Select Genre"
+                                    />
+                                  </div>
+                                  <div className="mb-2">
+                                    <label
+                                      className="form-label"
+                                      htmlFor="exampleDropdownFormEmail"
+                                    >
+                                      Dropdown Name
+                                    </label>
+                                    <Input
+                                      type="email"
+                                      className="form-control"
+                                      id="exampleDropdownFormEmail"
+                                      placeholder="Hindi, Bhojpuri etc."
+                                    />
+                                  </div>
+
+                                  <Button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                  >
+                                    Add
+                                  </Button>
+                                </form>
+                              </DropdownMenu>
+                            </UncontrolledDropdown>
+                          </ButtonGroup>
                         </div>
                       </Col>
                       {/* search input for future if needed */}
@@ -181,22 +264,30 @@ const IVRCampaign = () => {
                               </div>
                             </th>
                             <th className="sort" data-sort="campaign_name">
-                              Campaign Name
+                              Client Name
                             </th>
                             <th
                               className="sort"
                               data-sort="campaign_description"
                             >
-                              Campaign Description
+                              Project Genre
                             </th>
-
+                            <th className="sort" data-sort="dnc">
+                              Project Due Date
+                            </th>
+                            <th className="sort" data-sort="amd">
+                              Project YouTube Link
+                            </th>
+                            <th className="sort" data-sort="callback">
+                              Project Status
+                            </th>
                             <th className="sort" data-sort="action">
                               Action
                             </th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {ivrCampaigns?.map((campaign) => (
+                          {/* {campaigns?.map((campaign) => (
                             <tr key={campaign?.id}>
                               <th scope="row">
                                 <div className="form-check">
@@ -209,11 +300,16 @@ const IVRCampaign = () => {
                                 </div>
                               </th>
                               <td className="campaign-name">
-                                {campaign.ivrCampaignName}
+                                {campaign.campaignName}
                               </td>
                               <td className="campaign-description">
-                                {campaign.ivrCampaignDescription}
+                                {campaign.campaignDescription}
                               </td>
+                              <td className="campaign-callback">
+                                {campaign.callback}
+                              </td>
+                              <td className="campaign-dnc">{campaign.dnc}</td>
+                              <td className="campaign-amd">{campaign.amd}</td>
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="edit">
@@ -244,7 +340,7 @@ const IVRCampaign = () => {
                                 </div>
                               </td>
                             </tr>
-                          ))}
+                          ))} */}
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>
@@ -288,22 +384,21 @@ const IVRCampaign = () => {
       </div>
 
       {/* Add Modal */}
-      <IVRCampaignFormModal
+      <AddLeadModal
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
-        alreadyExistsError={alreadyExistsError}
         validation={validation}
-        isEditingCampaign={isEditingCampaign}
+        isEditingLead={isEditingLead}
       />
 
       {/* Remove Modal */}
-      <IVRCampaignRemoveModal
+      <LeadRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(removeIVRCampaign(listCampaignId));
+          dispatch(removeCampaign(listLeadId));
           setmodal_delete(false);
         }}
       />
@@ -311,4 +406,4 @@ const IVRCampaign = () => {
   );
 };
 
-export default IVRCampaign;
+export default AddLead;

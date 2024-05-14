@@ -369,6 +369,29 @@ export const removeDesign = ({ designId }) => {
   );
 };
 
+// *****************************************************************
+// **************************** ADD LEAD ***************************
+// *****************************************************************
+export const getLeads = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/leads`);
+};
+
+export const createLead = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/lead/create`, data);
+};
+export const removeLead = (leadId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
+  );
+};
+
+export const updateLead = (leadId, data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/edit`,
+    data
+  );
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);
@@ -562,14 +585,14 @@ export const deleteCompanies = (company) =>
 export const getDeals = () => api.get(url.GET_DEALS);
 
 // get Leads
-export const getLeads = () => api.get(url.GET_LEADS);
+// export const getLeads = () => api.get(url.GET_LEADS);
 
 // add Lead
 export const addNewLead = (lead) => api.create(url.ADD_NEW_LEAD, lead);
 
 // update Lead
-export const updateLead = (lead) =>
-  api.update(url.UPDATE_LEAD + "/" + lead._id, lead);
+// export const updateLead = (lead) =>
+//   api.update(url.UPDATE_LEAD + "/" + lead._id, lead);
 
 // delete Lead
 export const deleteLead = (lead) => api.delete(url.DELETE_LEAD + "/" + lead);

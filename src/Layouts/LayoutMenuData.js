@@ -14,20 +14,9 @@ const Navdata = () => {
   const menuDataOfUser = userData.data.menus;
 
   //state data
-  const [isHome, setIsHome] = useState(false);
   const [isAdminTools, setIsAdminTools] = useState(false);
   const [isLeadManagement, setIsLeadManagement] = useState(false);
   const [isPayments, setIsPayments] = useState(false);
-  // OTHER CRM DIVIDER
-  const [isSystemConfiguration, setIsSystemConfiguration] = useState(false);
-  const [isCampaignManagement, setIsCampaignManagement] = useState(false);
-  const [isOtherManagement, setIsOtherManagement] = useState(false);
-  const [isMonitoring, setIsMonitoring] = useState(false);
-  const [isQuality, setIsQuality] = useState(false);
-  const [isAnalytics, setIsAnalytics] = useState(false);
-  const [isWork, setIsWork] = useState(false);
-  const [isIVRAdmin, setIsIVRAdmin] = useState(false);
-  const [isIVR, setIsIVR] = useState(false);
 
   //
   const [isAuth, setIsAuth] = useState(false);
@@ -57,39 +46,11 @@ const Navdata = () => {
     if (iscurrentState !== "AdminTools") {
       setIsAdminTools(false);
     }
-    if (iscurrentState !== "Payments") {
-      setIsPayments(false);
-    }
-    if (iscurrentState !== "SystemConfiguration") {
-      setIsSystemConfiguration(false);
-    }
-
-    if (iscurrentState !== "CampaignManagement") {
-      setIsCampaignManagement(false);
-    }
     if (iscurrentState !== "LeadManagement") {
       setIsLeadManagement(false);
     }
-    if (iscurrentState !== "OtherManagement") {
-      setIsOtherManagement(false);
-    }
-    if (iscurrentState !== "Monitoring") {
-      setIsMonitoring(false);
-    }
-    if (iscurrentState !== "Quality") {
-      setIsQuality(false);
-    }
-    if (iscurrentState !== "Analytics") {
-      setIsAnalytics(false);
-    }
-    if (iscurrentState !== "Work") {
-      setIsWork(false);
-    }
-    if (iscurrentState !== "IVRAdmin") {
-      setIsIVRAdmin(false);
-    }
-    if (iscurrentState !== "IVR") {
-      setIsIVR(false);
+    if (iscurrentState !== "Payments") {
+      setIsPayments(false);
     }
 
     if (iscurrentState !== "Auth") {
@@ -102,35 +63,17 @@ const Navdata = () => {
     history,
     iscurrentState,
     isAdminTools,
-    isPayments,
-    isSystemConfiguration,
-    isHome,
-    isCampaignManagement,
     isLeadManagement,
-    isOtherManagement,
-    isMonitoring,
-    isQuality,
-    isAnalytics,
-    isWork,
-    isIVRAdmin,
-    isIVR,
+    isPayments,
+
     isAuth,
     isPages,
   ]);
 
   const parentMenuStates = {
-    SystemConfiguration: isSystemConfiguration,
     AdminTools: isAdminTools,
-    Payments: isPayments,
-    CampaignManagement: isCampaignManagement,
     LeadManagement: isLeadManagement,
-    OtherManagement: isOtherManagement,
-    Monitoring: isMonitoring,
-    Quality: isQuality,
-    Analytics: isAnalytics,
-    Work: isWork,
-    IVRAdmin: isIVRAdmin,
-    IVR: isIVR,
+    Payments: isPayments,
   };
 
   const handleClick = (menuLabelId) => {
@@ -141,48 +84,12 @@ const Navdata = () => {
           setIsAdminTools(!isAdminTools);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
-        case "Payments":
-          setIsPayments(!isPayments);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "SystemConfiguration":
-          setIsSystemConfiguration(!isSystemConfiguration);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "CampaignManagement":
-          setIsCampaignManagement(!isCampaignManagement);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
         case "LeadManagement":
           setIsLeadManagement(!isLeadManagement);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
-        case "OtherManagement":
-          setIsOtherManagement(!isOtherManagement);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Monitoring":
-          setIsMonitoring(!isMonitoring);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Quality":
-          setIsQuality(!isQuality);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Analytics":
-          setIsAnalytics(!isAnalytics);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "Work":
-          setIsWork(!isWork);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "IVRAdmin":
-          setIsIVRAdmin(!isIVRAdmin);
-          setIscurrentState(menuLabelId);
-          updateIconSidebar(e);
-        case "IVR":
-          setIsIVR(!isIVR);
+        case "Payments":
+          setIsPayments(!isPayments);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }
