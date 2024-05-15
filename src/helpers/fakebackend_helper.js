@@ -424,7 +424,7 @@ export const updateInvoice = (invoiceId, data) => {
 
 export const removeInvoice = (invoiceId) => {
   return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/lead/${invoiceId}/delete`
+    `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/delete`
   );
 };
 

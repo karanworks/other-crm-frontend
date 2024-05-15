@@ -5,12 +5,7 @@ import {
   removeInvoice,
   updateInvoice,
 } from "./thunk";
-// import {
-//   getCampaigns,
-//   createCampaign,
-//   removeCampaign,
-//   updateCampaign,
-// } from "./thunk";
+
 import { toast } from "react-toastify";
 
 export const initialState = {
@@ -51,7 +46,7 @@ const invoiceSlice = createSlice({
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        const updatedInvoiceId = action.payload.data?.updatedInvoice.id;
+        const updatedInvoiceId = action.payload.data?.updatedInvoice?.id;
 
         state.invoices = state.invoices.map((invoice) => {
           if (invoice.id == updatedInvoiceId) {
@@ -72,7 +67,7 @@ const invoiceSlice = createSlice({
     });
 
     builder.addCase(removeInvoice.fulfilled, (state, action) => {
-      const deletedInvoiceId = action.payload.id;
+      const deletedInvoiceId = action.payload.data.deletedInvoice.id;
       state.invoices = state.invoices.filter(
         (invoice) => invoice.id !== deletedInvoiceId
       );

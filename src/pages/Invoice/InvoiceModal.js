@@ -1,5 +1,4 @@
 import {
-  Alert,
   Input,
   Label,
   Form,
@@ -12,11 +11,11 @@ import "react-toastify/dist/ReactToastify.css";
 import Flatpickr from "react-flatpickr";
 
 function InvoiceModal({
-  modal_list, // modal state
-  tog_list, // to change modal state
-  formHandleSubmit, // submit function for form
-  validation, // to get the values from formik
-  isEditingInvoice, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  modal_list,
+  tog_list,
+  formHandleSubmit,
+  validation,
+  isEditingInvoice,
 }) {
   return (
     <Modal
@@ -69,7 +68,7 @@ function InvoiceModal({
           </div>
           <div className="mb-2">
             <Label htmlFor="balance" className="form-label">
-              Amount
+              Balance
             </Label>
 
             <Input

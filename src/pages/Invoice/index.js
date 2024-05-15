@@ -36,42 +36,29 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Invoice = () => {
-  // register / edit campaign modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
-  // this state triggers when editing the campaign
-  // const [isEditingCampaign, setIsEditingCampaign] = useState(false);
 
   const [isEditingInvoice, setIsEditingInvoice] = useState(false);
 
-  // delete campaign confirmation modal state
   const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete campaign button this state stores that campaign's id, had to make this state because I needed to have that campaign's id to make changes to it
-  // const [listCampaignId, setListCampaignId] = useState(null);
 
   const [listInvoiceId, setListInvoiceId] = useState(null);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // const { campaigns, alreadyExistsError, error } = useSelector(
-  //   (state) => state.Campaigns
-  // );
 
   const { invoices, error } = useSelector((state) => state.Invoice);
 
-  // toggles register / edit campaign modal
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingInvoice(false);
   }
 
-  // toggles delete campaign confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
 
   useEffect(() => {
-    // dispatch(getInvoices());
+    dispatch(getInvoices());
   }, [dispatch]);
 
   // formik setup
@@ -97,14 +84,12 @@ const Invoice = () => {
     },
   });
 
-  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
     return false;
   }
 
-  // to update the values of register form when editing the campaign
   function handleEditInvoice(invoice) {
     setIsEditingInvoice(true);
     setmodal_list(!modal_list);
@@ -116,7 +101,7 @@ const Invoice = () => {
     validation.values.dueDate = invoice.dueDate;
   }
 
-  document.title = "Campaign";
+  document.title = "Invoice";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -145,19 +130,6 @@ const Invoice = () => {
                           </Button>
                         </div>
                       </Col>
-                      {/* search input for future if needed */}
-                      {/* <Col className="col-sm">
-                        <div className="d-flex justify-content-sm-end">
-                          <div className="search-box ms-2">
-                            <input
-                              type="text"
-                              className="form-control search"
-                              placeholder="Search..."
-                            />
-                            <i className="ri-search-line search-icon"></i>
-                          </div>
-                        </div>
-                      </Col> */}
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">
