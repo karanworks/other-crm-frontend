@@ -28,12 +28,7 @@ import * as Yup from "yup";
 import AddLeadModal from "./AddLeadModal";
 import LeadRemoveModal from "./LeadRemoveModal";
 import { useDispatch } from "react-redux";
-import {
-  getCampaigns,
-  createCampaign,
-  removeCampaign,
-  updateCampaign,
-} from "../../slices/Campaigns/thunk";
+
 import {
   getLeads,
   createLead,
@@ -50,12 +45,10 @@ import YoutubeLogo from "./youtube_logo.webp";
 const AddLead = () => {
   const [modal_list, setmodal_list] = useState(false);
 
-  // const [isEditingCampaign, setIsEditingCampaign] = useState(false);
   const [isEditingLead, setIsEditingLead] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  // const [listCampaignId, setListCampaignId] = useState(null);
   const [listLeadId, setListLeadId] = useState(null);
 
   const [singleCategoryOption, setSingleCategoryOption] = useState(null);
@@ -65,9 +58,6 @@ const AddLead = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // const { campaigns, alreadyExistsError, error } = useSelector(
-  //   (state) => state.Campaigns
-  // );
   const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
 
   const projectCategoryOptions = [
@@ -79,38 +69,19 @@ const AddLead = () => {
     setSingleCategoryOption(selectedSingle);
   }
 
-  useEffect(() => {
-    if (error) {
-      dispatch(logoutUser());
-      navigate("/login");
-      window.location.reload();
-    }
-  }, [dispatch, error]);
-
-  // toggles register / edit campaign modal
+  // toggles register / edit lead modal
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingLead(false);
   }
 
-  // toggles delete campaign confirmation modal
+  // toggles delete lead confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
 
-  // useEffect(() => {
-  //   if (alreadyExistsError) {
-  //     setmodal_list(!modal_list);
-  //   }
-  // }, [alreadyExistsError]);
-
-  // useEffect(() => {
-  //   dispatch(getCampaigns());
-  // }, [dispatch]);
-
   useEffect(() => {
     dispatch(getLeads());
-    // dispatch(getDropdowns());
   }, [dispatch]);
 
   // formik setup
@@ -153,14 +124,10 @@ const AddLead = () => {
     onSubmit: (values) => {
       dispatch(createDropdown(values));
       setAddDropdownOpen(false);
-
-      // isEditingLead
-      //   ? dispatch(updateLead({ values, listLeadId }))
-      //   : dispatch(createLead(values));
     },
   });
 
-  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
+  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit lead from
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
@@ -172,7 +139,7 @@ const AddLead = () => {
     return false;
   }
 
-  // to update the values of register form when editing the campaign
+  // to update the values of register form when editing the lead
   function handleEditLead(lead) {
     setIsEditingLead(true);
     setmodal_list(!modal_list);
@@ -251,21 +218,6 @@ const AddLead = () => {
                                     />
                                   </div>
 
-                                  {/* <div className="mb-2">
-                                    <label
-                                      className="form-label"
-                                      htmlFor="exampleDropdownFormEmail"
-                                    >
-                                      Dropdown Category
-                                    </label>
-                                    <Select
-                                      value={singleCategoryOption}
-                                      onChange={handleSelectSingle}
-                                      options={projectCategoryOptions}
-                                      placeholder="Select Genre"
-                                    />
-                                  </div> */}
-
                                   <div className="mb-2">
                                     <Label
                                       htmlFor="dropdownName"
@@ -302,21 +254,6 @@ const AddLead = () => {
                                     ) : null}
                                   </div>
 
-                                  {/* <div className="mb-2">
-                                    <label
-                                      className="form-label"
-                                      htmlFor="exampleDropdownFormEmail"
-                                    >
-                                      Dropdown Name
-                                    </label>
-                                    <Input
-                                      type="email"
-                                      className="form-control"
-                                      id="exampleDropdownFormEmail"
-                                      placeholder="Hindi, Bhojpuri etc."
-                                    />
-                                  </div> */}
-
                                   <Button
                                     type="submit"
                                     className="btn btn-primary"
@@ -329,19 +266,6 @@ const AddLead = () => {
                           </ButtonGroup>
                         </div>
                       </Col>
-                      {/* search input for future if needed */}
-                      {/* <Col className="col-sm">
-                        <div className="d-flex justify-content-sm-end">
-                          <div className="search-box ms-2">
-                            <input
-                              type="text"
-                              className="form-control search"
-                              placeholder="Search..."
-                            />
-                            <i className="ri-search-line search-icon"></i>
-                          </div>
-                        </div>
-                      </Col> */}
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">

@@ -397,14 +397,34 @@ export const removeLead = (leadId) => {
 // ************************ PROJECT DROPDOWN ***********************
 // *****************************************************************
 
-// export const getDropdowns = () => {
-//   return api.get(`${process.env.REACT_APP_SERVER_URL}/dropdowns`);
-// };
-
 export const createDropdown = (data) => {
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/dropdown/create`,
     data
+  );
+};
+
+// *****************************************************************
+// ***************************** INVOICE ***************************
+// *****************************************************************
+export const getInvoices = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/invoices`);
+};
+
+export const createInvoice = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/invoice/create`, data);
+};
+
+export const updateInvoice = (invoiceId, data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/edit`,
+    data
+  );
+};
+
+export const removeInvoice = (invoiceId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/lead/${invoiceId}/delete`
   );
 };
 
@@ -622,15 +642,15 @@ export const getOrderList = () => api.get(url.GET_ORDRER_LIST);
 
 // Invoice
 //get Invoice
-export const getInvoices = () => api.get(url.GET_INVOICES);
+// export const getInvoices = () => api.get(url.GET_INVOICES);
 
 // add Invoice
 export const addNewInvoice = (invoice) =>
   api.create(url.ADD_NEW_INVOICE, invoice);
 
 // update Invoice
-export const updateInvoice = (invoice) =>
-  api.update(url.UPDATE_INVOICE + "/" + invoice._id, invoice);
+// export const updateInvoice = (invoice) =>
+//   api.update(url.UPDATE_INVOICE + "/" + invoice._id, invoice);
 
 // delete Invoice
 export const deleteInvoice = (invoice) =>

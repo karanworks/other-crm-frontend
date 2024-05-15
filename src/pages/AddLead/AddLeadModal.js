@@ -1,5 +1,4 @@
 import {
-  Alert,
   Input,
   Label,
   Form,
@@ -20,7 +19,6 @@ function AddLeadModal({
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
   isEditingLead, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
-  alreadyExistsError,
   dropdowns,
 }) {
   const [selectedSingleGenre, setSelectedSingleGenre] = useState(null);
@@ -69,11 +67,6 @@ function AddLeadModal({
       </ModalHeader>
       <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
-          {/* {alreadyExistsError && (
-            <Alert color="danger" style={{ marginBlock: "10px" }}>
-              {alreadyExistsError}
-            </Alert>
-          )} */}
           <div className="mb-2">
             <Label htmlFor="clientName" className="form-label">
               Client Name
@@ -163,36 +156,22 @@ function AddLeadModal({
               </FormFeedback>
             ) : null}
           </div>
-          {/* <div className="mb-2">
-            <label htmlFor="projectDueDate" className="form-label">
-              Project due date
-            </label>
-            <Field name="projectDueDate">
-              {({ field, form }) => (
-                <Flatpickr
-                  id="projectDueDate"
-                  name={field.name}
-                  className={`form-control ${
-                    form.errors.projectDueDate &&
-                    form.touched.projectDueDate &&
-                    "is-invalid"
-                  }`}
-                  options={{
-                    dateFormat: "d M, Y",
-                  }}
-                  value={field.value}
-                  onChange={(date) => form.setFieldValue(field.name, date)}
-                  onBlur={field.onBlur}
-                  placeholder="Select Date"
-                />
-              )}
-            </Field>
-            <ErrorMessage
-              name="projectDueDate"
-              component="div"
-              className="invalid-feedback"
+          <div className="mb-3">
+            <Label className="form-label">Project Due Date</Label>
+            <Flatpickr
+              className="form-control"
+              options={{
+                dateFormat: "d M, Y",
+              }}
+              onChange={(date) => {
+                const formattedDate = new Date(date).toLocaleDateString(
+                  "en-GB"
+                );
+                console.log("DUE DATE ->", formattedDate);
+                validation.setFieldValue("projectDueDate", formattedDate);
+              }}
             />
-          </div> */}
+          </div>
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
