@@ -62,15 +62,15 @@ export const removeLead = createAsyncThunk(
 // *************************** DROPDOWNS ***************************
 // *****************************************************************
 
-export const getDropdowns = createAsyncThunk("leads/getDropdowns", async () => {
-  try {
-    const response = await getDropdownsApi();
+// export const getDropdowns = createAsyncThunk("leads/getDropdowns", async () => {
+//   try {
+//     const response = await getDropdownsApi();
 
-    return response;
-  } catch (error) {
-    console.log("error inside get dropdown in leads thunk", error);
-  }
-});
+//     return response;
+//   } catch (error) {
+//     console.log("error inside get dropdown in leads thunk", error);
+//   }
+// });
 
 export const createDropdown = createAsyncThunk(
   "leads/createDropdown",

@@ -8,7 +8,7 @@ import {
   ModalBody,
   ModalHeader,
 } from "reactstrap";
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, validateYupSchema } from "formik";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import Select from "react-select";
@@ -21,21 +21,26 @@ function AddLeadModal({
   validation, // to get the values from formik
   isEditingLead, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   alreadyExistsError,
+  dropdowns,
 }) {
   const [selectedSingleGenre, setSelectedSingleGenre] = useState(null);
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
 
-  const SingleGenreOptions = [
-    { value: "Hindi", label: "Hindi" },
-    { value: "Bhojpuri", label: "Bhojpuri" },
-    { value: "Lokgeet", label: "Lokgeet" },
-  ];
-  const SingleStatusOptions = [
-    { value: "Dummy", label: "Dummy" },
-    { value: "Recording", label: "Recording" },
-    { value: "Mix-Master", label: "Mix-Master" },
-    { value: "Delivered", label: "Delivered" },
-  ];
+  let SingleGenreOptions = dropdowns
+    ?.map((dropdown) => {
+      if (dropdown.category === "Project Genre") {
+        return { value: dropdown.dropdownName, label: dropdown.dropdownName };
+      }
+    })
+    .filter(Boolean);
+
+  let SingleStatusOptions = dropdowns
+    ?.map((dropdown) => {
+      if (dropdown.category === "Project Status") {
+        return { value: dropdown.dropdownName, label: dropdown.dropdownName };
+      }
+    })
+    .filter(Boolean);
 
   function handleSelectSingleGenre(selectedSingle) {
     setSelectedSingleGenre(selectedSingle);

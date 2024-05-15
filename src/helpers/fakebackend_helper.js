@@ -397,9 +397,9 @@ export const removeLead = (leadId) => {
 // ************************ PROJECT DROPDOWN ***********************
 // *****************************************************************
 
-export const getDropdowns = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/dropdowns`);
-};
+// export const getDropdowns = () => {
+//   return api.get(`${process.env.REACT_APP_SERVER_URL}/dropdowns`);
+// };
 
 export const createDropdown = (data) => {
   return api.create(

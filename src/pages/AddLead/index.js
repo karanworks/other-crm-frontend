@@ -39,7 +39,6 @@ import {
   createLead,
   removeLead,
   updateLead,
-  getDropdowns,
   createDropdown,
 } from "../../slices/AddLead/thunk";
 import { logoutUser } from "../../slices/auth/login/thunk";
@@ -61,13 +60,15 @@ const AddLead = () => {
 
   const [singleCategoryOption, setSingleCategoryOption] = useState(null);
 
+  const [addDropdownOpen, setAddDropdownOpen] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // const { campaigns, alreadyExistsError, error } = useSelector(
   //   (state) => state.Campaigns
   // );
-  const { leads, error } = useSelector((state) => state.AddLead);
+  const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
 
   const projectCategoryOptions = [
     { value: "Project Genre", label: "Project Genre" },
@@ -150,9 +151,8 @@ const AddLead = () => {
       dropdownName: Yup.string().required("Please enter dropdown name "),
     }),
     onSubmit: (values) => {
-      console.log("ADD DROPDOWN FORM ->", values);
-
       dispatch(createDropdown(values));
+      setAddDropdownOpen(false);
 
       // isEditingLead
       //   ? dispatch(updateLead({ values, listLeadId }))
@@ -163,13 +163,11 @@ const AddLead = () => {
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
   function formHandleSubmit(e) {
     e.preventDefault();
-    console.log("HANDLE SUBMIT BEING CALLED");
     validation.handleSubmit();
     return false;
   }
   function dropdownHandleSubmit(e) {
     e.preventDefault();
-    console.log("DROPDOWN HANDLE SUBMIT BEING CALLED");
     dropdownValidation.handleSubmit();
     return false;
   }
@@ -217,10 +215,13 @@ const AddLead = () => {
                             </Button>
                           </div>
                           <ButtonGroup>
-                            <UncontrolledDropdown>
+                            <UncontrolledDropdown isOpen={addDropdownOpen}>
                               <DropdownToggle
                                 tag="button"
                                 className="btn btn-primary"
+                                onClick={() =>
+                                  setAddDropdownOpen(!addDropdownOpen)
+                                }
                               >
                                 Add Dropdown{" "}
                                 <i className="mdi mdi-chevron-down"></i>
@@ -415,7 +416,7 @@ const AddLead = () => {
                                 </a>
                               </td>
                               <td className="project-status">
-                                <span class="badge border border-primary text-primary fs-13">
+                                <span className="badge border border-primary text-primary fs-13">
                                   {" "}
                                   {lead.projectStatus}
                                 </span>
@@ -485,6 +486,7 @@ const AddLead = () => {
         formHandleSubmit={formHandleSubmit}
         validation={validation}
         isEditingLead={isEditingLead}
+        dropdowns={dropdowns}
       />
 
       {/* Remove Modal */}

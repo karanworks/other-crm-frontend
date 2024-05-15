@@ -35,6 +35,7 @@ const leadSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.leads = action.payload?.data.leads;
+        state.dropdowns = action.payload.data.dropdowns;
         state.error = "";
       }
     });
@@ -102,15 +103,15 @@ const leadSlice = createSlice({
     // *************************** DROPDOWNS ***************************
     // *****************************************************************
 
-    builder.addCase(getDropdowns.fulfilled, (state, action) => {
-      console.log("GET DROPDOWNS IN LEADS REDUCER ->", action.payload.data);
-      if (action.payload.status === "failure") {
-        state.error = action.payload.message;
-      } else {
-        state.dropdowns = action.payload?.data.dropdowns;
-        state.error = "";
-      }
-    });
+    // builder.addCase(getDropdowns.fulfilled, (state, action) => {
+    //   console.log("GET DROPDOWNS IN LEADS REDUCER ->", action.payload.data);
+    //   if (action.payload.status === "failure") {
+    //     state.error = action.payload.message;
+    //   } else {
+    //     state.dropdowns = action.payload?.data.dropdowns;
+    //     state.error = "";
+    //   }
+    // });
 
     builder.addCase(createDropdown.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
