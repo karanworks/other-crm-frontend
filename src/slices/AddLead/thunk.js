@@ -5,6 +5,8 @@ import {
   createLead as createLeadApi,
   removeLead as removeLeadApi,
   updateLead as updateLeadApi,
+  getDropdowns as getDropdownsApi,
+  createDropdown as createDropdownApi,
 } from "../../helpers/fakebackend_helper";
 
 import {
@@ -52,6 +54,32 @@ export const removeLead = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside remove lead thunk", error);
+    }
+  }
+);
+
+// *****************************************************************
+// *************************** DROPDOWNS ***************************
+// *****************************************************************
+
+export const getDropdowns = createAsyncThunk("leads/getDropdowns", async () => {
+  try {
+    const response = await getDropdownsApi();
+
+    return response;
+  } catch (error) {
+    console.log("error inside get dropdown in leads thunk", error);
+  }
+});
+
+export const createDropdown = createAsyncThunk(
+  "leads/createDropdown",
+  async (data) => {
+    try {
+      const response = await createDropdownApi(data);
+      return response;
+    } catch (error) {
+      console.log("error inside create dropdown in lead thunk", error);
     }
   }
 );

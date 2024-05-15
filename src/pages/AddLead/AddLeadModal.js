@@ -130,6 +130,34 @@ function AddLeadModal({
               placeholder="Select Status"
             />
           </div>
+
+          <div className="mb-2">
+            <Label htmlFor="clientName" className="form-label">
+              Youtube Link
+            </Label>
+
+            <Input
+              id="youtubeLink"
+              name="youtubeLink"
+              className="form-control"
+              placeholder="Enter Youtube Link"
+              type="text"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.youtubeLink || ""}
+              invalid={
+                validation.touched.youtubeLink && validation.errors.youtubeLink
+                  ? true
+                  : false
+              }
+            />
+
+            {validation.touched.youtubeLink && validation.errors.youtubeLink ? (
+              <FormFeedback type="invalid">
+                {validation.errors.youtubeLink}
+              </FormFeedback>
+            ) : null}
+          </div>
           {/* <div className="mb-2">
             <label htmlFor="projectDueDate" className="form-label">
               Project due date

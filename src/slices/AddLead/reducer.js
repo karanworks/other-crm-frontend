@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getLeads, createLead, removeLead, updateLead } from "./thunk";
+import {
+  getLeads,
+  createLead,
+  removeLead,
+  updateLead,
+  getDropdowns,
+  createDropdown,
+} from "./thunk";
 
 // import {
 //   getCampaigns,
@@ -12,6 +19,7 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   leads: [],
+  dropdowns: [],
   alreadyExistsError: null,
   error: "",
 };
@@ -88,6 +96,36 @@ const leadSlice = createSlice({
         autoClose: 3000,
         theme: "colored",
       });
+    });
+
+    // *****************************************************************
+    // *************************** DROPDOWNS ***************************
+    // *****************************************************************
+
+    builder.addCase(getDropdowns.fulfilled, (state, action) => {
+      console.log("GET DROPDOWNS IN LEADS REDUCER ->", action.payload.data);
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.dropdowns = action.payload?.data.dropdowns;
+        state.error = "";
+      }
+    });
+
+    builder.addCase(createDropdown.fulfilled, (state, action) => {
+      if (action.payload.status == "failure") {
+        state.alreadyExistsError = action.payload.message;
+        state.error = "";
+      } else {
+        state.dropdowns = [...state.dropdowns, action.payload.data];
+        state.error = "";
+
+        toast.success("Dropdown has been added !", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "colored",
+        });
+      }
     });
   },
 });

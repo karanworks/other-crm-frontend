@@ -11,12 +11,16 @@ import {
   Container,
   Row,
   Input,
+  Form,
+  FormFeedback,
   Button,
   ButtonGroup,
   DropdownMenu,
   DropdownToggle,
   UncontrolledDropdown,
+  Label,
 } from "reactstrap";
+
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
@@ -35,11 +39,14 @@ import {
   createLead,
   removeLead,
   updateLead,
+  getDropdowns,
+  createDropdown,
 } from "../../slices/AddLead/thunk";
 import { logoutUser } from "../../slices/auth/login/thunk";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Select from "react-select";
+import YoutubeLogo from "./youtube_logo.webp";
 
 const AddLead = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -102,6 +109,7 @@ const AddLead = () => {
 
   useEffect(() => {
     dispatch(getLeads());
+    // dispatch(getDropdowns());
   }, [dispatch]);
 
   // formik setup
@@ -110,16 +118,16 @@ const AddLead = () => {
       clientName: "",
       projectGenre: "",
       projectStatus: "",
+      youtubeLink: "",
       // projectDueDate: "",
-      // youtubeLink: "",
     },
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please enter client name"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
+      youtubeLink: Yup.string(),
       // projectDueDate: Yup.string(),
       // .required("Please select project due date"),
-      // youtubeLink: Yup.string(),
     }),
     onSubmit: (values) => {
       console.log("ADD LEAD FORM ->", values);
@@ -132,11 +140,37 @@ const AddLead = () => {
     },
   });
 
+  const dropdownValidation = useFormik({
+    initialValues: {
+      category: "",
+      dropdownName: "",
+    },
+    validationSchema: Yup.object({
+      category: Yup.string().required("Please select category"),
+      dropdownName: Yup.string().required("Please enter dropdown name "),
+    }),
+    onSubmit: (values) => {
+      console.log("ADD DROPDOWN FORM ->", values);
+
+      dispatch(createDropdown(values));
+
+      // isEditingLead
+      //   ? dispatch(updateLead({ values, listLeadId }))
+      //   : dispatch(createLead(values));
+    },
+  });
+
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
   function formHandleSubmit(e) {
     e.preventDefault();
     console.log("HANDLE SUBMIT BEING CALLED");
     validation.handleSubmit();
+    return false;
+  }
+  function dropdownHandleSubmit(e) {
+    e.preventDefault();
+    console.log("DROPDOWN HANDLE SUBMIT BEING CALLED");
+    dropdownValidation.handleSubmit();
     return false;
   }
 
@@ -149,6 +183,7 @@ const AddLead = () => {
     validation.values.clientName = lead.clientName;
     validation.values.projectGenre = lead.projectGenre;
     validation.values.projectStatus = lead.projectStatus;
+    validation.values.youtubeLink = lead.youtubeLink;
     // YOUTUBELINK, DUE DATE FIELD REMAINING HERE
   }
 
@@ -191,8 +226,31 @@ const AddLead = () => {
                                 <i className="mdi mdi-chevron-down"></i>
                               </DropdownToggle>
                               <DropdownMenu className="dropdown-menu-md p-4">
-                                <form>
+                                <Form onSubmit={(e) => dropdownHandleSubmit(e)}>
                                   <div className="mb-2">
+                                    <Label
+                                      htmlFor="category"
+                                      className="form-label"
+                                    >
+                                      Dropdown Category
+                                    </Label>
+                                    <Select
+                                      id="category"
+                                      name="category"
+                                      value={singleCategoryOption}
+                                      onChange={(category) => {
+                                        handleSelectSingle(category);
+                                        dropdownValidation.setFieldValue(
+                                          "category",
+                                          category.value
+                                        );
+                                      }}
+                                      options={projectCategoryOptions}
+                                      placeholder="Select Category"
+                                    />
+                                  </div>
+
+                                  {/* <div className="mb-2">
                                     <label
                                       className="form-label"
                                       htmlFor="exampleDropdownFormEmail"
@@ -205,8 +263,45 @@ const AddLead = () => {
                                       options={projectCategoryOptions}
                                       placeholder="Select Genre"
                                     />
-                                  </div>
+                                  </div> */}
+
                                   <div className="mb-2">
+                                    <Label
+                                      htmlFor="dropdownName"
+                                      className="form-label"
+                                    >
+                                      Dropdown Name
+                                    </Label>
+
+                                    <Input
+                                      id="dropdownName"
+                                      name="dropdownName"
+                                      className="form-control"
+                                      placeholder="Hindi, Bhojpuri etc."
+                                      type="text"
+                                      onChange={dropdownValidation.handleChange}
+                                      onBlur={dropdownValidation.handleBlur}
+                                      value={
+                                        dropdownValidation.values.dropdownName
+                                      }
+                                      invalid={
+                                        dropdownValidation.touched
+                                          .dropdownName &&
+                                        dropdownValidation.errors.dropdownName
+                                          ? true
+                                          : false
+                                      }
+                                    />
+
+                                    {dropdownValidation.touched.dropdownName &&
+                                    dropdownValidation.errors.dropdownName ? (
+                                      <FormFeedback type="invalid">
+                                        {dropdownValidation.errors.dropdownName}
+                                      </FormFeedback>
+                                    ) : null}
+                                  </div>
+
+                                  {/* <div className="mb-2">
                                     <label
                                       className="form-label"
                                       htmlFor="exampleDropdownFormEmail"
@@ -219,7 +314,7 @@ const AddLead = () => {
                                       id="exampleDropdownFormEmail"
                                       placeholder="Hindi, Bhojpuri etc."
                                     />
-                                  </div>
+                                  </div> */}
 
                                   <Button
                                     type="submit"
@@ -227,7 +322,7 @@ const AddLead = () => {
                                   >
                                     Add
                                   </Button>
-                                </form>
+                                </Form>
                               </DropdownMenu>
                             </UncontrolledDropdown>
                           </ButtonGroup>
@@ -309,10 +404,21 @@ const AddLead = () => {
                                 {lead.projectDueDate}
                               </td>
                               <td className="project-youtube-link">
-                                {lead.youtubeLink}
+                                <a href={lead.youtubeLink} target="blank">
+                                  {/* Youtube Link */}
+
+                                  <img
+                                    src={YoutubeLogo}
+                                    height="50px"
+                                    width="50px"
+                                  />
+                                </a>
                               </td>
                               <td className="project-status">
-                                {lead.projectStatus}
+                                <span class="badge border border-primary text-primary fs-13">
+                                  {" "}
+                                  {lead.projectStatus}
+                                </span>
                               </td>
                               <td>
                                 <div className="d-flex gap-2">
