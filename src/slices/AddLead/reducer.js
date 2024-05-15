@@ -22,10 +22,11 @@ const leadSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getLeads.fulfilled, (state, action) => {
+      console.log("GET LEADS REDUCER ->", action.payload.data);
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.campaigns = action.payload?.data.campaigns;
+        state.leads = action.payload?.data.leads;
         state.error = "";
       }
     });
@@ -35,7 +36,7 @@ const leadSlice = createSlice({
         state.alreadyExistsError = action.payload.message;
         state.error = "";
       } else {
-        state.campaigns = [...state.campaigns, action.payload.data];
+        state.leads = [...state.leads, action.payload.data];
         state.alreadyExistsError = null;
         state.error = "";
 
@@ -54,14 +55,14 @@ const leadSlice = createSlice({
         state.alreadyExistsError = action.payload.message;
         state.error = "";
       } else {
-        const updatedCampaignId = action.payload.data?.updatedCampaign.id;
+        const updatedLeadId = action.payload.data?.updatedLead.id;
 
-        state.campaigns = state.campaigns.map((campaign) => {
-          if (campaign.id == updatedCampaignId) {
-            campaign = action.payload.data.updatedCampaign;
-            return campaign;
+        state.leads = state.leads.map((lead) => {
+          if (lead.id == updatedLeadId) {
+            lead = action.payload.data.updatedLead;
+            return lead;
           } else {
-            return campaign;
+            return lead;
           }
         });
 
@@ -76,10 +77,9 @@ const leadSlice = createSlice({
     });
 
     builder.addCase(removeLead.fulfilled, (state, action) => {
-      const deletedCampaignId = action.payload.id;
-      state.campaigns = state.campaigns.filter(
-        (campaign) => campaign.id !== deletedCampaignId
-      );
+      const deletedLeadId = action.payload.data.deletedLead.id;
+      console.log("REMOVE LEAD REDUCER ->", action.payload);
+      state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
 
       state.error = "";
 

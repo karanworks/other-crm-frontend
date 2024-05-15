@@ -379,16 +379,17 @@ export const getLeads = () => {
 export const createLead = (data) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/lead/create`, data);
 };
-export const removeLead = (leadId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
-  );
-};
 
 export const updateLead = (leadId, data) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/edit`,
     data
+  );
+};
+
+export const removeLead = (leadId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
   );
 };
 

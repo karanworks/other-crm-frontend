@@ -8,13 +8,13 @@ import {
   ModalBody,
   ModalHeader,
 } from "reactstrap";
-
+import { Field, ErrorMessage } from "formik";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 
-function UserFormModal({
+function AddLeadModal({
   modal_list, // modal state
   tog_list, // to change modal state
   formHandleSubmit, // submit function for form
@@ -62,10 +62,7 @@ function UserFormModal({
         {" "}
         Create New Lead
       </ModalHeader>
-      <Form
-        className="tablelist-form"
-        onSubmit={(e) => formHandleSubmit(e, validation.userId)}
-      >
+      <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           {/* {alreadyExistsError && (
             <Alert color="danger" style={{ marginBlock: "10px" }}>
@@ -105,10 +102,12 @@ function UserFormModal({
               Project Genre
             </Label>
             <Select
+              id="projectGenre"
+              name="projectGenre"
               value={selectedSingleGenre}
               onChange={(genre) => {
                 handleSelectSingleGenre(genre);
-                validation.setFieldValue("projectGenre", genre);
+                validation.setFieldValue("projectGenre", genre.value);
               }}
               options={SingleGenreOptions}
               placeholder="Select Genre"
@@ -120,34 +119,47 @@ function UserFormModal({
               Project Status
             </Label>
             <Select
+              id="projectStatus"
+              name="projectStatus"
               value={selectedSingleStatus}
               onChange={(status) => {
                 handleSelectSingleStatus(status);
-                validation.setFieldValue("projectStatus", status);
+                validation.setFieldValue("projectStatus", status.value);
               }}
               options={SingleStatusOptions}
               placeholder="Select Status"
             />
           </div>
-          <div className="mb-2">
-            <Label className="form-label">Project due date</Label>
-            <Flatpickr
-              className="form-control"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.projectDueDate || ""}
-              invalid={
-                validation.touched.projectDueDate &&
-                validation.errors.projectDueDate
-                  ? true
-                  : false
-              }
-              options={{
-                dateFormat: "d M, Y",
-              }}
-              placeholder="Select Date"
+          {/* <div className="mb-2">
+            <label htmlFor="projectDueDate" className="form-label">
+              Project due date
+            </label>
+            <Field name="projectDueDate">
+              {({ field, form }) => (
+                <Flatpickr
+                  id="projectDueDate"
+                  name={field.name}
+                  className={`form-control ${
+                    form.errors.projectDueDate &&
+                    form.touched.projectDueDate &&
+                    "is-invalid"
+                  }`}
+                  options={{
+                    dateFormat: "d M, Y",
+                  }}
+                  value={field.value}
+                  onChange={(date) => form.setFieldValue(field.name, date)}
+                  onBlur={field.onBlur}
+                  placeholder="Select Date"
+                />
+              )}
+            </Field>
+            <ErrorMessage
+              name="projectDueDate"
+              component="div"
+              className="invalid-feedback"
             />
-          </div>
+          </div> */}
 
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
@@ -160,4 +172,4 @@ function UserFormModal({
   );
 }
 
-export default UserFormModal;
+export default AddLeadModal;

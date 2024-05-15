@@ -40,9 +40,7 @@ const Navdata = () => {
 
   useEffect(() => {
     document.body.classList.remove("twocolumn-panel");
-    if (iscurrentState !== "Home") {
-      setIsHome(false);
-    }
+
     if (iscurrentState !== "AdminTools") {
       setIsAdminTools(false);
     }

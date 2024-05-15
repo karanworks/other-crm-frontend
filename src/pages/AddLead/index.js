@@ -110,16 +110,16 @@ const AddLead = () => {
       clientName: "",
       projectGenre: "",
       projectStatus: "",
-      projectDueDate: "",
-      youtubeLink: "",
+      // projectDueDate: "",
+      // youtubeLink: "",
     },
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please enter client name"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
-      projectDueDate: Yup.string(),
+      // projectDueDate: Yup.string(),
       // .required("Please select project due date"),
-      youtubeLink: Yup.string(),
+      // youtubeLink: Yup.string(),
     }),
     onSubmit: (values) => {
       console.log("ADD LEAD FORM ->", values);
@@ -135,19 +135,21 @@ const AddLead = () => {
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit campaign from
   function formHandleSubmit(e) {
     e.preventDefault();
+    console.log("HANDLE SUBMIT BEING CALLED");
     validation.handleSubmit();
     return false;
   }
 
   // to update the values of register form when editing the campaign
-  function handleEditCampaign(campaignData) {
+  function handleEditLead(lead) {
     setIsEditingLead(true);
     setmodal_list(!modal_list);
-    setListLeadId(campaignData.id);
+    setListLeadId(lead.id);
 
-    validation.values.campaignName = campaignData.campaignName;
-    validation.values.campaignDescription = campaignData.campaignDescription;
-    validation.values.campaignType = campaignData.campaignType;
+    validation.values.clientName = lead.clientName;
+    validation.values.projectGenre = lead.projectGenre;
+    validation.values.projectStatus = lead.projectStatus;
+    // YOUTUBELINK, DUE DATE FIELD REMAINING HERE
   }
 
   document.title = "Add Lead";
@@ -263,22 +265,22 @@ const AddLead = () => {
                                 />
                               </div>
                             </th>
-                            <th className="sort" data-sort="campaign_name">
+                            <th className="sort" data-sort="client_name">
                               Client Name
+                            </th>
+                            <th className="sort" data-sort="project_genre">
+                              Project Genre
+                            </th>
+                            <th className="sort" data-sort="project_due_date">
+                              Project Due Date
                             </th>
                             <th
                               className="sort"
-                              data-sort="campaign_description"
+                              data-sort="project_youtube_link"
                             >
-                              Project Genre
-                            </th>
-                            <th className="sort" data-sort="dnc">
-                              Project Due Date
-                            </th>
-                            <th className="sort" data-sort="amd">
                               Project YouTube Link
                             </th>
-                            <th className="sort" data-sort="callback">
+                            <th className="sort" data-sort="project_status">
                               Project Status
                             </th>
                             <th className="sort" data-sort="action">
@@ -287,8 +289,8 @@ const AddLead = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {/* {campaigns?.map((campaign) => (
-                            <tr key={campaign?.id}>
+                          {leads?.map((lead) => (
+                            <tr key={lead?.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -299,17 +301,19 @@ const AddLead = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="campaign-name">
-                                {campaign.campaignName}
+                              <td className="client-name">{lead.clientName}</td>
+                              <td className="project-genre">
+                                {lead.projectGenre}
                               </td>
-                              <td className="campaign-description">
-                                {campaign.campaignDescription}
+                              <td className="project-date">
+                                {lead.projectDueDate}
                               </td>
-                              <td className="campaign-callback">
-                                {campaign.callback}
+                              <td className="project-youtube-link">
+                                {lead.youtubeLink}
                               </td>
-                              <td className="campaign-dnc">{campaign.dnc}</td>
-                              <td className="campaign-amd">{campaign.amd}</td>
+                              <td className="project-status">
+                                {lead.projectStatus}
+                              </td>
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="edit">
@@ -318,7 +322,7 @@ const AddLead = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        handleEditCampaign(campaign);
+                                        handleEditLead(lead);
                                       }}
                                     >
                                       Edit
@@ -330,7 +334,7 @@ const AddLead = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
-                                        setListCampaignId(campaign.id);
+                                        setListLeadId(lead.id);
                                         setmodal_delete(true);
                                       }}
                                     >
@@ -340,24 +344,9 @@ const AddLead = () => {
                                 </div>
                               </td>
                             </tr>
-                          ))} */}
+                          ))}
                         </tbody>
                       </table>
-                      <div className="noresult" style={{ display: "none" }}>
-                        <div className="text-center">
-                          <lord-icon
-                            src="https://cdn.lordicon.com/msoeawqm.json"
-                            trigger="loop"
-                            colors="primary:#25a0e2,secondary:#00bd9d"
-                            style={{ width: "75px", height: "75px" }}
-                          ></lord-icon>
-                          <h5 className="mt-2">Sorry! No Result Found</h5>
-                          <p className="text-muted mb-0">
-                            We've searched more than 150+ Orders We did not find
-                            any orders for you search.
-                          </p>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="d-flex justify-content-end">
@@ -398,7 +387,7 @@ const AddLead = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(removeCampaign(listLeadId));
+          dispatch(removeLead(listLeadId));
           setmodal_delete(false);
         }}
       />

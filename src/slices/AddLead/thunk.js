@@ -17,6 +17,7 @@ import {
 export const getLeads = createAsyncThunk("leads/getLeads", async () => {
   try {
     const response = await getLeadsApi();
+
     return response;
   } catch (error) {
     console.log("error inside get leads thunk", error);
