@@ -97,55 +97,57 @@ function InvoiceModal({
             ) : null}
           </div>
 
-          <div className="mb-2 d-flex justify-content-between">
-            <div>
-              <Label htmlFor="paymentAmount" className="form-label">
-                Payment Amount
-              </Label>
+          {isEditingInvoice && (
+            <div className="mb-2 d-flex justify-content-between">
+              <div>
+                <Label htmlFor="paymentAmount" className="form-label">
+                  Payment Amount
+                </Label>
 
-              <Input
-                id="paymentAmount"
-                name="paymentAmount"
-                className="form-control"
-                placeholder="Enter payment amount"
-                type="text"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                value={validation.values.paymentAmount || ""}
-                invalid={
-                  validation.touched.paymentAmount &&
-                  validation.errors.paymentAmount
-                    ? true
-                    : false
-                }
-              />
+                <Input
+                  id="paymentAmount"
+                  name="paymentAmount"
+                  className="form-control"
+                  placeholder="Enter payment amount"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.paymentAmount || ""}
+                  invalid={
+                    validation.touched.paymentAmount &&
+                    validation.errors.paymentAmount
+                      ? true
+                      : false
+                  }
+                />
 
-              {validation.touched.paymentAmount &&
-              validation.errors.paymentAmount ? (
-                <FormFeedback type="invalid">
-                  {validation.errors.paymentAmount}
-                </FormFeedback>
-              ) : null}
+                {validation.touched.paymentAmount &&
+                validation.errors.paymentAmount ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.paymentAmount}
+                  </FormFeedback>
+                ) : null}
+              </div>
+
+              <div>
+                <Label className="form-label">Payment Date</Label>
+                <Flatpickr
+                  className="form-control"
+                  placeholder="Select Payment Date"
+                  options={{
+                    dateFormat: "d/m/Y",
+                    defaultDate: validation.values.paymentDate || "",
+                  }}
+                  onChange={(date) => {
+                    const formattedDate = new Date(date).toLocaleDateString(
+                      "en-GB"
+                    );
+                    validation.setFieldValue("paymentDate", formattedDate);
+                  }}
+                />
+              </div>
             </div>
-
-            <div>
-              <Label className="form-label">Payment Date</Label>
-              <Flatpickr
-                className="form-control"
-                placeholder="Select Payment Date"
-                options={{
-                  dateFormat: "d M, Y",
-                }}
-                onChange={(date) => {
-                  const formattedDate = new Date(date).toLocaleDateString(
-                    "en-GB"
-                  );
-                  validation.setFieldValue("paymentDate", formattedDate);
-                }}
-              />
-            </div>
-          </div>
-
+          )}
           <div className="mb-2">
             <Label htmlFor="balance" className="form-label">
               Balance

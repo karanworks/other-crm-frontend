@@ -87,16 +87,12 @@ const Users = () => {
       roleId: "",
       email: "",
       password: "",
-      agentMobile: "",
-      campaigns: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Please enter Name"),
       roleId: Yup.string().required("Please select user role"),
       email: Yup.string().required("Please enter CRM Email"),
       password: Yup.string().required("Please enter CRM Password"),
-      agentMobile: Yup.string().required("Please enter Agent Mobile"),
-      campaigns: Yup.array().required("Please select at least one campaign"),
     }),
     onSubmit: (values) => {
       isEditingUser
@@ -105,14 +101,13 @@ const Users = () => {
     },
   });
 
+  console.log("UPDATED USER VALUES ->", validation.values);
+
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();
-    console.log("formik values ->", validation);
 
     validation.handleSubmit();
-
-    console.log("users after updation -.", users);
 
     setmodal_list(false);
     return false;
@@ -131,21 +126,11 @@ const Users = () => {
     // setting the value of role according to roleId because in select element roleId is used as value
     const roleName = roles.find((role) => role.id === userData.roleId);
 
-    const campaignsIdForFormikValue = userData.campaigns.map((c) => c.id);
-
-    const campaignNamesForOptions = userData.campaigns.map((c) => {
-      return { value: c.id, label: c.campaignName };
-    });
-
-    setSelectedCampaigns(campaignNamesForOptions);
-
     validation.setValues({
       name: userData.username,
       email: userData.email,
       password: userData.password,
-      agentMobile: userData.agentMobile,
       roleId: roleName.id,
-      campaigns: campaignsIdForFormikValue,
     });
   }
 
@@ -178,20 +163,6 @@ const Users = () => {
                           </Button>
                         </div>
                       </Col>
-
-                      {/* search input for future if needed */}
-                      {/* <Col className="col-sm">
-                        <div className="d-flex justify-content-sm-end">
-                          <div className="search-box ms-2">
-                            <input
-                              type="text"
-                              className="form-control search"
-                              placeholder="Search..."
-                            />
-                            <i className="ri-search-line search-icon"></i>
-                          </div>
-                        </div>
-                      </Col> */}
                     </Row>
 
                     <div className="table-responsive table-card mt-3 mb-1">
@@ -218,11 +189,9 @@ const Users = () => {
                               Name
                             </th>
                             <th className="sort" data-sort="device_id">
-                              Device Id
+                              email
                             </th>
-                            <th className="sort" data-sort="agent_mobile">
-                              Agent Mobile
-                            </th>
+
                             <th className="sort" data-sort="action">
                               Action
                             </th>
@@ -248,9 +217,7 @@ const Users = () => {
                               </td>
                               <td className="name">{user?.username}</td>
                               <td className="email">{user?.email}</td>
-                              <td className="agent_mobile">
-                                {user?.agentMobile}
-                              </td>
+
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="edit">
@@ -267,7 +234,7 @@ const Users = () => {
                                   </div>
                                   <div className="remove">
                                     <button
-                                      className="btn btn-sm btn-success remove-item-btn"
+                                      className="btn btn-sm btn-danger remove-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {

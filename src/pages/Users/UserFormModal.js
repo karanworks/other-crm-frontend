@@ -108,14 +108,14 @@ function UserFormModal({
           </div>
           <div className="mb-2">
             <Label htmlFor="email" className="form-label">
-              CRM Email
+              Email
             </Label>
 
             <Input
               id="email"
               name="email"
               className="form-control"
-              placeholder="Enter CRM Email"
+              placeholder="Enter Email"
               type="email"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -135,14 +135,14 @@ function UserFormModal({
           </div>
           <div className="mb-2">
             <Label htmlFor="password" className="form-label">
-              CRM Password
+              Password
             </Label>
 
             <Input
               id="password"
               name="password"
               className="form-control"
-              placeholder="Enter CRM Password"
+              placeholder="Enter Password"
               type="password"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
@@ -157,33 +157,6 @@ function UserFormModal({
             {validation.touched.password && validation.errors.password ? (
               <FormFeedback type="invalid">
                 {validation.errors.password}
-              </FormFeedback>
-            ) : null}
-          </div>
-          <div className="mb-2">
-            <Label htmlFor="agentMobile" className="form-label">
-              Agent Mobile
-            </Label>
-
-            <Input
-              id="agentMobile"
-              name="agentMobile"
-              className="form-control"
-              placeholder="Enter Agent Mobile"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.agentMobile || ""}
-              invalid={
-                validation.touched.agentMobile && validation.errors.agentMobile
-                  ? true
-                  : false
-              }
-            />
-
-            {validation.touched.agentMobile && validation.errors.agentMobile ? (
-              <FormFeedback type="invalid">
-                {validation.errors.agentMobile}
               </FormFeedback>
             ) : null}
           </div>

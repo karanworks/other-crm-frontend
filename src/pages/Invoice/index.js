@@ -96,10 +96,19 @@ const Invoice = () => {
     setmodal_list(!modal_list);
     setListInvoiceId(invoice.id);
 
-    validation.values.amount = invoice.amount;
-    validation.values.balance = invoice.balance;
-    validation.values.paymentDate = invoice.paymentDate;
-    validation.values.dueDate = invoice.dueDate;
+    // validation.values.amount = invoice.amount;
+    // validation.values.balance = invoice.balance;
+    // validation.values.paymentDate = invoice.paymentDate;
+    // validation.values.dueDate = invoice.dueDate;
+
+    validation.setValues({
+      clientName: invoice.clientName,
+      totalAmount: invoice.totalAmount,
+      paymentAmount: invoice.paymentAmount,
+      paymentDate: invoice.paymentDate,
+      balance: invoice.balance,
+      paymentDueDate: invoice.paymentDueDate,
+    });
   }
 
   document.title = "Invoice";
@@ -190,24 +199,45 @@ const Invoice = () => {
                               </th>
                               <td className="amount">{invoice.clientName}</td>
                               <td className="amount">
-                                <span className="fs-13 badge border border-dark text-dark">
+                                <span className="fs-13 badge border border-secondary text-secondary">
                                   {invoice.paymentAmount}
                                 </span>
                                 <span
-                                  className="fs-13 badge border border-dark text-dark"
+                                  className="fs-13 badge border border-secondary text-secondary"
                                   style={{ marginLeft: "10px" }}
                                 >
                                   {invoice.paymentDate}
                                 </span>
                               </td>
-                              <td className="amount">{invoice.totalAmount}</td>
+                              <td className="amount">
+                                <span className="fs-13 badge border border-secondary text-secondary">
+                                  {invoice.totalAmount}
+                                </span>
+                              </td>
 
-                              <td className="balance">{invoice.balance}</td>
+                              <td className="balance">
+                                <span className="fs-13 badge border border-secondary text-secondary">
+                                  {invoice.balance}
+                                </span>
+                              </td>
                               <td className="dueDate">
-                                {invoice.paymentDueDate}
+                                <span className="fs-13 badge border border-secondary text-secondary">
+                                  {invoice.paymentDueDate}
+                                </span>
                               </td>
                               <td>
                                 <div className="d-flex gap-2">
+                                  <div>
+                                    <button
+                                      className="btn btn-sm btn-success edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => {}}
+                                    >
+                                      View
+                                    </button>
+                                  </div>
+
                                   <div className="edit">
                                     <button
                                       className="btn btn-sm btn-primary edit-item-btn"
@@ -222,7 +252,7 @@ const Invoice = () => {
                                   </div>
                                   <div className="remove">
                                     <button
-                                      className="btn btn-sm btn-success remove-item-btn"
+                                      className="btn btn-sm btn-danger remove-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
