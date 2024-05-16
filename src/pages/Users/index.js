@@ -26,9 +26,7 @@ import {
   removeUser,
   updateUser,
 } from "../../slices/Users/thunk";
-import { getCampaigns } from "../../slices/Campaigns/thunk";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../../slices/auth/login/thunk";
 
 const Users = () => {
   // register / edit user modal state whether modal is open or not
@@ -44,21 +42,9 @@ const Users = () => {
   // campaigns that a user is in
   const [selectedCampaigns, setSelectedCampaigns] = useState(null);
 
-  const { campaigns } = useSelector((state) => state.Campaigns);
-  const { users, alreadyRegisteredError, error } = useSelector(
-    (state) => state.Users
-  );
+  const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (error) {
-      dispatch(logoutUser());
-      navigate("/login");
-      window.location.reload();
-    }
-  }, [dispatch, error]);
 
   // toggles register / edit user modal
   function tog_list() {
@@ -70,10 +56,6 @@ const Users = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
-
-  const campaignOptions = campaigns?.map((campaign) => {
-    return { value: campaign.id, label: campaign.campaignName };
-  });
 
   useEffect(() => {
     axios
@@ -96,7 +78,6 @@ const Users = () => {
 
   useEffect(() => {
     dispatch(getUsers());
-    dispatch(getCampaigns());
   }, [dispatch]);
 
   // formik setup
@@ -353,10 +334,6 @@ const Users = () => {
         alreadyRegisteredError={alreadyRegisteredError}
         handleRoleChange={handleRoleChange}
         roles={roles}
-        campaigns={campaigns}
-        selectedCampaigns={selectedCampaigns}
-        setSelectedCampaigns={setSelectedCampaigns}
-        campaignOptions={campaignOptions}
       />
 
       {/* Remove Modal */}

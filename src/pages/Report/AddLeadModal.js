@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalHeader,
 } from "reactstrap";
-import { Field, ErrorMessage, validateYupSchema } from "formik";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import Select from "react-select";
@@ -160,6 +159,7 @@ function AddLeadModal({
             <Label className="form-label">Project Due Date</Label>
             <Flatpickr
               className="form-control"
+              placeholder="Select Project Due Date"
               options={{
                 dateFormat: "d M, Y",
               }}

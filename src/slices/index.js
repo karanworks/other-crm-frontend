@@ -6,7 +6,6 @@ import LayoutReducer from "./layouts/reducer";
 // Authentication
 import LoginReducer from "./auth/login/reducer";
 import UsersReducer from "./Users/reducer";
-import CampaignReducer from "./Campaigns/reducer";
 import MappingReducer from "./Mapping/reducer";
 import AddLeadReducer from "./AddLead/reducer";
 import InvoiceReducer from "./Invoice/reducer";
@@ -22,7 +21,6 @@ const rootReducer = combineReducers({
   Account: AccountReducer,
   Users: UsersReducer,
   Mapping: MappingReducer,
-  Campaigns: CampaignReducer,
   AddLead: AddLeadReducer,
   Invoice: InvoiceReducer,
   ForgetPassword: ForgetPasswordReducer,

@@ -18,12 +18,16 @@ import Mapping from "../pages/Mapping";
 
 import AddLead from "../pages/AddLead";
 import Invoice from "../pages/Invoice";
+import Report from "../pages/Report";
+import PendingTasks from "../pages/PendingTasks";
 
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
   { path: "/roles", component: <Mapping /> },
   { path: "/add-lead", component: <AddLead /> },
+  { path: "/report", component: <Report /> },
   { path: "/invoice", component: <Invoice /> },
+  { path: "/pending-tasks", component: <PendingTasks /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

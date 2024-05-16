@@ -28,6 +28,7 @@ const invoiceSlice = createSlice({
     });
 
     builder.addCase(createInvoice.fulfilled, (state, action) => {
+      console.log("CREATE INVOICE PAYLOAD NEW ->", action.payload.data);
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {

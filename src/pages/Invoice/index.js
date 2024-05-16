@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,14 +24,8 @@ import {
   removeInvoice,
   updateInvoice,
 } from "../../slices/Invoice/thunk";
-// import {
-//   getCampaigns,
-//   createCampaign,
-//   removeCampaign,
-//   updateCampaign,
-// } from "../../slices/Campaigns/thunk";
-import { logoutUser } from "../../slices/auth/login/thunk";
-import { useNavigate } from "react-router-dom";
+import { getLeads } from "../../slices/AddLead/thunk";
+
 import { useSelector } from "react-redux";
 
 const Invoice = () => {
@@ -47,6 +40,9 @@ const Invoice = () => {
   const dispatch = useDispatch();
 
   const { invoices, error } = useSelector((state) => state.Invoice);
+  const { leads } = useSelector((state) => state.AddLead);
+
+  console.log("INVOICES VALUE ->", invoices);
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -59,21 +55,26 @@ const Invoice = () => {
 
   useEffect(() => {
     dispatch(getInvoices());
+    dispatch(getLeads());
   }, [dispatch]);
 
   // formik setup
   const validation = useFormik({
     initialValues: {
-      amount: "",
-      balance: "",
+      clientName: "",
+      totalAmount: "",
+      paymentAmount: "",
       paymentDate: "",
-      dueDate: "",
+      balance: "",
+      paymentDueDate: "",
     },
     validationSchema: Yup.object({
-      amount: Yup.string().required("Please enter amount"),
-      balance: Yup.string().required("Please enter balance"),
+      clientName: Yup.string().required("Please select client"),
+      totalAmount: Yup.string().required("Please enter total amount"),
+      paymentAmount: Yup.string().required("Please enter total amount"),
       paymentDate: Yup.string().required("Please select payment date"),
-      dueDate: Yup.string().required("Please select due date"),
+      balance: Yup.string().required("Please enter balance"),
+      paymentDueDate: Yup.string().required("Please select due date"),
     }),
     onSubmit: (values) => {
       isEditingInvoice
@@ -150,16 +151,20 @@ const Invoice = () => {
                               </div>
                             </th>
                             <th className="sort" data-sort="campaign_name">
-                              Amount
+                              Client Name
                             </th>
-                            <th className="sort" data-sort="callback">
-                              Balance
-                            </th>
+
                             <th
                               className="sort"
                               data-sort="campaign_description"
                             >
-                              Payment Date
+                              Payment Amount / Date
+                            </th>
+                            <th className="sort" data-sort="campaign_name">
+                              Total Amount
+                            </th>
+                            <th className="sort" data-sort="callback">
+                              Balance
                             </th>
                             <th className="sort" data-sort="dnc">
                               Due Date
@@ -183,12 +188,24 @@ const Invoice = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="amount">{invoice.amount}</td>
-                              <td className="balance">{invoice.balance}</td>
-                              <td className="paymentDate">
-                                {invoice.paymentDate}
+                              <td className="amount">{invoice.clientName}</td>
+                              <td className="amount">
+                                <span className="fs-13 badge border border-dark text-dark">
+                                  {invoice.paymentAmount}
+                                </span>
+                                <span
+                                  className="fs-13 badge border border-dark text-dark"
+                                  style={{ marginLeft: "10px" }}
+                                >
+                                  {invoice.paymentDate}
+                                </span>
                               </td>
-                              <td className="dueDate">{invoice.dueDate}</td>
+                              <td className="amount">{invoice.totalAmount}</td>
+
+                              <td className="balance">{invoice.balance}</td>
+                              <td className="dueDate">
+                                {invoice.paymentDueDate}
+                              </td>
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="edit">
@@ -254,6 +271,7 @@ const Invoice = () => {
         formHandleSubmit={formHandleSubmit}
         validation={validation}
         isEditingInvoice={isEditingInvoice}
+        leads={leads}
       />
 
       {/* Remove Modal */}

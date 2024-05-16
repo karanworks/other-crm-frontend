@@ -6,7 +6,6 @@ export const initialState = {
   users: [], // list of all users
   alreadyRegisteredError: null, // if user with same email, mobile number already registered
   error: "",
-  lastActiveTime: "",
 };
 
 const usersSlice = createSlice({
@@ -19,7 +18,6 @@ const usersSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.users = action.payload?.data.users;
-        state.lastActiveTime = action.payload?.data.lastActiveTime;
         state.error = "";
       }
     });
