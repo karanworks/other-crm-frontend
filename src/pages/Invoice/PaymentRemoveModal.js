@@ -1,15 +1,11 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function LeadRemoveModal({
-  modal_delete, // delete user confirmation modal
-  setmodal_delete, // change user confirmation modal state
-  handleDeleteCampaign, // function to delete a user
-}) {
+function PaymentRemoveModal({ payement_modal_delete, payment_tog_delete }) {
   return (
     <Modal
-      isOpen={modal_delete}
+      isOpen={payement_modal_delete}
       toggle={() => {
-        setmodal_delete(!modal_delete);
+        payment_tog_delete();
       }}
       className="modal zoomIn mt-0 mb-0"
       id="deleteRecordModal"
@@ -18,7 +14,7 @@ function LeadRemoveModal({
       <div className="modal-header">
         <Button
           type="button"
-          onClick={() => setmodal_delete(false)}
+          onClick={() => payment_tog_delete()}
           className="btn-close"
           aria-label="Close"
         ></Button>
@@ -34,7 +30,7 @@ function LeadRemoveModal({
           <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
             <h4>Are you Sure ?</h4>
             <p className="mx-4 mb-0">
-              Do you really want to Remove this Record ?
+              Do you really want to Remove this payment ?
             </p>
           </div>
         </div>
@@ -42,7 +38,7 @@ function LeadRemoveModal({
           <button
             type="button"
             className="btn w-sm btn-light"
-            onClick={() => setmodal_delete(false)}
+            onClick={() => payment_tog_delete()}
           >
             Close
           </button>
@@ -50,7 +46,7 @@ function LeadRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteCampaign}
+            // onClick={}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +56,4 @@ function LeadRemoveModal({
   );
 }
 
-export default LeadRemoveModal;
+export default PaymentRemoveModal;

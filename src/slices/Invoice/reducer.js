@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   invoices: [],
+  // payments: [],
   error: "",
 };
 
@@ -28,7 +29,6 @@ const invoiceSlice = createSlice({
     });
 
     builder.addCase(createInvoice.fulfilled, (state, action) => {
-      console.log("CREATE INVOICE PAYLOAD NEW ->", action.payload.data);
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {

@@ -27,13 +27,25 @@ import {
 import { getLeads } from "../../slices/AddLead/thunk";
 
 import { useSelector } from "react-redux";
+import PaymentsViewModal from "./PaymentsViewModal";
+import AddPaymentModal from "./AddPaymentModal";
+import PaymentRemoveModal from "./PaymentRemoveModal";
 
 const Invoice = () => {
   const [modal_list, setmodal_list] = useState(false);
 
+  const [payments_view_modal_list, setPayments_view_modal_list] =
+    useState(false);
+
+  const [add_payment_modal_list, setAdd_payment_modal_list] = useState(false);
+
+  const [currentInvoicePayments, setCurrentInvoicePayments] = useState([]);
+
   const [isEditingInvoice, setIsEditingInvoice] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
+
+  const [payement_modal_delete, setPayment_modal_delete] = useState(false);
 
   const [listInvoiceId, setListInvoiceId] = useState(null);
 
@@ -42,13 +54,23 @@ const Invoice = () => {
   const { invoices, error } = useSelector((state) => state.Invoice);
   const { leads } = useSelector((state) => state.AddLead);
 
-  console.log("INVOICES VALUE ->", invoices);
-
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingInvoice(false);
   }
 
+  function payements_view_tog_list(invoice) {
+    setCurrentInvoicePayments(invoice ? invoice.payments : []);
+    setPayments_view_modal_list(!payments_view_modal_list);
+  }
+
+  function add_Payment_tog_list() {
+    setAdd_payment_modal_list(!add_payment_modal_list);
+  }
+
+  function payment_tog_delete() {
+    setPayment_modal_delete(!payement_modal_delete);
+  }
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
@@ -73,7 +95,6 @@ const Invoice = () => {
       totalAmount: Yup.string().required("Please enter total amount"),
       paymentAmount: Yup.string().required("Please enter total amount"),
       paymentDate: Yup.string().required("Please select payment date"),
-      balance: Yup.string().required("Please enter balance"),
       paymentDueDate: Yup.string().required("Please select due date"),
     }),
     onSubmit: (values) => {
@@ -106,7 +127,6 @@ const Invoice = () => {
       totalAmount: invoice.totalAmount,
       paymentAmount: invoice.paymentAmount,
       paymentDate: invoice.paymentDate,
-      balance: invoice.balance,
       paymentDueDate: invoice.paymentDueDate,
     });
   }
@@ -163,15 +183,10 @@ const Invoice = () => {
                               Client Name
                             </th>
 
-                            <th
-                              className="sort"
-                              data-sort="campaign_description"
-                            >
-                              Payment Amount / Date
-                            </th>
                             <th className="sort" data-sort="campaign_name">
                               Total Amount
                             </th>
+
                             <th className="sort" data-sort="callback">
                               Balance
                             </th>
@@ -200,17 +215,6 @@ const Invoice = () => {
                               <td className="amount">{invoice.clientName}</td>
                               <td className="amount">
                                 <span className="fs-13 badge border border-secondary text-secondary">
-                                  {invoice.paymentAmount}
-                                </span>
-                                <span
-                                  className="fs-13 badge border border-secondary text-secondary"
-                                  style={{ marginLeft: "10px" }}
-                                >
-                                  {invoice.paymentDate}
-                                </span>
-                              </td>
-                              <td className="amount">
-                                <span className="fs-13 badge border border-secondary text-secondary">
                                   {invoice.totalAmount}
                                 </span>
                               </td>
@@ -232,9 +236,11 @@ const Invoice = () => {
                                       className="btn btn-sm btn-success edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => {}}
+                                      onClick={() => {
+                                        payements_view_tog_list(invoice);
+                                      }}
                                     >
-                                      View
+                                      View Payments
                                     </button>
                                   </div>
 
@@ -313,6 +319,24 @@ const Invoice = () => {
           dispatch(removeInvoice(listInvoiceId));
           setmodal_delete(false);
         }}
+      />
+
+      <PaymentsViewModal
+        payments_view_modal_list={payments_view_modal_list}
+        payements_view_tog_list={payements_view_tog_list}
+        currentInvoicePayments={currentInvoicePayments}
+        add_Payment_tog_list={add_Payment_tog_list}
+        payment_tog_delete={payment_tog_delete}
+      />
+
+      <AddPaymentModal
+        add_payment_modal_list={add_payment_modal_list}
+        add_Payment_tog_list={add_Payment_tog_list}
+      />
+
+      <PaymentRemoveModal
+        payement_modal_delete={payement_modal_delete}
+        payment_tog_delete={payment_tog_delete}
       />
     </React.Fragment>
   );
