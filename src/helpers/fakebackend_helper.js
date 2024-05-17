@@ -427,6 +427,29 @@ export const removeInvoice = (invoiceId) => {
     `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/delete`
   );
 };
+// *****************************************************************
+// ***************************** PAYMENT ***************************
+// *****************************************************************
+// export const getInvoices = () => {
+//   return api.get(`${process.env.REACT_APP_SERVER_URL}/invoices`);
+// };
+
+export const createPayment = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/payment/create`, data);
+};
+
+export const updatePayment = (paymentId, data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/payment/${paymentId}/edit`,
+    data
+  );
+};
+
+export const removePayment = (paymentId) => {
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/payment/${paymentId}/delete`
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
