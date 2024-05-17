@@ -1,5 +1,6 @@
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
 
 function PaymentsViewModal({
   payments_view_modal_list,
@@ -7,7 +8,28 @@ function PaymentsViewModal({
   add_Payment_tog_list,
   currentInvoicePayments,
   payment_tog_delete,
+  setListPaymentId,
+  handleEditPayment,
+  setCurrentInvoicePayments,
+  listInvoiceId,
+  payments,
 }) {
+  // Added for instant refresh
+  // useEffect(() => {
+  //   if (listInvoiceId) {
+  //     const filteredInvoice = payments?.find(
+  //       (inv) => inv?.id === listInvoiceId
+  //     );
+  //     setCurrentInvoicePayments(
+  //       filteredInvoice ? filteredInvoice.payments : []
+  //     );
+  //   }
+  // }, [payments, listInvoiceId, setCurrentInvoicePayments]);
+
+  const totalPaymentAmount = currentInvoicePayments?.reduce((acc, curr) => {
+    return acc + parseInt(curr.paymentAmount);
+  }, 0);
+
   return (
     <Modal
       isOpen={payments_view_modal_list}
@@ -22,8 +44,7 @@ function PaymentsViewModal({
           payements_view_tog_list();
         }}
       >
-        {" "}
-        Oggy's Payments
+        Payments
       </ModalHeader>
 
       <ModalBody style={{ paddingTop: "0px" }}>
@@ -45,14 +66,16 @@ function PaymentsViewModal({
 
             <tbody>
               {currentInvoicePayments?.map((payment) => (
-                <tr>
-                  <td>₹{payment.amount}</td>
-                  <td>{payment.date}</td>
+                <tr key={payment.id}>
+                  <td>₹{payment.paymentAmount}</td>
+                  <td>{payment.paymentDate}</td>
                   <td>
                     <div className="hstack gap-2">
                       <button
                         className="btn btn-sm btn-soft-info edit-list"
-                        onClick={() => {}}
+                        onClick={() => {
+                          handleEditPayment(payment);
+                        }}
                       >
                         <i className="ri-pencil-fill align-bottom" />
                       </button>
@@ -60,6 +83,7 @@ function PaymentsViewModal({
                         className="btn btn-sm btn-soft-danger remove-list"
                         onClick={() => {
                           payment_tog_delete();
+                          setListPaymentId(payment.id);
                         }}
                       >
                         <i className="ri-delete-bin-5-fill align-bottom" />
@@ -73,7 +97,7 @@ function PaymentsViewModal({
                   <span className="fs-15">Total Amount Paid</span>
                 </td>
                 <td>
-                  <span className="fs-15">500</span>
+                  <span className="fs-15">₹{totalPaymentAmount}</span>
                 </td>
               </tr>
             </tbody>

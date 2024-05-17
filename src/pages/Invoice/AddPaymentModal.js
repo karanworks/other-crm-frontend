@@ -9,8 +9,15 @@ import {
   Button,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
+import Flatpickr from "react-flatpickr";
 
-function AddPaymentModal({ add_payment_modal_list, add_Payment_tog_list }) {
+function AddPaymentModal({
+  add_payment_modal_list,
+  add_Payment_tog_list,
+  paymentValidation,
+  paymentFormHandleSubmit,
+  isEditingPayment,
+}) {
   return (
     <Modal
       isOpen={add_payment_modal_list}
@@ -27,36 +34,63 @@ function AddPaymentModal({ add_payment_modal_list, add_Payment_tog_list }) {
         }}
       >
         {" "}
-        Add Payment
+        {isEditingPayment ? "Update Payment" : "Add Payment"}
       </ModalHeader>
-      <Form className="tablelist-form">
+      <Form
+        className="tablelist-form"
+        onSubmit={(e) => paymentFormHandleSubmit(e)}
+      >
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
-            <Label htmlFor="clientName" className="form-label">
-              Amount
+            <Label htmlFor="paymentAmount" className="form-label">
+              Payment Amount
             </Label>
+
             <Input
-              id="totalAmount"
-              name="totalAmount"
+              id="paymentAmount"
+              name="paymentAmount"
               className="form-control"
               placeholder="Enter amount"
               type="text"
+              onChange={paymentValidation.handleChange}
+              onBlur={paymentValidation.handleBlur}
+              value={paymentValidation.values.paymentAmount || ""}
+              invalid={
+                paymentValidation.touched.paymentAmount &&
+                paymentValidation.errors.paymentAmount
+                  ? true
+                  : false
+              }
             />
+
+            {paymentValidation.touched.paymentAmount &&
+            paymentValidation.errors.paymentAmount ? (
+              <FormFeedback type="invalid">
+                {paymentValidation.errors.paymentAmount}
+              </FormFeedback>
+            ) : null}
           </div>
+
           <div className="mb-2">
-            <Label htmlFor="clientName" className="form-label">
-              Date
-            </Label>
-            <Input
-              id="totalAmount"
-              name="totalAmount"
+            <Label className="form-label">Payment Date</Label>
+            <Flatpickr
               className="form-control"
-              placeholder="Enter amount"
-              type="text"
+              placeholder="Select Date"
+              options={{
+                dateFormat: "d/m/Y",
+                defaultDate: paymentValidation.values.paymentDate || "",
+              }}
+              onChange={(date) => {
+                const formattedDate = new Date(date).toLocaleDateString(
+                  "en-GB"
+                );
+                paymentValidation.setFieldValue("paymentDate", formattedDate);
+              }}
             />
           </div>
+
           <Button type="submit" className="btn " style={{ float: "right" }}>
-            Add
+            {isEditingPayment ? "Update" : "Add"}
           </Button>
         </ModalBody>
       </Form>

@@ -430,24 +430,51 @@ export const removeInvoice = (invoiceId) => {
 // *****************************************************************
 // ***************************** PAYMENT ***************************
 // *****************************************************************
-// export const getInvoices = () => {
-//   return api.get(`${process.env.REACT_APP_SERVER_URL}/invoices`);
-// };
 
-export const createPayment = (data) => {
-  return api.create(`${process.env.REACT_APP_SERVER_URL}/payment/create`, data);
+export const getPayments = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/payments`);
 };
 
-export const updatePayment = (paymentId, data) => {
-  return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/payment/${paymentId}/edit`,
-    data
+export const createPayment = ({
+  listInvoiceId: invoiceId,
+  paymentAmount,
+  paymentDate,
+}) => {
+  console.log(
+    "CREATE PAYMENT THUNK VALUES ->",
+    invoiceId,
+    paymentAmount,
+    paymentDate
+  );
+
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/create`,
+    {
+      paymentAmount,
+      paymentDate,
+    }
   );
 };
 
-export const removePayment = (paymentId) => {
+export const updatePayment = ({
+  paymentAmount,
+  paymentDate,
+  listInvoiceId: invoiceId,
+  listPaymentId: paymentId,
+}) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/${paymentId}/edit`,
+    {
+      paymentAmount,
+      paymentDate,
+    }
+  );
+};
+
+export const removePayment = ({ invoiceId, paymentId }) => {
+
   return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/payment/${paymentId}/delete`
+    `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/${paymentId}/delete`
   );
 };
 

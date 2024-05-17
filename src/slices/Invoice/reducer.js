@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   invoices: [],
-  // payments: [],
   error: "",
 };
 

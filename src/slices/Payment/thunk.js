@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import {
+  getPayments as getPaymentsApi,
   createPayment as createPaymentApi,
   removePayment as removePaymentApi,
   updatePayment as updatePaymentApi,
@@ -14,19 +15,20 @@ import {
 //   createDropdown as createDropdownApi,
 // } from "../../helpers/fakebackend_helper";
 
-// export const getPayments = createAsyncThunk("payment/getPayments", async () => {
-//   try {
-//     const response = await getLeadsApi();
+export const getPayments = createAsyncThunk("payment/getPayments", async () => {
+  try {
+    const response = await getPaymentsApi();
 
-//     return response;
-//   } catch (error) {
-//     console.log("error inside get leads thunk", error);
-//   }
-// });
+    return response;
+  } catch (error) {
+    console.log("error inside get payments thunk", error);
+  }
+});
 
 export const createPayment = createAsyncThunk(
   "payment/createPayment",
   async (data) => {
+    console.log("DATA WHILE CREATING PAYMENT ->", data);
     try {
       const response = await createPaymentApi(data);
       return response;
@@ -38,9 +40,14 @@ export const createPayment = createAsyncThunk(
 
 export const updatePayment = createAsyncThunk(
   "payment/updatePayment",
-  async (data) => {
+  async ({ paymentDate, paymentAmount, listPaymentId, listInvoiceId }) => {
     try {
-      const response = await updatePaymentApi(data.listPaymentId, data.values);
+      const response = await updatePaymentApi({
+        paymentDate,
+        paymentAmount,
+        listPaymentId,
+        listInvoiceId,
+      });
       console.log("response while updating payment", response);
       return response;
     } catch (error) {
@@ -51,29 +58,13 @@ export const updatePayment = createAsyncThunk(
 
 export const removePayment = createAsyncThunk(
   "payment/removePayment",
-  async (paymentId) => {
+  async ({ listInvoiceId: invoiceId, listPaymentId: paymentId }) => {
     try {
-      const response = await removePaymentApi(paymentId);
+      const response = await removePaymentApi({ invoiceId, paymentId });
 
       return response;
     } catch (error) {
       console.log("error inside remove payment thunk", error);
-    }
-  }
-);
-
-// *****************************************************************
-// *************************** DROPDOWNS ***************************
-// *****************************************************************
-
-export const createDropdown = createAsyncThunk(
-  "leads/createDropdown",
-  async (data) => {
-    try {
-      const response = await createDropdownApi(data);
-      return response;
-    } catch (error) {
-      console.log("error inside create dropdown in lead thunk", error);
     }
   }
 );

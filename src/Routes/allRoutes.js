@@ -20,6 +20,9 @@ import AddLead from "../pages/AddLead";
 import Invoice from "../pages/Invoice";
 import Report from "../pages/Report";
 import PendingTasks from "../pages/PendingTasks";
+import AdminAddLead from "../pages/AdminAddLead";
+import AdminReport from "../pages/AdminReport";
+import AdminPendingTasks from "../pages/AdminPendingTasks";
 
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
@@ -28,6 +31,9 @@ const authProtectedRoutes = [
   { path: "/report", component: <Report /> },
   { path: "/invoice", component: <Invoice /> },
   { path: "/pending-tasks", component: <PendingTasks /> },
+  { path: "/admin-add-lead", component: <AdminAddLead /> },
+  { path: "/admin-report", component: <AdminReport /> },
+  { path: "/admin-pending-tasks", component: <AdminPendingTasks /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

@@ -17,6 +17,7 @@ const Navdata = () => {
   const [isAdminTools, setIsAdminTools] = useState(false);
   const [isLeadManagement, setIsLeadManagement] = useState(false);
   const [isPayments, setIsPayments] = useState(false);
+  const [isWork, setIsWork] = useState(false);
 
   //
   const [isAuth, setIsAuth] = useState(false);
@@ -50,6 +51,9 @@ const Navdata = () => {
     if (iscurrentState !== "Payments") {
       setIsPayments(false);
     }
+    if (iscurrentState !== "Work") {
+      setIsWork(false);
+    }
 
     if (iscurrentState !== "Auth") {
       setIsAuth(false);
@@ -63,6 +67,7 @@ const Navdata = () => {
     isAdminTools,
     isLeadManagement,
     isPayments,
+    isWork,
 
     isAuth,
     isPages,
@@ -72,6 +77,7 @@ const Navdata = () => {
     AdminTools: isAdminTools,
     LeadManagement: isLeadManagement,
     Payments: isPayments,
+    Work: isWork,
   };
 
   const handleClick = (menuLabelId) => {
@@ -88,6 +94,10 @@ const Navdata = () => {
           updateIconSidebar(e);
         case "Payments":
           setIsPayments(!isPayments);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "Work":
+          setIsWork(!isWork);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }

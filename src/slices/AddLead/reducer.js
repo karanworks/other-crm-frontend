@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 
 export const initialState = {
+  userData: null,
   leads: [],
   dropdowns: [],
   error: "",
@@ -24,6 +25,7 @@ const leadSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
+        state.userData = action.payload.data;
         state.leads = action.payload?.data.leads;
         state.dropdowns = action.payload.data.dropdowns;
         state.error = "";

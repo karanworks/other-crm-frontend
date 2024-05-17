@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -24,6 +23,14 @@ import {
   removeInvoice,
   updateInvoice,
 } from "../../slices/Invoice/thunk";
+
+import {
+  getPayments,
+  createPayment,
+  removePayment,
+  updatePayment,
+} from "../../slices/Payment/thunk";
+
 import { getLeads } from "../../slices/AddLead/thunk";
 
 import { useSelector } from "react-redux";
@@ -43,16 +50,21 @@ const Invoice = () => {
 
   const [isEditingInvoice, setIsEditingInvoice] = useState(false);
 
+  const [isEditingPayment, setIsEditingPayment] = useState(false);
+
   const [modal_delete, setmodal_delete] = useState(false);
 
   const [payement_modal_delete, setPayment_modal_delete] = useState(false);
 
   const [listInvoiceId, setListInvoiceId] = useState(null);
 
+  const [listPaymentId, setListPaymentId] = useState(null);
+
   const dispatch = useDispatch();
 
   const { invoices, error } = useSelector((state) => state.Invoice);
   const { leads } = useSelector((state) => state.AddLead);
+  const { payments } = useSelector((state) => state.Payment);
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -60,12 +72,14 @@ const Invoice = () => {
   }
 
   function payements_view_tog_list(invoice) {
-    setCurrentInvoicePayments(invoice ? invoice.payments : []);
+    const filteredInvoice = payments?.find((inv) => inv?.id === invoice?.id);
+    setCurrentInvoicePayments(filteredInvoice ? filteredInvoice.payments : []);
     setPayments_view_modal_list(!payments_view_modal_list);
   }
 
   function add_Payment_tog_list() {
     setAdd_payment_modal_list(!add_payment_modal_list);
+    setIsEditingPayment(false);
   }
 
   function payment_tog_delete() {
@@ -74,6 +88,10 @@ const Invoice = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
+
+  useEffect(() => {
+    dispatch(getPayments());
+  }, [dispatch, currentInvoicePayments]);
 
   useEffect(() => {
     dispatch(getInvoices());
@@ -106,9 +124,32 @@ const Invoice = () => {
     },
   });
 
+  const paymentValidation = useFormik({
+    initialValues: {
+      paymentAmount: "",
+      paymentDate: "",
+    },
+    validationSchema: Yup.object({
+      paymentAmount: Yup.string().required("Please enter payment amount"),
+      paymentDate: Yup.string().required("Please select payment date"),
+    }),
+    onSubmit: (values) => {
+      isEditingPayment
+        ? dispatch(updatePayment({ ...values, listPaymentId, listInvoiceId }))
+        : dispatch(createPayment({ ...values, listInvoiceId, listInvoiceId }));
+
+      setAdd_payment_modal_list(false);
+    },
+  });
+
   function formHandleSubmit(e) {
     e.preventDefault();
     validation.handleSubmit();
+    return false;
+  }
+  function paymentFormHandleSubmit(e) {
+    e.preventDefault();
+    paymentValidation.handleSubmit();
     return false;
   }
 
@@ -117,17 +158,22 @@ const Invoice = () => {
     setmodal_list(!modal_list);
     setListInvoiceId(invoice.id);
 
-    // validation.values.amount = invoice.amount;
-    // validation.values.balance = invoice.balance;
-    // validation.values.paymentDate = invoice.paymentDate;
-    // validation.values.dueDate = invoice.dueDate;
-
     validation.setValues({
       clientName: invoice.clientName,
       totalAmount: invoice.totalAmount,
       paymentAmount: invoice.paymentAmount,
       paymentDate: invoice.paymentDate,
       paymentDueDate: invoice.paymentDueDate,
+    });
+  }
+  function handleEditPayment(payment) {
+    setIsEditingPayment(true);
+    setAdd_payment_modal_list(!add_payment_modal_list);
+    setListPaymentId(payment.id);
+
+    paymentValidation.setValues({
+      paymentAmount: payment.paymentAmount,
+      paymentDate: payment.paymentDate,
     });
   }
 
@@ -215,13 +261,13 @@ const Invoice = () => {
                               <td className="amount">{invoice.clientName}</td>
                               <td className="amount">
                                 <span className="fs-13 badge border border-secondary text-secondary">
-                                  {invoice.totalAmount}
+                                  ₹{invoice.totalAmount}
                                 </span>
                               </td>
 
                               <td className="balance">
                                 <span className="fs-13 badge border border-secondary text-secondary">
-                                  {invoice.balance}
+                                  ₹{invoice.balance}
                                 </span>
                               </td>
                               <td className="dueDate">
@@ -238,6 +284,7 @@ const Invoice = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => {
                                         payements_view_tog_list(invoice);
+                                        setListInvoiceId(invoice.id);
                                       }}
                                     >
                                       View Payments
@@ -327,16 +374,28 @@ const Invoice = () => {
         currentInvoicePayments={currentInvoicePayments}
         add_Payment_tog_list={add_Payment_tog_list}
         payment_tog_delete={payment_tog_delete}
+        setListPaymentId={setListPaymentId}
+        handleEditPayment={handleEditPayment}
+        setCurrentInvoicePayments={setCurrentInvoicePayments}
+        listInvoiceId={listInvoiceId}
+        payments={payments}
       />
 
       <AddPaymentModal
         add_payment_modal_list={add_payment_modal_list}
         add_Payment_tog_list={add_Payment_tog_list}
+        paymentValidation={paymentValidation}
+        paymentFormHandleSubmit={paymentFormHandleSubmit}
+        isEditingPayment={isEditingPayment}
       />
 
       <PaymentRemoveModal
         payement_modal_delete={payement_modal_delete}
         payment_tog_delete={payment_tog_delete}
+        handleDeletePayment={() => {
+          dispatch(removePayment({ listInvoiceId, listPaymentId }));
+          setPayment_modal_delete(false);
+        }}
       />
     </React.Fragment>
   );

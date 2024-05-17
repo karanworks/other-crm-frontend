@@ -1,43 +1,41 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  getLeads,
-  createLead,
-  removeLead,
-  updateLead,
-  createDropdown,
+  getPayments,
+  createPayment,
+  removePayment,
+  updatePayment,
 } from "./thunk";
 
 import { toast } from "react-toastify";
 
 export const initialState = {
-  leads: [],
-  dropdowns: [],
+  payments: [],
   error: "",
 };
 
-const leadSlice = createSlice({
+const paymentSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // builder.addCase(getLeads.fulfilled, (state, action) => {
-    //   if (action.payload.status === "failure") {
-    //     state.error = action.payload.message;
-    //   } else {
-    //     state.leads = action.payload?.data.leads;
-    //     state.dropdowns = action.payload.data.dropdowns;
-    //     state.error = "";
-    //   }
-    // });
+    builder.addCase(getPayments.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.payments = action.payload?.data.invoices;
+        state.error = "";
+      }
+    });
 
-    builder.addCase(createLead.fulfilled, (state, action) => {
+    builder.addCase(createPayment.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        state.leads = [...state.leads, action.payload.data];
+        console.log("DATA AFTER CREATING PAYMENT ->", action.payload.data);
+        state.payments = [...state.payments, action.payload.data];
         state.error = "";
 
-        toast.success("Lead has been added !", {
+        toast.success("Payment has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -45,26 +43,23 @@ const leadSlice = createSlice({
       }
     });
 
-    builder.addCase(updateLead.fulfilled, (state, action) => {
-      console.log("action payload while updating", action.payload);
-
+    builder.addCase(updatePayment.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        const updatedLeadId = action.payload.data?.updatedLead.id;
+        const updatedPaymentId = action.payload.data?.updatedPayment.id;
 
-        state.leads = state.leads.map((lead) => {
-          if (lead.id == updatedLeadId) {
-            lead = action.payload.data.updatedLead;
-            return lead;
+        state.payments = state.payments.map((payment) => {
+          if (payment.id == updatedPaymentId) {
+            payment = action.payload.data.updatedPayment;
+            return payment;
           } else {
-            return lead;
+            return payment;
           }
         });
 
-        state.alreadyExistsError = null;
         state.error = "";
-        toast.success("Lead details updated !", {
+        toast.success("Payment details updated !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -72,37 +67,20 @@ const leadSlice = createSlice({
       }
     });
 
-    builder.addCase(removeLead.fulfilled, (state, action) => {
-      const deletedLeadId = action.payload.data.deletedLead.id;
-      state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
+    builder.addCase(removePayment.fulfilled, (state, action) => {
+      const deletedPaymentId = action.payload.data.deletedPayment.id;
+      state.payments = state.payments.filter(
+        (payment) => payment.id !== deletedPaymentId
+      );
       state.error = "";
 
-      toast.error("Lead has been removed !", {
+      toast.error("Payment has been removed !", {
         position: "bottom-center",
         autoClose: 3000,
         theme: "colored",
       });
     });
-
-    // *****************************************************************
-    // *************************** DROPDOWNS ***************************
-    // *****************************************************************
-
-    builder.addCase(createDropdown.fulfilled, (state, action) => {
-      if (action.payload.status == "failure") {
-        state.error = action.payload.message;
-      } else {
-        state.dropdowns = [...state.dropdowns, action.payload.data];
-        state.error = "";
-
-        toast.success("Dropdown has been added !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
-      }
-    });
   },
 });
 
-export default leadSlice.reducer;
+export default paymentSlice.reducer;

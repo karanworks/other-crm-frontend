@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import YoutubeLogo from "./youtube_logo.webp";
 
-const Report = () => {
+const AdminReport = () => {
   const [modal_list, setmodal_list] = useState(false);
 
   const [isEditingLead, setIsEditingLead] = useState(false);
@@ -411,4 +411,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default AdminReport;

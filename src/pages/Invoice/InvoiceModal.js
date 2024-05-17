@@ -47,10 +47,7 @@ function InvoiceModal({
         {" "}
         Create New Invoice
       </ModalHeader>
-      <Form
-        className="tablelist-form"
-        onSubmit={(e) => formHandleSubmit(e, validation.userId)}
-      >
+      <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
             <Label htmlFor="clientName" className="form-label">
@@ -68,7 +65,6 @@ function InvoiceModal({
               placeholder="Select Client"
             />
           </div>
-
           <div className="mb-2">
             <Label htmlFor="totalAmount" className="form-label">
               Total Amount
@@ -96,56 +92,57 @@ function InvoiceModal({
               </FormFeedback>
             ) : null}
           </div>
+          {!isEditingInvoice && (
+            <div className="mb-2 d-flex justify-content-between">
+              <div>
+                <Label htmlFor="paymentAmount" className="form-label">
+                  Payment Amount
+                </Label>
 
-          <div className="mb-2 d-flex justify-content-between">
-            <div>
-              <Label htmlFor="paymentAmount" className="form-label">
-                Payment Amount
-              </Label>
+                <Input
+                  id="paymentAmount"
+                  name="paymentAmount"
+                  className="form-control"
+                  placeholder="Enter payment amount"
+                  type="text"
+                  onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.paymentAmount || ""}
+                  invalid={
+                    validation.touched.paymentAmount &&
+                    validation.errors.paymentAmount
+                      ? true
+                      : false
+                  }
+                />
 
-              <Input
-                id="paymentAmount"
-                name="paymentAmount"
-                className="form-control"
-                placeholder="Enter payment amount"
-                type="text"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                value={validation.values.paymentAmount || ""}
-                invalid={
-                  validation.touched.paymentAmount &&
-                  validation.errors.paymentAmount
-                    ? true
-                    : false
-                }
-              />
+                {validation.touched.paymentAmount &&
+                validation.errors.paymentAmount ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.paymentAmount}
+                  </FormFeedback>
+                ) : null}
+              </div>
 
-              {validation.touched.paymentAmount &&
-              validation.errors.paymentAmount ? (
-                <FormFeedback type="invalid">
-                  {validation.errors.paymentAmount}
-                </FormFeedback>
-              ) : null}
+              <div>
+                <Label className="form-label">Payment Date</Label>
+                <Flatpickr
+                  className="form-control"
+                  placeholder="Select Payment Date"
+                  options={{
+                    dateFormat: "d/m/Y",
+                    defaultDate: validation.values.paymentDate || "",
+                  }}
+                  onChange={(date) => {
+                    const formattedDate = new Date(date).toLocaleDateString(
+                      "en-GB"
+                    );
+                    validation.setFieldValue("paymentDate", formattedDate);
+                  }}
+                />
+              </div>
             </div>
-
-            <div>
-              <Label className="form-label">Payment Date</Label>
-              <Flatpickr
-                className="form-control"
-                placeholder="Select Payment Date"
-                options={{
-                  dateFormat: "d/m/Y",
-                  defaultDate: validation.values.paymentDate || "",
-                }}
-                onChange={(date) => {
-                  const formattedDate = new Date(date).toLocaleDateString(
-                    "en-GB"
-                  );
-                  validation.setFieldValue("paymentDate", formattedDate);
-                }}
-              />
-            </div>
-          </div>
+          )}
           {/* <div className="mb-2">
             <Label htmlFor="balance" className="form-label">
               Balance
@@ -173,7 +170,6 @@ function InvoiceModal({
               </FormFeedback>
             ) : null}
           </div> */}
-
           <div className="mb-3">
             <Label className="form-label">Payment Due Date</Label>
             <Flatpickr
@@ -190,7 +186,6 @@ function InvoiceModal({
               }}
             />
           </div>
-
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
               {isEditingInvoice ? "Update Invoice" : "Save Invoice"}
