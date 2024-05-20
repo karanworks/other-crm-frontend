@@ -15,15 +15,19 @@ import {
 //   createDropdown as createDropdownApi,
 // } from "../../helpers/fakebackend_helper";
 
-export const getPayments = createAsyncThunk("payment/getPayments", async () => {
-  try {
-    const response = await getPaymentsApi();
+export const getPayments = createAsyncThunk(
+  "payment/getPayments",
+  async ({ invoiceId }) => {
+    try {
+      console.log("INVOICE ID IN PAYMENTS THUNK ->", invoiceId);
+      const response = await getPaymentsApi(invoiceId);
 
-    return response;
-  } catch (error) {
-    console.log("error inside get payments thunk", error);
+      return response;
+    } catch (error) {
+      console.log("error inside get payments thunk", error);
+    }
   }
-});
+);
 
 export const createPayment = createAsyncThunk(
   "payment/createPayment",

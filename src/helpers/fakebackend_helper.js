@@ -431,8 +431,8 @@ export const removeInvoice = (invoiceId) => {
 // ***************************** PAYMENT ***************************
 // *****************************************************************
 
-export const getPayments = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/payments`);
+export const getPayments = (invoiceId) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/${invoiceId}/payments`);
 };
 
 export const createPayment = ({
@@ -472,7 +472,6 @@ export const updatePayment = ({
 };
 
 export const removePayment = ({ invoiceId, paymentId }) => {
-
   return api.delete(
     `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/${paymentId}/delete`
   );

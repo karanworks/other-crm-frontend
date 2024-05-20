@@ -24,6 +24,8 @@ import {
   updateInvoice,
 } from "../../slices/Invoice/thunk";
 
+import { getInvoicePayments } from "../../slices/Payment/reducer";
+
 import {
   getPayments,
   createPayment,
@@ -45,8 +47,6 @@ const Invoice = () => {
     useState(false);
 
   const [add_payment_modal_list, setAdd_payment_modal_list] = useState(false);
-
-  const [currentInvoicePayments, setCurrentInvoicePayments] = useState([]);
 
   const [isEditingInvoice, setIsEditingInvoice] = useState(false);
 
@@ -72,9 +72,11 @@ const Invoice = () => {
   }
 
   function payements_view_tog_list(invoice) {
-    const filteredInvoice = payments?.find((inv) => inv?.id === invoice?.id);
-    setCurrentInvoicePayments(filteredInvoice ? filteredInvoice.payments : []);
+    // const filteredInvoice = payments?.find((inv) => inv?.id === invoice?.id);
+    // setCurrentInvoicePayments(filteredInvoice ? filteredInvoice.payments : []);
     setPayments_view_modal_list(!payments_view_modal_list);
+
+    // dispatch(getInvoicePayments(invoice));
   }
 
   function add_Payment_tog_list() {
@@ -88,10 +90,6 @@ const Invoice = () => {
   function tog_delete() {
     setmodal_delete(!modal_delete);
   }
-
-  useEffect(() => {
-    dispatch(getPayments());
-  }, [dispatch, currentInvoicePayments]);
 
   useEffect(() => {
     dispatch(getInvoices());
@@ -285,6 +283,9 @@ const Invoice = () => {
                                       onClick={() => {
                                         payements_view_tog_list(invoice);
                                         setListInvoiceId(invoice.id);
+                                        dispatch(
+                                          getPayments({ invoiceId: invoice.id })
+                                        );
                                       }}
                                     >
                                       View Payments
@@ -371,13 +372,10 @@ const Invoice = () => {
       <PaymentsViewModal
         payments_view_modal_list={payments_view_modal_list}
         payements_view_tog_list={payements_view_tog_list}
-        currentInvoicePayments={currentInvoicePayments}
         add_Payment_tog_list={add_Payment_tog_list}
         payment_tog_delete={payment_tog_delete}
         setListPaymentId={setListPaymentId}
         handleEditPayment={handleEditPayment}
-        setCurrentInvoicePayments={setCurrentInvoicePayments}
-        listInvoiceId={listInvoiceId}
         payments={payments}
       />
 

@@ -143,33 +143,7 @@ function InvoiceModal({
               </div>
             </div>
           )}
-          {/* <div className="mb-2">
-            <Label htmlFor="balance" className="form-label">
-              Balance
-            </Label>
 
-            <Input
-              id="balance"
-              name="balance"
-              className="form-control"
-              placeholder="Enter balance"
-              type="text"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              value={validation.values.balance || ""}
-              invalid={
-                validation.touched.balance && validation.errors.balance
-                  ? true
-                  : false
-              }
-            />
-
-            {validation.touched.balance && validation.errors.balance ? (
-              <FormFeedback type="invalid">
-                {validation.errors.balance}
-              </FormFeedback>
-            ) : null}
-          </div> */}
           <div className="mb-3">
             <Label className="form-label">Payment Due Date</Label>
             <Flatpickr

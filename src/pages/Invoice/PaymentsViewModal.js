@@ -1,32 +1,16 @@
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
 
 function PaymentsViewModal({
   payments_view_modal_list,
   payements_view_tog_list,
   add_Payment_tog_list,
-  currentInvoicePayments,
   payment_tog_delete,
   setListPaymentId,
   handleEditPayment,
-  setCurrentInvoicePayments,
-  listInvoiceId,
   payments,
 }) {
-  // Added for instant refresh
-  // useEffect(() => {
-  //   if (listInvoiceId) {
-  //     const filteredInvoice = payments?.find(
-  //       (inv) => inv?.id === listInvoiceId
-  //     );
-  //     setCurrentInvoicePayments(
-  //       filteredInvoice ? filteredInvoice.payments : []
-  //     );
-  //   }
-  // }, [payments, listInvoiceId, setCurrentInvoicePayments]);
-
-  const totalPaymentAmount = currentInvoicePayments?.reduce((acc, curr) => {
+  const totalPaymentAmount = payments?.reduce((acc, curr) => {
     return acc + parseInt(curr.paymentAmount);
   }, 0);
 
@@ -65,7 +49,7 @@ function PaymentsViewModal({
             </thead>
 
             <tbody>
-              {currentInvoicePayments?.map((payment) => (
+              {payments?.map((payment) => (
                 <tr key={payment.id}>
                   <td>₹{payment.paymentAmount}</td>
                   <td>{payment.paymentDate}</td>

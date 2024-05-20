@@ -155,6 +155,7 @@ const Mapping = () => {
     return false;
   }
 
+  document.title = "Roles";
   return (
     <React.Fragment>
       <div className="page-content">

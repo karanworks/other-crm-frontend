@@ -10,19 +10,24 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   payments: [],
+  invoicePayments: [],
   error: "",
 };
 
 const paymentSlice = createSlice({
   name: "payment",
   initialState,
-  reducers: {},
+  reducers: {
+    getInvoicePayments(state, action) {
+      state.invoicePayments = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getPayments.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.payments = action.payload?.data.invoices;
+        state.payments = action.payload?.data.invoicePayments;
         state.error = "";
       }
     });
@@ -31,7 +36,6 @@ const paymentSlice = createSlice({
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        console.log("DATA AFTER CREATING PAYMENT ->", action.payload.data);
         state.payments = [...state.payments, action.payload.data];
         state.error = "";
 
@@ -83,4 +87,5 @@ const paymentSlice = createSlice({
   },
 });
 
+export const { getInvoicePayments } = paymentSlice.actions;
 export default paymentSlice.reducer;
