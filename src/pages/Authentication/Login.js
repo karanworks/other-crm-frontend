@@ -67,19 +67,6 @@ const Login = (props) => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3001/login", { withCredentials: true })
-  //     .then((res) => {
-  //       const { data } = res;
-  //       dispatch(loginSuccess(data));
-  //       navigate("/home");
-  //     })
-  //     .catch((err) => {
-  //       console.log("error in logging get request ->", err);
-  //     });
-  // }, []);
-
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,

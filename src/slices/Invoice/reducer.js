@@ -16,7 +16,51 @@ export const initialState = {
 const invoiceSlice = createSlice({
   name: "invoice",
   initialState,
-  reducers: {},
+  reducers: {
+    // these actions are for instant updation of balance
+    updateBalanceOnPaymentCreation(state, action) {
+      console.log("invoice payload on payment ->", action.payload);
+
+      const payment = action.payload.data;
+
+      state.invoices = state.invoices.map((invoice) => {
+        if (invoice.id === payment.invoiceId) {
+          invoice.balance = invoice.balance - payment.paymentAmount;
+          return invoice;
+        } else {
+          return invoice;
+        }
+      });
+    },
+
+    updateBalanceOnPaymentDeletion(state, action) {
+      const payment = action.payload.data.deletedPayment;
+
+      state.invoices = state.invoices.map((invoice) => {
+        if (invoice.id === payment.invoiceId) {
+          invoice.balance =
+            parseInt(invoice.balance) + parseInt(payment.paymentAmount);
+          return invoice;
+        } else {
+          return invoice;
+        }
+      });
+    },
+
+    updateBalanceOnPaymentUpdation(state, action) {
+      const updatedBalance = action.payload.data.invoiceBalance;
+      const updatedPayment = action.payload.data.updatedPayment;
+
+      state.invoices = state.invoices.map((invoice) => {
+        if (invoice.id === updatedPayment.invoiceId) {
+          invoice.balance = updatedBalance;
+          return invoice;
+        } else {
+          return invoice;
+        }
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getInvoices.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
@@ -83,4 +127,9 @@ const invoiceSlice = createSlice({
   },
 });
 
+export const {
+  updateBalanceOnPaymentCreation,
+  updateBalanceOnPaymentDeletion,
+  updateBalanceOnPaymentUpdation,
+} = invoiceSlice.actions;
 export default invoiceSlice.reducer;

@@ -109,10 +109,11 @@ const Invoice = () => {
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please select client"),
       totalAmount: Yup.string().required("Please enter total amount"),
-      paymentAmount: Yup.string().required("Please enter total amount"),
-      paymentDate: Yup.string().required("Please select payment date"),
+      paymentAmount: Yup.string(),
+      paymentDate: Yup.string(),
       paymentDueDate: Yup.string().required("Please select due date"),
     }),
+
     onSubmit: (values) => {
       isEditingInvoice
         ? dispatch(updateInvoice({ values, listInvoiceId }))

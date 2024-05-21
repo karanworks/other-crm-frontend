@@ -7,6 +7,12 @@ import {
   updatePayment as updatePaymentApi,
 } from "../../helpers/fakebackend_helper";
 
+import {
+  updateBalanceOnPaymentCreation,
+  updateBalanceOnPaymentDeletion,
+  updateBalanceOnPaymentUpdation,
+} from "../Invoice/reducer";
+
 // import {
 //   getLeads as getLeadsApi,
 //   createLead as createLeadApi,
@@ -19,7 +25,6 @@ export const getPayments = createAsyncThunk(
   "payment/getPayments",
   async ({ invoiceId }) => {
     try {
-      console.log("INVOICE ID IN PAYMENTS THUNK ->", invoiceId);
       const response = await getPaymentsApi(invoiceId);
 
       return response;
@@ -31,10 +36,14 @@ export const getPayments = createAsyncThunk(
 
 export const createPayment = createAsyncThunk(
   "payment/createPayment",
-  async (data) => {
-    console.log("DATA WHILE CREATING PAYMENT ->", data);
+  async (data, { dispatch }) => {
     try {
       const response = await createPaymentApi(data);
+
+      if (response.status === "success") {
+        dispatch(updateBalanceOnPaymentCreation(response));
+      }
+
       return response;
     } catch (error) {
       console.log("error inside get payment thunk", error);
@@ -44,7 +53,10 @@ export const createPayment = createAsyncThunk(
 
 export const updatePayment = createAsyncThunk(
   "payment/updatePayment",
-  async ({ paymentDate, paymentAmount, listPaymentId, listInvoiceId }) => {
+  async (
+    { paymentDate, paymentAmount, listPaymentId, listInvoiceId },
+    { dispatch }
+  ) => {
     try {
       const response = await updatePaymentApi({
         paymentDate,
@@ -52,7 +64,11 @@ export const updatePayment = createAsyncThunk(
         listPaymentId,
         listInvoiceId,
       });
-      console.log("response while updating payment", response);
+
+      if (response.status === "success") {
+        dispatch(updateBalanceOnPaymentUpdation(response));
+      }
+
       return response;
     } catch (error) {
       console.log("error inside update payment thunk", error);
@@ -62,9 +78,16 @@ export const updatePayment = createAsyncThunk(
 
 export const removePayment = createAsyncThunk(
   "payment/removePayment",
-  async ({ listInvoiceId: invoiceId, listPaymentId: paymentId }) => {
+  async (
+    { listInvoiceId: invoiceId, listPaymentId: paymentId },
+    { dispatch }
+  ) => {
     try {
       const response = await removePaymentApi({ invoiceId, paymentId });
+
+      if (response.status === "success") {
+        dispatch(updateBalanceOnPaymentDeletion(response));
+      }
 
       return response;
     } catch (error) {

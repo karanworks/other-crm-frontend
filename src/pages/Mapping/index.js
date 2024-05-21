@@ -27,7 +27,6 @@ import {
   removeRole,
 } from "../../slices/Mapping/thunk";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../../slices/auth/login/thunk";
 
 const Mapping = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -42,14 +41,6 @@ const Mapping = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (error) {
-      dispatch(logoutUser());
-      navigate("/login");
-      window.location.reload();
-    }
-  }, [dispatch, error]);
 
   useEffect(() => {
     const checkedSubmenuLabels = [];
