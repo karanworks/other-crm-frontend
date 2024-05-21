@@ -118,16 +118,17 @@ function UpcommingEvents(props) {
               {startDate} {end_dt}
             </span>
           </div>
-          {/* <div className="flex-shrink-0">
-            <small className="badge bg-primary-subtle text-primary ms-auto">
-              {e_time_s} {e_time_e}
-            </small>
-          </div> */}
         </div>
         <h6 className="card-title fs-16">{props.event.title}</h6>
-        <p className="text-muted text-truncate-two-lines mb-0">
-          {props.event.description === "N.A." ? "" : props.event.description}
-        </p>
+
+        <div className="d-flex" style={{ gap: "5px" }}>
+          <p className="badge border border-primary text-primary fs-13">
+            {props.event.projectStatus}
+          </p>
+          <p className="badge border border-success text-success fs-13">
+            {props.event.projectGenre}
+          </p>
+        </div>
       </CardBody>
     </Card>
   );

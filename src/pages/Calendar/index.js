@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-//Import Icons
-import FeatherIcon from "feather-icons-react";
 
 import {
   Card,
   CardBody,
   Container,
-  Form,
-  FormFeedback,
-  Input,
-  Label,
   Modal,
   ModalBody,
   ModalHeader,
@@ -24,9 +17,8 @@ import { useFormik } from "formik";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
+import interactionPlugin from "@fullcalendar/interaction";
 import BootstrapTheme from "@fullcalendar/bootstrap";
-import Flatpickr from "react-flatpickr";
 import listPlugin from "@fullcalendar/list";
 
 //redux
@@ -75,11 +67,9 @@ const Calender = () => {
     selectLayoutProperties
   );
 
-  useEffect(() => {
-    dispatch(getLeads());
-  }, [dispatch]);
-
   const { leads } = useSelector((state) => state.AddLead);
+
+  console.log("LEADS ->", leads);
 
   const leadsCalendarData = leads?.map((lead) => {
     let dateStr = lead.projectDueDate;
@@ -95,33 +85,18 @@ const Calender = () => {
       title: lead.clientName,
       start: formattedDateStr,
       className: "bg-primary-subtle",
+      projectDueDate: lead.projectDueDate,
+      projectStatus: lead.projectStatus,
+      projectGenre: lead.projectGenre,
+      youtubeLink: lead.youtubeLink,
     };
   });
 
   useEffect(() => {
     dispatch(onGetEvents());
     dispatch(onGetCategories());
-    // new Draggable(document.getElementById("external-events"), {
-    //   itemSelector: ".external-event",
-    // });
+    dispatch(getLeads());
   }, [dispatch]);
-
-  useEffect(() => {
-    setUpcommingevents(leadsCalendarData);
-    // Object.entries(upcommingevents).sort((o1, o2) => {
-    //   return new Date(o1.start) - new Date(o2.start);
-    // });
-  }, [events, upcommingevents]);
-
-  useEffect(() => {
-    if (isEventUpdated) {
-      setIsEdit(false);
-      setEvent({});
-      setTimeout(() => {
-        dispatch(resetCalendar("isEventUpdated", false));
-      }, 500);
-    }
-  }, [dispatch, isEventUpdated]);
 
   /**
    * Handling the modal state
@@ -131,39 +106,10 @@ const Calender = () => {
       setModal(false);
       setEvent(null);
       setIsEdit(false);
-      setIsEditButton(true);
+      // setIsEditButton(true);
     } else {
       setModal(true);
     }
-  };
-  /**
-   * Handling date click on calendar
-   */
-
-  const handleDateClick = (arg) => {
-    const date = arg["date"];
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    const currectDate = new Date();
-    const currentHour = currectDate.getHours();
-    const currentMin = currectDate.getMinutes();
-    const currentSec = currectDate.getSeconds();
-    const modifiedDate = new Date(
-      year,
-      month,
-      day,
-      currentHour,
-      currentMin,
-      currentSec
-    );
-
-    const modifiedData = { ...arg, date: modifiedDate };
-
-    setSelectedNewDay(date);
-    setSelectedDay(modifiedData);
-    toggle();
   };
 
   const str_dt = function formatDate(date) {
@@ -204,6 +150,8 @@ const Calender = () => {
    * Handling click on event on calendar
    */
   const handleEventClick = (arg) => {
+    console.log("HANDLE EVENT CLICK ->", arg.event);
+    // const event = arg.event;
     const event = arg.event;
 
     const st_date = event.start;
@@ -217,21 +165,31 @@ const Calender = () => {
         ? date_r(st_date)
         : date_r(st_date) + " to " + date_r(ed_date);
 
+    // setEvent({
+    //   id: event.id,
+    //   title: event.title,
+    //   start: event.start,
+    //   end: event.end,
+    //   className: event.classNames,
+    //   category: event.classNames[0],
+    //   location: event._def.extendedProps.location,
+    //   description: event._def.extendedProps.description,
+    //   defaultDate: er_date,
+    //   datetag: r_date,
+    // });
     setEvent({
       id: event.id,
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      className: event.classNames,
-      category: event.classNames[0],
-      location: event._def.extendedProps.location,
-      description: event._def.extendedProps.description,
+      title: event._def.title,
+      start: event._def.extendedProps.projectDueDate,
+      status: event._def.extendedProps.projectStatus,
+      genre: event._def.extendedProps.projectGenre,
+      youtubeLink: event._def.extendedProps.youtubeLink,
       defaultDate: er_date,
       datetag: r_date,
     });
 
     setIsEdit(true);
-    setIsEditButton(false);
+    // setIsEditButton(false);
     toggle();
   };
   /**
@@ -301,84 +259,6 @@ const Calender = () => {
     },
   });
 
-  const submitOtherEvent = () => {
-    document.getElementById("form-event").classList.remove("view-event");
-
-    document
-      .getElementById("event-title")
-      .classList.replace("d-none", "d-block");
-    document
-      .getElementById("event-category")
-      .classList.replace("d-none", "d-block");
-    document
-      .getElementById("event-start-date")
-      .parentNode.classList.remove("d-none");
-    document
-      .getElementById("event-start-date")
-      .classList.replace("d-none", "d-block");
-    document
-      .getElementById("event-location")
-      .classList.replace("d-none", "d-block");
-    document
-      .getElementById("event-description")
-      .classList.replace("d-none", "d-block");
-    document
-      .getElementById("event-start-date-tag")
-      .classList.replace("d-block", "d-none");
-    document
-      .getElementById("event-location-tag")
-      .classList.replace("d-block", "d-none");
-    document
-      .getElementById("event-description-tag")
-      .classList.replace("d-block", "d-none");
-    // document.getElementById("btn-save-event").removeAttribute("hidden");
-    setIsEditButton(true);
-  };
-
-  /**
-   * On category darg event
-   */
-  const onDrag = (event) => {
-    event.preventDefault();
-  };
-
-  /**
-   * On calendar drop event
-   */
-  const onDrop = (event) => {
-    const date = event["date"];
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    const currectDate = new Date();
-    const currentHour = currectDate.getHours();
-    const currentMin = currectDate.getMinutes();
-    const currentSec = currectDate.getSeconds();
-    const modifiedDate = new Date(
-      year,
-      month,
-      day,
-      currentHour,
-      currentMin,
-      currentSec
-    );
-
-    const draggedEl = event.draggedEl;
-    const draggedElclass = draggedEl.className;
-    if (
-      draggedEl.classList.contains("external-event") &&
-      draggedElclass.indexOf("fc-event-draggable") === -1
-    ) {
-      const modifiedData = {
-        id: Math.floor(Math.random() * 1000),
-        title: draggedEl.innerText,
-        start: modifiedDate,
-        className: draggedEl.className,
-      };
-      dispatch(onAddNewEvent(modifiedData));
-    }
-  };
   document.title = "Calendar | Velzon - React Admin & Dashboard Template";
   return (
     <React.Fragment>
@@ -389,43 +269,11 @@ const Calender = () => {
       />
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Calendar" pageTitle="Apps" />
+          <BreadCrumb title="Calendar" pageTitle="Lead Management" />
           <Row>
             <Col xs={12}>
               <Row>
                 <Col xl={3}>
-                  {/* <Card className="card-h-100">
-                    <CardBody>
-                      <button
-                        className="btn btn-primary w-100"
-                        id="btn-new-event"
-                        onClick={toggle}
-                      >
-                        <i className="mdi mdi-plus"></i> Create New Event
-                      </button>
-
-                      <div id="external-events">
-                        <br />
-                        <p className="text-muted">
-                          Drag and drop your event or click in the calendar
-                        </p>
-                        {categories &&
-                          categories.map((category, i) => (
-                            <div
-                              className={`bg-${category.type}-subtle external-event fc-event text-${category.type}`}
-                              key={"cat-" + category.id}
-                              draggable
-                              onDrag={(event) => {
-                                onDrag(event, category);
-                              }}
-                            >
-                              <i className="mdi mdi-checkbox-blank-circle me-2" />
-                              {category.title}
-                            </div>
-                          ))}
-                      </div>
-                    </CardBody>
-                  </Card> */}
                   <div>
                     <h5 className="mb-1">Upcoming Events</h5>
                     <p className="text-muted">Don't miss scheduled events</p>
@@ -434,8 +282,8 @@ const Calender = () => {
                       style={{ height: "400px" }}
                     >
                       <div id="upcoming-event-list">
-                        {upcommingevents &&
-                          upcommingevents.map((event, key) => (
+                        {leadsCalendarData &&
+                          leadsCalendarData.map((event, key) => (
                             <UpcommingEvents event={event} key={key} />
                           ))}
                       </div>
@@ -460,15 +308,16 @@ const Calender = () => {
                         headerToolbar={{
                           left: "prev,next today",
                           center: "title",
-                          right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
+                          // right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
+                          right: "dayGridMonth,listWeek",
                         }}
                         events={leadsCalendarData}
                         editable={true}
-                        droppable={true}
+                        // droppable={true}
                         selectable={true}
-                        dateClick={handleDateClick}
+                        // dateClick={handleDateClick}
                         eventClick={handleEventClick}
-                        drop={onDrop}
+                        // drop={onDrop}
                       />
                     </CardBody>
                   </Card>
@@ -483,15 +332,16 @@ const Calender = () => {
                   tag="h5"
                   className="p-3 bg-info-subtle modal-title"
                 >
-                  {!!isEdit ? "Edit Event" : "Add Event"}
+                  {/* {!!isEdit ? "Edit Event" : "Add Event"} */}
+                  Details
                 </ModalHeader>
                 <ModalBody>
-                  <Form
-                    className={
-                      !!isEdit
-                        ? "needs-validation view-event"
-                        : "needs-validation"
-                    }
+                  {/* <Form
+                    // className={
+                    //   !!isEdit
+                    //     ? "needs-validation view-event"
+                    //     : "needs-validation"
+                    // }
                     name="event-form"
                     id="form-event"
                     onSubmit={(e) => {
@@ -499,8 +349,8 @@ const Calender = () => {
                       validation.handleSubmit();
                       return false;
                     }}
-                  >
-                    {!!isEdit ? (
+                  > */}
+                  {/* {!!isEdit ? (
                       <div className="text-end">
                         <Link
                           to="#"
@@ -515,56 +365,134 @@ const Calender = () => {
                           Edit
                         </Link>
                       </div>
-                    ) : null}
+                    ) : null} */}
 
-                    <div className="event-details">
-                      <div className="d-flex mb-2">
-                        <div className="flex-grow-1 d-flex align-items-center">
-                          <div className="flex-shrink-0 me-3">
-                            <i className="ri-calendar-event-line text-muted fs-16"></i>
-                          </div>
-                          <div className="flex-grow-1">
-                            <h6
-                              className="d-block fw-semibold mb-0"
-                              id="event-start-date-tag"
-                            >
-                              {event ? event.datetag : ""}
-                            </h6>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="d-flex align-items-center mb-2">
-                        <div className="flex-shrink-0 me-3">
-                          <i className="ri-map-pin-line text-muted fs-16"></i>
+                  <div>
+                    <div className="d-flex ">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-2">
+                          <i className="ri-shield-user-line text-muted fs-22"></i>
                         </div>
                         <div className="flex-grow-1">
-                          <h6 className="d-block fw-semibold mb-0">
-                            {" "}
-                            <span id="event-location-tag">
-                              {event && event.location !== undefined
-                                ? event.location
-                                : "No Location"}
-                            </span>
+                          <h6
+                            className="d-block fw-semibold mb-0 fs-16"
+                            id="event-start-date-tag"
+                          >
+                            {event?.title}
                           </h6>
                         </div>
                       </div>
-                      <div className="d-flex mb-3">
-                        <div className="flex-shrink-0 me-3">
-                          <i className="ri-discuss-line text-muted fs-16"></i>
+                    </div>
+                    <div className="d-flex ">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-2">
+                          <i class="ri-calendar-event-line text-muted fs-22"></i>
                         </div>
                         <div className="flex-grow-1">
-                          <p
-                            className="d-block text-muted mb-0"
-                            id="event-description-tag"
+                          <h6
+                            className="d-block fw-semibold mb-0 fs-16"
+                            id="event-start-date-tag"
                           >
-                            {event && event.description !== undefined
-                              ? event.description
-                              : "No Description"}
-                          </p>
+                            {event?.start}
+                          </h6>
                         </div>
                       </div>
                     </div>
-                    <Row className="event-form">
+
+                    <div className="d-flex ">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-2">
+                          <i class="ri-pages-line text-muted fs-22"></i>
+                        </div>
+                        <div className="flex-grow-1">
+                          <h6
+                            className="d-block fw-semibold mb-0 fs-16"
+                            id="event-start-date-tag"
+                          >
+                            {event?.genre}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex ">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-2">
+                          <i class="ri-timer-line text-muted fs-22"></i>
+                        </div>
+                        <div className="flex-grow-1">
+                          <h6
+                            className="d-block fw-semibold mb-0 fs-16"
+                            id="event-start-date-tag"
+                          >
+                            {event?.status}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex ">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-2">
+                          <i class="ri-youtube-line text-muted fs-22"></i>
+                        </div>
+                        <div className="flex-grow-1">
+                          <h6
+                            className="d-block fw-semibold mb-0 fs-16"
+                            id="event-start-date-tag"
+                          >
+                            <a href={event?.youtubeLink}>YouTube</a>
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="event-details">
+                    <div className="d-flex mb-2">
+                      <div className="flex-grow-1 d-flex align-items-center">
+                        <div className="flex-shrink-0 me-3">
+                          <i className="ri-calendar-event-line text-muted fs-16"></i>
+                        </div>
+                        <div className="flex-grow-1">
+                          <h6
+                            className="d-block fw-semibold mb-0"
+                            id="event-start-date-tag"
+                          >
+                            {/* {event ? event.title : ""} */}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center mb-2">
+                      <div className="flex-shrink-0 me-3">
+                        <i className="ri-map-pin-line text-muted fs-16"></i>
+                      </div>
+                      <div className="flex-grow-1">
+                        <h6 className="d-block fw-semibold mb-0">
+                          {" "}
+                          <span id="event-location-tag">
+                            {event && event.location !== undefined
+                              ? event.location
+                              : "No Location"}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                    <div className="d-flex mb-3">
+                      <div className="flex-shrink-0 me-3">
+                        <i className="ri-discuss-line text-muted fs-16"></i>
+                      </div>
+                      <div className="flex-grow-1">
+                        <p
+                          className="d-block text-muted mb-0"
+                          id="event-description-tag"
+                        >
+                          {event && event.description !== undefined
+                            ? event.description
+                            : "No Description"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <Row className="event-form">
                       <Col xs={12}>
                         <div className="mb-3">
                           <Label className="form-label">Type</Label>
@@ -729,8 +657,8 @@ const Calender = () => {
                           ) : null}
                         </div>
                       </Col>
-                    </Row>
-                    <div className="hstack gap-2 justify-content-end">
+                    </Row> */}
+                  {/* <div className="hstack gap-2 justify-content-end">
                       {!!isEdit && (
                         <button
                           type="button"
@@ -750,8 +678,8 @@ const Calender = () => {
                           {!!isEdit ? "Edit Event" : "Add Event"}
                         </button>
                       )}
-                    </div>
-                  </Form>
+                    </div> */}
+                  {/* </Form> */}
                 </ModalBody>
               </Modal>
             </Col>
