@@ -101,8 +101,6 @@ const Users = () => {
     },
   });
 
-  console.log("UPDATED USER VALUES ->", validation.values);
-
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
   function formHandleSubmit(e) {
     e.preventDefault();

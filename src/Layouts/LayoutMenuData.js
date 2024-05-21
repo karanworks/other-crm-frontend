@@ -90,7 +90,6 @@ const Navdata = () => {
           setIsPayments(!isPayments);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
-        
       }
     };
   };

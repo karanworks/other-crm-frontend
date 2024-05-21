@@ -20,6 +20,7 @@ import AddLead from "../pages/AddLead";
 import Invoice from "../pages/Invoice";
 import Report from "../pages/Report";
 import PendingTasks from "../pages/PendingTasks";
+import Calendar from "../pages/Calendar";
 
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
@@ -28,6 +29,7 @@ const authProtectedRoutes = [
   { path: "/report", component: <Report /> },
   { path: "/invoice", component: <Invoice /> },
   { path: "/pending-tasks", component: <PendingTasks /> },
+  { path: "/calendar", component: <Calendar /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },

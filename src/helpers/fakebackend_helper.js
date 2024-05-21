@@ -477,6 +477,29 @@ export const removePayment = ({ invoiceId, paymentId }) => {
   );
 };
 
+// *****************************************************************
+// **************************** CALENDAR ***************************
+// *****************************************************************
+
+// get Events
+export const getEvents = () => api.get(url.GET_EVENTS);
+
+// get Events
+export const getCategories = () => api.get(url.GET_CATEGORIES);
+
+// get Upcomming Events
+export const getUpCommingEvent = () => api.get(url.GET_UPCOMMINGEVENT);
+
+// add Events
+export const addNewEvent = (event) => api.create(url.ADD_NEW_EVENT, event);
+
+// update Event
+export const updateEvent = (event) => api.put(url.UPDATE_EVENT, event);
+
+// delete Event
+export const deleteEvent = (event) =>
+  api.delete(url.DELETE_EVENT, { headers: { event } });
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);
@@ -522,26 +545,6 @@ export const postJwtForgetPwd = (data) =>
 
 // postSocialLogin
 export const postSocialLogin = (data) => api.create(url.SOCIAL_LOGIN, data);
-
-// Calendar
-// get Events
-export const getEvents = () => api.get(url.GET_EVENTS);
-
-// get Events
-export const getCategories = () => api.get(url.GET_CATEGORIES);
-
-// get Upcomming Events
-export const getUpCommingEvent = () => api.get(url.GET_UPCOMMINGEVENT);
-
-// add Events
-export const addNewEvent = (event) => api.create(url.ADD_NEW_EVENT, event);
-
-// update Event
-export const updateEvent = (event) => api.put(url.UPDATE_EVENT, event);
-
-// delete Event
-export const deleteEvent = (event) =>
-  api.delete(url.DELETE_EVENT, { headers: { event } });
 
 // Chat
 // get Contact

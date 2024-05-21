@@ -10,6 +10,7 @@ import MappingReducer from "./Mapping/reducer";
 import AddLeadReducer from "./AddLead/reducer";
 import InvoiceReducer from "./Invoice/reducer";
 import PaymentReducer from "./Payment/reducer";
+import CalendarReducer from "./calendar/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   Mapping: MappingReducer,
   AddLead: AddLeadReducer,
   Invoice: InvoiceReducer,
+  Calendar: CalendarReducer,
   Payment: PaymentReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
