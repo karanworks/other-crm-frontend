@@ -336,46 +336,15 @@ const Calender = () => {
                   Details
                 </ModalHeader>
                 <ModalBody>
-                  {/* <Form
-                    // className={
-                    //   !!isEdit
-                    //     ? "needs-validation view-event"
-                    //     : "needs-validation"
-                    // }
-                    name="event-form"
-                    id="form-event"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      validation.handleSubmit();
-                      return false;
-                    }}
-                  > */}
-                  {/* {!!isEdit ? (
-                      <div className="text-end">
-                        <Link
-                          to="#"
-                          className="btn btn-sm btn-soft-primary"
-                          id="edit-event-btn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            submitOtherEvent();
-                            return false;
-                          }}
-                        >
-                          Edit
-                        </Link>
-                      </div>
-                    ) : null} */}
-
                   <div>
                     <div className="d-flex ">
                       <div className="flex-grow-1 d-flex align-items-center">
                         <div className="flex-shrink-0 me-2">
-                          <i className="ri-shield-user-line text-muted fs-22"></i>
+                          <i className="ri-shield-user-line text-muted fs-36"></i>
                         </div>
-                        <div className="flex-grow-1">
+                        <div className="flex-grow-1 d-flex align-items-center">
                           <h6
-                            className="d-block fw-semibold mb-0 fs-16"
+                            className="d-block fw-semibold mb-0 fs-36"
                             id="event-start-date-tag"
                           >
                             {event?.title}
@@ -445,241 +414,37 @@ const Calender = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="event-details">
-                    <div className="d-flex mb-2">
-                      <div className="flex-grow-1 d-flex align-items-center">
-                        <div className="flex-shrink-0 me-3">
-                          <i className="ri-calendar-event-line text-muted fs-16"></i>
-                        </div>
-                        <div className="flex-grow-1">
-                          <h6
-                            className="d-block fw-semibold mb-0"
-                            id="event-start-date-tag"
-                          >
-                            {/* {event ? event.title : ""} */}
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="flex-shrink-0 me-3">
-                        <i className="ri-map-pin-line text-muted fs-16"></i>
-                      </div>
-                      <div className="flex-grow-1">
-                        <h6 className="d-block fw-semibold mb-0">
-                          {" "}
-                          <span id="event-location-tag">
-                            {event && event.location !== undefined
-                              ? event.location
-                              : "No Location"}
-                          </span>
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex mb-3">
-                      <div className="flex-shrink-0 me-3">
-                        <i className="ri-discuss-line text-muted fs-16"></i>
-                      </div>
-                      <div className="flex-grow-1">
-                        <p
-                          className="d-block text-muted mb-0"
-                          id="event-description-tag"
-                        >
-                          {event && event.description !== undefined
-                            ? event.description
-                            : "No Description"}
-                        </p>
-                      </div>
-                    </div>
+
+                  <div className="table-responsive mt-2">
+                    <h4>Payments</h4>
+                    <table className="table table-bordered table-nowrap align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col" style={{ width: "40%" }}>
+                            Amount
+                          </th>
+                          <th scope="col" style={{ width: "40%" }}>
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>₹₹2500 </td>
+                          <td>"22/05/2024 "</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span className="fs-15">Total Amount Paid</span>
+                          </td>
+                          <td>
+                            <span className="fs-15">₹5000</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  {/* <Row className="event-form">
-                      <Col xs={12}>
-                        <div className="mb-3">
-                          <Label className="form-label">Type</Label>
-                          <Input
-                            className={
-                              !!isEdit
-                                ? "form-select d-none"
-                                : "form-select d-block"
-                            }
-                            name="category"
-                            id="event-category"
-                            type="select"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.category || ""}
-                            // invalid={
-                            //   validation.touched.category &&
-                            //   validation.errors.category
-                            //     ? true
-                            //     : false
-                            // }
-                          >
-                            <option value="bg-danger-subtle">Danger</option>
-                            <option value="bg-success-subtle">Success</option>
-                            <option value="bg-primary-subtle">Primary</option>
-                            <option value="bg-info-subtle">Info</option>
-                            <option value="bg-dark-subtle">Dark</option>
-                            <option value="bg-warning-subtle">Warning</option>
-                          </Input>
-                          {validation.touched.category &&
-                          validation.errors.category ? (
-                            <FormFeedback type="invalid">
-                              {validation.errors.category}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </Col>
-                      <Col xs={12}>
-                        <div className="mb-3">
-                          <Label className="form-label">Event Name</Label>
-                          <Input
-                            className={
-                              !!isEdit
-                                ? "form-control d-none"
-                                : "form-control d-block"
-                            }
-                            placeholder="Enter event name"
-                            type="text"
-                            name="title"
-                            id="event-title"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.title || ""}
-                            // invalid={
-                            //   validation.touched.title &&
-                            //   validation.errors.title
-                            //     ? true
-                            //     : false
-                            // }
-                          />
-                          {validation.touched.title &&
-                          validation.errors.title ? (
-                            <FormFeedback type="invalid">
-                              {validation.errors.title}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </Col>
-                      <Col xs={12}>
-                        <div className="mb-3">
-                          <Label>Event Date</Label>
-                          <div
-                            className={
-                              !!isEdit ? "input-group d-none" : "input-group"
-                            }
-                          >
-                            <Flatpickr
-                              className="form-control"
-                              id="event-start-date"
-                              name="defaultDate"
-                              placeholder="Select Date"
-                              value={validation.values.defaultDate || ""}
-                              options={{
-                                mode: "range",
-                                dateFormat: "Y-m-d",
-                              }}
-                              onChange={(date) => {
-                                setSelectedNewDay(date);
-                              }}
-                            />
-                            <span className="input-group-text">
-                              <i className="ri-calendar-event-line"></i>
-                            </span>
-                          </div>
-                        </div>
-                      </Col>
-                      <Col xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="event-location">Location</Label>
-                          <div>
-                            <Input
-                              type="text"
-                              className={
-                                !!isEdit
-                                  ? "form-control d-none"
-                                  : "form-control d-block"
-                              }
-                              name="location"
-                              id="event-location"
-                              placeholder="Event location"
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              value={
-                                validation.values.location || "No Location"
-                              }
-                              // invalid={
-                              //   validation.touched.location &&
-                              //   validation.errors.location
-                              //     ? true
-                              //     : false
-                              // }
-                            />
-                            {validation.touched.location &&
-                            validation.errors.location ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.location}
-                              </FormFeedback>
-                            ) : null}
-                          </div>
-                        </div>
-                      </Col>
-                      <Col xs={12}>
-                        <div className="mb-3">
-                          <Label className="form-label">Description</Label>
-                          <textarea
-                            className={
-                              !!isEdit
-                                ? "form-control d-none"
-                                : "form-control d-block"
-                            }
-                            id="event-description"
-                            name="description"
-                            placeholder="Enter a description"
-                            rows="3"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={
-                              validation.values.description || "No Description"
-                            }
-                            // invalid={
-                            //   validation.touched.description &&
-                            //   validation.errors.description
-                            //     ? true
-                            //     : false
-                            // }
-                          ></textarea>
-                          {validation.touched.description &&
-                          validation.errors.description ? (
-                            <FormFeedback type="invalid">
-                              {validation.errors.description}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </Col>
-                    </Row> */}
-                  {/* <div className="hstack gap-2 justify-content-end">
-                      {!!isEdit && (
-                        <button
-                          type="button"
-                          className="btn btn-soft-danger"
-                          id="btn-delete-event"
-                          onClick={() => setDeleteModal(true)}
-                        >
-                          <i className="ri-close-line align-bottom"></i> Delete
-                        </button>
-                      )}
-                      {isEditButton && (
-                        <button
-                          type="submit"
-                          className="btn btn-success"
-                          id="btn-save-event"
-                        >
-                          {!!isEdit ? "Edit Event" : "Add Event"}
-                        </button>
-                      )}
-                    </div> */}
-                  {/* </Form> */}
                 </ModalBody>
               </Modal>
             </Col>
