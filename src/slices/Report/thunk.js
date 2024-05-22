@@ -1,67 +1,60 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
 import {
-  getLeads as getLeadsApi,
-  createLead as createLeadApi,
-  removeLead as removeLeadApi,
-  updateLead as updateLeadApi,
-  createDropdown as createDropdownApi,
+  getEvents as getEventsApi,
+  createEvent as createEventApi,
+  removeEvent as removeEventApi,
+  updateEvent as updateEventApi,
 } from "../../helpers/fakebackend_helper";
 
-export const getLeads = createAsyncThunk("leads/getLeads", async () => {
-  try {
-    const response = await getLeadsApi();
-
-    return response;
-  } catch (error) {
-    console.log("error inside get leads thunk", error);
-  }
-});
-
-export const createLead = createAsyncThunk("leads/createLead", async (data) => {
-  try {
-    const response = await createLeadApi(data);
-    return response;
-  } catch (error) {
-    console.log("error inside get lead thunk", error);
-  }
-});
-
-export const updateLead = createAsyncThunk("leads/updateLead", async (data) => {
-  try {
-    const response = await updateLeadApi(data.listLeadId, data.values);
-    console.log("response while updating lead", response);
-    return response;
-  } catch (error) {
-    console.log("error inside update lead thunk", error);
-  }
-});
-
-export const removeLead = createAsyncThunk(
-  "leads/removeLead",
-  async (leadId) => {
+export const getEvents = createAsyncThunk(
+  "report/getEvents",
+  async (clientName) => {
     try {
-      const response = await removeLeadApi(leadId);
+      const response = await getEventsApi(clientName);
 
       return response;
     } catch (error) {
-      console.log("error inside remove lead thunk", error);
+      console.log("error inside get events thunk", error);
     }
   }
 );
 
-// *****************************************************************
-// *************************** DROPDOWNS ***************************
-// *****************************************************************
-
-export const createDropdown = createAsyncThunk(
-  "leads/createDropdown",
+export const createEvent = createAsyncThunk(
+  "report/createEvent",
   async (data) => {
     try {
-      const response = await createDropdownApi(data);
+      console.log("EVENTS IN CREATE EVENT THUNK ->", data);
+      const response = await createEventApi(data);
+
       return response;
     } catch (error) {
-      console.log("error inside create dropdown in lead thunk", error);
+      console.log("error inside get event thunk", error);
+    }
+  }
+);
+
+export const updateEvent = createAsyncThunk(
+  "report/updateEvent",
+  async ({ eventName, eventDate, listEventId: eventId }) => {
+    try {
+      const response = await updateEventApi({ eventName, eventDate, eventId });
+
+      return response;
+    } catch (error) {
+      console.log("error inside update event thunk", error);
+    }
+  }
+);
+
+export const removeEvent = createAsyncThunk(
+  "report/removeEvent",
+  async (listEventId) => {
+    try {
+      const response = await removeEventApi(listEventId);
+
+      return response;
+    } catch (error) {
+      console.log("error inside remove event thunk", error);
     }
   }
 );

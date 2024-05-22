@@ -15,9 +15,11 @@ function AddEventModal({
   add_event_view_modal,
   add_event_tog_list,
   eventValidation,
-  // paymentFormHandleSubmit,
+  eventFormHandleSubmit,
   isEditingEvent,
 }) {
+  console.log("IS EDITING EVENT ->", isEditingEvent);
+
   return (
     <Modal
       isOpen={add_event_view_modal}
@@ -38,7 +40,7 @@ function AddEventModal({
       </ModalHeader>
       <Form
         className="tablelist-form"
-        onSubmit={(e) => paymentFormHandleSubmit(e)}
+        onSubmit={(e) => eventFormHandleSubmit(e)}
       >
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">

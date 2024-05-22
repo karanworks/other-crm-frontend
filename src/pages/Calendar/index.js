@@ -31,14 +31,14 @@ import DeleteModal from "../../Components/Common/DeleteModal";
 import SimpleBar from "simplebar-react";
 import UpcommingEvents from "./UpcommingEvents";
 
-import {
-  getEvents as onGetEvents,
-  getCategories as onGetCategories,
-  addNewEvent as onAddNewEvent,
-  deleteEvent as onDeleteEvent,
-  updateEvent as onUpdateEvent,
-  resetCalendar,
-} from "../../slices/calendar/thunk";
+// import {
+//   getEvents as onGetEvents,
+//   getCategories as onGetCategories,
+//   addNewEvent as onAddNewEvent,
+//   deleteEvent as onDeleteEvent,
+//   updateEvent as onUpdateEvent,
+//   resetCalendar,
+// } from "../../slices/calendar/thunk";
 import { createSelector } from "reselect";
 import { getLeads } from "../../slices/AddLead/thunk";
 import { getPayments } from "../../slices/Payment/thunk";
@@ -96,8 +96,8 @@ const Calender = () => {
   });
 
   useEffect(() => {
-    dispatch(onGetEvents());
-    dispatch(onGetCategories());
+    // dispatch(onGetEvents());
+    // dispatch(onGetCategories());
     dispatch(getLeads());
     dispatch(getInvoices());
   }, [dispatch]);

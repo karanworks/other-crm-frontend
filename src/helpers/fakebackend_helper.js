@@ -440,13 +440,6 @@ export const createPayment = ({
   paymentAmount,
   paymentDate,
 }) => {
-  console.log(
-    "CREATE PAYMENT THUNK VALUES ->",
-    invoiceId,
-    paymentAmount,
-    paymentDate
-  );
-
   return api.create(
     `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/create`,
     {
@@ -478,27 +471,35 @@ export const removePayment = ({ invoiceId, paymentId }) => {
 };
 
 // *****************************************************************
-// **************************** CALENDAR ***************************
+// ***************************** EVENTS ****************************
 // *****************************************************************
 
-// get Events
-export const getEvents = () => api.get(url.GET_EVENTS);
+export const getEvents = (clientName) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/${clientName}/events`);
+};
 
-// get Events
-export const getCategories = () => api.get(url.GET_CATEGORIES);
+export const createEvent = (events) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/event/create`, {
+    events,
+  });
+};
 
-// get Upcomming Events
-export const getUpCommingEvent = () => api.get(url.GET_UPCOMMINGEVENT);
+export const updateEvent = ({ eventName, eventDate, eventId }) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/event/${eventId}/edit`,
+    {
+      eventName,
+      eventDate,
+    }
+  );
+};
 
-// add Events
-export const addNewEvent = (event) => api.create(url.ADD_NEW_EVENT, event);
-
-// update Event
-export const updateEvent = (event) => api.put(url.UPDATE_EVENT, event);
-
-// delete Event
-export const deleteEvent = (event) =>
-  api.delete(url.DELETE_EVENT, { headers: { event } });
+export const removeEvent = (eventId) => {
+  console.log("REMOVE EVENT ID IN BACKEND HELPER ->", eventId);
+  return api.delete(
+    `${process.env.REACT_APP_SERVER_URL}/event/${eventId}/delete`
+  );
+};
 
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>

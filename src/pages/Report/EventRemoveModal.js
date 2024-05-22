@@ -1,13 +1,13 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function PaymentRemoveModal({
-  payement_modal_delete,
-  payment_tog_delete,
-  handleDeletePayment,
+function EventRemoveModal({
+  event_modal_delete,
+  event_tog_delete,
+  handleDeleteEvent,
 }) {
   return (
     <Modal
-      isOpen={payement_modal_delete}
+      isOpen={event_modal_delete}
       toggle={() => {
         payment_tog_delete();
       }}
@@ -18,7 +18,7 @@ function PaymentRemoveModal({
       <div className="modal-header">
         <Button
           type="button"
-          onClick={() => payment_tog_delete()}
+          onClick={() => event_tog_delete()}
           className="btn-close"
           aria-label="Close"
         ></Button>
@@ -42,7 +42,7 @@ function PaymentRemoveModal({
           <button
             type="button"
             className="btn w-sm btn-light"
-            onClick={() => payment_tog_delete()}
+            onClick={() => event_tog_delete()}
           >
             Close
           </button>
@@ -50,7 +50,7 @@ function PaymentRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeletePayment}
+            onClick={handleDeleteEvent}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +60,4 @@ function PaymentRemoveModal({
   );
 }
 
-export default PaymentRemoveModal;
+export default EventRemoveModal;

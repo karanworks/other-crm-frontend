@@ -31,6 +31,8 @@ import {
   createLead,
   createDropdown,
 } from "../../slices/AddLead/thunk";
+
+import { createEvent } from "../../slices/Report/thunk";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 
@@ -157,6 +159,11 @@ const AddLead = () => {
       // .required("Please select project due date"),
     }),
     onSubmit: (values) => {
+      const { events } = values;
+      if (events) {
+        dispatch(createEvent(events));
+      }
+
       dispatch(createLead(values));
     },
   });
@@ -179,6 +186,7 @@ const AddLead = () => {
   // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit lead from
   function formHandleSubmit(e) {
     e.preventDefault();
+
     validation.handleSubmit();
     return false;
   }

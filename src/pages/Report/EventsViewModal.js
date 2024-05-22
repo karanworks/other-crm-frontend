@@ -7,8 +7,8 @@ function EventsViewModal({
   add_event_tog_list,
   event_tog_delete,
   setListEventId,
-  // handleEditPayment,
-  // events,
+  leadEvents,
+  handleEditEvent,
 }) {
   return (
     <Modal
@@ -45,7 +45,35 @@ function EventsViewModal({
             </thead>
 
             <tbody>
-              <tr>
+              {leadEvents?.map((event) => (
+                <tr key={event.id}>
+                  <td>{event.eventName}</td>
+                  <td>{event.eventDate}</td>
+                  <td>
+                    <div className="hstack gap-2">
+                      <button
+                        className="btn btn-sm btn-soft-info edit-list"
+                        onClick={() => {
+                          handleEditEvent(event);
+                        }}
+                      >
+                        <i className="ri-pencil-fill align-bottom" />
+                      </button>
+                      <button
+                        className="btn btn-sm btn-soft-danger remove-list"
+                        onClick={() => {
+                          event_tog_delete();
+                          setListEventId(event.id);
+                        }}
+                      >
+                        <i className="ri-delete-bin-5-fill align-bottom" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {/* <tr>
                 <td>Recording</td>
                 <td>24/05/2024</td>
                 <td>
@@ -69,7 +97,7 @@ function EventsViewModal({
                     </button>
                   </div>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
 

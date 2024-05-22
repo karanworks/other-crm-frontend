@@ -1,42 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  getLeads,
-  createLead,
-  removeLead,
-  updateLead,
-  createDropdown,
-} from "./thunk";
+import { getEvents, createEvent, removeEvent, updateEvent } from "./thunk";
 
 import { toast } from "react-toastify";
 
 export const initialState = {
-  reports: [],
+  events: [],
+  leadEvents: [],
   error: "",
 };
 
-const reportSlice = createSlice({
+const eventSlice = createSlice({
   name: "report",
   initialState,
-  reducers: {},
+  reducers: {
+    getLeadEvents(state, action) {
+      state.leadEvents = action.payload;
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(getLeads.fulfilled, (state, action) => {
+    builder.addCase(getEvents.fulfilled, (state, action) => {
+      console.log("EVENTS GOT FROM BACKEND ->", action.payload);
+
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
-        state.leads = action.payload?.data.leads;
-        state.dropdowns = action.payload.data.dropdowns;
+        state.leadEvents = action.payload?.data.leadEvents;
         state.error = "";
       }
     });
 
-    builder.addCase(createLead.fulfilled, (state, action) => {
+    builder.addCase(createEvent.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        state.leads = [...state.leads, action.payload.data];
+        state.leadEvents = [...state.leadEvents, action.payload.data];
         state.error = "";
 
-        toast.success("Lead has been added !", {
+        toast.success("Event has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -44,26 +44,23 @@ const reportSlice = createSlice({
       }
     });
 
-    builder.addCase(updateLead.fulfilled, (state, action) => {
-      console.log("action payload while updating", action.payload);
-
+    builder.addCase(updateEvent.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        const updatedLeadId = action.payload.data?.updatedLead.id;
+        const updatedEventId = action.payload.data?.updatedEvent.id;
 
-        state.leads = state.leads.map((lead) => {
-          if (lead.id == updatedLeadId) {
-            lead = action.payload.data.updatedLead;
-            return lead;
+        state.leadEvents = state.leadEvents.map((event) => {
+          if (event.id == updatedEventId) {
+            event = action.payload.data.updatedEvent;
+            return event;
           } else {
-            return lead;
+            return event;
           }
         });
 
-        state.alreadyExistsError = null;
         state.error = "";
-        toast.success("Lead details updated !", {
+        toast.success("Event details updated !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -71,37 +68,21 @@ const reportSlice = createSlice({
       }
     });
 
-    builder.addCase(removeLead.fulfilled, (state, action) => {
-      const deletedLeadId = action.payload.data.deletedLead.id;
-      state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
+    builder.addCase(removeEvent.fulfilled, (state, action) => {
+      const deletedEventId = action.payload.data.deletedEvent.id;
+      state.leadEvents = state.leadEvents.filter(
+        (event) => event.id !== deletedEventId
+      );
       state.error = "";
 
-      toast.error("Lead has been removed !", {
+      toast.error("Event has been removed !", {
         position: "bottom-center",
         autoClose: 3000,
         theme: "colored",
       });
     });
-
-    // *****************************************************************
-    // *************************** DROPDOWNS ***************************
-    // *****************************************************************
-
-    builder.addCase(createDropdown.fulfilled, (state, action) => {
-      if (action.payload.status == "failure") {
-        state.error = action.payload.message;
-      } else {
-        state.dropdowns = [...state.dropdowns, action.payload.data];
-        state.error = "";
-
-        toast.success("Dropdown has been added !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
-      }
-    });
   },
 });
 
-export default reportSlice.reducer;
+export const { getLeadEvents } = eventSlice.actions;
+export default eventSlice.reducer;

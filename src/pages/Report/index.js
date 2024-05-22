@@ -18,15 +18,18 @@ import {
   createLead,
   removeLead,
   updateLead,
-  createDropdown,
 } from "../../slices/AddLead/thunk";
-import { logoutUser } from "../../slices/auth/login/thunk";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Select from "react-select";
 import YoutubeLogo from "./youtube_logo.webp";
 import EventsViewModal from "../Report/EventsViewModal";
 import AddEventModal from "./AddEventModal";
+import {
+  createEvent,
+  getEvents,
+  updateEvent,
+  removeEvent,
+} from "../../slices/Report/thunk";
+import EventRemoveModal from "./EventRemoveModal";
 
 const Report = () => {
   const [events_view_modal, setEvents_view_modal] = useState(false);
@@ -39,6 +42,9 @@ const Report = () => {
 
   const [listEventId, setListEventId] = useState(null);
 
+  // needed this for creating event
+  const [selectedClientName, setSelectedClientName] = useState("");
+
   // separater
 
   const [modal_list, setmodal_list] = useState(false);
@@ -49,23 +55,10 @@ const Report = () => {
 
   const [listLeadId, setListLeadId] = useState(null);
 
-  const [singleCategoryOption, setSingleCategoryOption] = useState(null);
-
-  const [addDropdownOpen, setAddDropdownOpen] = useState(false);
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
-
-  const projectCategoryOptions = [
-    { value: "Project Genre", label: "Project Genre" },
-    { value: "Project Status", label: "Project Status" },
-  ];
-
-  function handleSelectSingle(selectedSingle) {
-    setSingleCategoryOption(selectedSingle);
-  }
+  const { leadEvents } = useSelector((state) => state.Report);
 
   // toggles register / edit lead modal
   function tog_list() {
@@ -113,8 +106,6 @@ const Report = () => {
       // .required("Please select project due date"),
     }),
     onSubmit: (values) => {
-      console.log("ADD LEAD FORM ->", values);
-
       isEditingLead
         ? dispatch(updateLead({ values, listLeadId }))
         : dispatch(createLead(values));
@@ -126,34 +117,17 @@ const Report = () => {
     initialValues: {
       eventName: "",
       eventDate: "",
-      clientName: "",
     },
     validationSchema: Yup.object({
       eventName: Yup.string().required("Please enter event name"),
       eventDate: Yup.string().required("Please enter event date"),
-      clientName: Yup.string().required("Please eneter client name"),
     }),
     onSubmit: (values) => {
-      // isEditingLead
-      //   ? dispatch(updateLead({ values, listLeadId }))
-      //   : dispatch(createLead(values));
+      isEditingEvent
+        ? dispatch(updateEvent({ ...values, listEventId }))
+        : dispatch(createEvent({ ...values, clientName: selectedClientName }));
 
-      setmodal_list(false);
-    },
-  });
-
-  const dropdownValidation = useFormik({
-    initialValues: {
-      category: "",
-      dropdownName: "",
-    },
-    validationSchema: Yup.object({
-      category: Yup.string().required("Please select category"),
-      dropdownName: Yup.string().required("Please enter dropdown name "),
-    }),
-    onSubmit: (values) => {
-      dispatch(createDropdown(values));
-      setAddDropdownOpen(false);
+      setAddEvent_view_modal(false);
     },
   });
 
@@ -163,9 +137,9 @@ const Report = () => {
     validation.handleSubmit();
     return false;
   }
-  function dropdownHandleSubmit(e) {
+  function eventFormHandleSubmit(e) {
     e.preventDefault();
-    dropdownValidation.handleSubmit();
+    eventValidation.handleSubmit();
     return false;
   }
 
@@ -180,6 +154,17 @@ const Report = () => {
     validation.values.projectStatus = lead.projectStatus;
     validation.values.youtubeLink = lead.youtubeLink;
     // YOUTUBELINK, DUE DATE FIELD REMAINING HERE
+  }
+
+  function handleEditEvent(event) {
+    setIsEditingEvent(true);
+    setListEventId(event.id);
+    setAddEvent_view_modal(!add_event_view_modal);
+
+    eventValidation.setValues({
+      eventName: event.eventName,
+      eventDate: event.eventDate,
+    });
   }
 
   document.title = "Report";
@@ -197,107 +182,6 @@ const Report = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
-                    {/* <Row className="g-4 mb-3">
-                      <Col className="col-sm-auto">
-                        <div className="d-flex">
-                          <div>
-                            <Button
-                              color="primary"
-                              className="add-btn me-1"
-                              onClick={() => tog_list()}
-                              id="create-btn"
-                            >
-                              <i className="ri-add-line align-bottom me-1"></i>{" "}
-                              Add Lead
-                            </Button>
-                          </div>
-                          <ButtonGroup>
-                            <UncontrolledDropdown isOpen={addDropdownOpen}>
-                              <DropdownToggle
-                                tag="button"
-                                className="btn btn-primary"
-                                onClick={() =>
-                                  setAddDropdownOpen(!addDropdownOpen)
-                                }
-                              >
-                                Add Dropdown{" "}
-                                <i className="mdi mdi-chevron-down"></i>
-                              </DropdownToggle>
-                              <DropdownMenu className="dropdown-menu-md p-4">
-                                <Form onSubmit={(e) => dropdownHandleSubmit(e)}>
-                                  <div className="mb-2">
-                                    <Label
-                                      htmlFor="category"
-                                      className="form-label"
-                                    >
-                                      Dropdown Category
-                                    </Label>
-                                    <Select
-                                      id="category"
-                                      name="category"
-                                      value={singleCategoryOption}
-                                      onChange={(category) => {
-                                        handleSelectSingle(category);
-                                        dropdownValidation.setFieldValue(
-                                          "category",
-                                          category.value
-                                        );
-                                      }}
-                                      options={projectCategoryOptions}
-                                      placeholder="Select Category"
-                                    />
-                                  </div>
-
-                                  <div className="mb-2">
-                                    <Label
-                                      htmlFor="dropdownName"
-                                      className="form-label"
-                                    >
-                                      Dropdown Name
-                                    </Label>
-
-                                    <Input
-                                      id="dropdownName"
-                                      name="dropdownName"
-                                      className="form-control"
-                                      placeholder="Hindi, Bhojpuri etc."
-                                      type="text"
-                                      onChange={dropdownValidation.handleChange}
-                                      onBlur={dropdownValidation.handleBlur}
-                                      value={
-                                        dropdownValidation.values.dropdownName
-                                      }
-                                      invalid={
-                                        dropdownValidation.touched
-                                          .dropdownName &&
-                                        dropdownValidation.errors.dropdownName
-                                          ? true
-                                          : false
-                                      }
-                                    />
-
-                                    {dropdownValidation.touched.dropdownName &&
-                                    dropdownValidation.errors.dropdownName ? (
-                                      <FormFeedback type="invalid">
-                                        {dropdownValidation.errors.dropdownName}
-                                      </FormFeedback>
-                                    ) : null}
-                                  </div>
-
-                                  <Button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                  >
-                                    Add
-                                  </Button>
-                                </Form>
-                              </DropdownMenu>
-                            </UncontrolledDropdown>
-                          </ButtonGroup>
-                        </div>
-                      </Col>
-                    </Row> */}
-
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table
                         className="table align-middle table-nowrap"
@@ -384,6 +268,8 @@ const Report = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => {
                                         events_view_tog_list();
+                                        dispatch(getEvents(lead.clientName));
+                                        setSelectedClientName(lead.clientName);
                                       }}
                                     >
                                       View Events
@@ -473,6 +359,17 @@ const Report = () => {
         add_event_tog_list={add_event_tog_list}
         event_tog_delete={event_tog_delete}
         setListEventId={setListEventId}
+        leadEvents={leadEvents}
+        handleEditEvent={handleEditEvent}
+      />
+
+      <EventRemoveModal
+        event_modal_delete={event_modal_delete}
+        event_tog_delete={event_tog_delete}
+        handleDeleteEvent={() => {
+          dispatch(removeEvent(listEventId));
+          event_tog_delete();
+        }}
       />
 
       <AddEventModal
@@ -480,6 +377,7 @@ const Report = () => {
         add_event_tog_list={add_event_tog_list}
         eventValidation={eventValidation}
         isEditingEvent={isEditingEvent}
+        eventFormHandleSubmit={eventFormHandleSubmit}
       />
     </React.Fragment>
   );
