@@ -41,6 +41,8 @@ import {
 } from "../../slices/calendar/thunk";
 import { createSelector } from "reselect";
 import { getLeads } from "../../slices/AddLead/thunk";
+import { getPayments } from "../../slices/Payment/thunk";
+import { getInvoices } from "../../slices/Invoice/thunk";
 
 const Calender = () => {
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ const Calender = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [upcommingevents, setUpcommingevents] = useState([]);
   const [isEditButton, setIsEditButton] = useState(true);
+  const [singleInvoice, setSingleInvoice] = useState();
 
   const selectLayoutState = (state) => state.Calendar;
   const selectLayoutProperties = createSelector(
@@ -68,8 +71,8 @@ const Calender = () => {
   );
 
   const { leads } = useSelector((state) => state.AddLead);
-
-  console.log("LEADS ->", leads);
+  const { payments } = useSelector((state) => state.Payment);
+  const { invoices } = useSelector((state) => state.Invoice);
 
   const leadsCalendarData = leads?.map((lead) => {
     let dateStr = lead.projectDueDate;
@@ -96,6 +99,7 @@ const Calender = () => {
     dispatch(onGetEvents());
     dispatch(onGetCategories());
     dispatch(getLeads());
+    dispatch(getInvoices());
   }, [dispatch]);
 
   /**
@@ -150,7 +154,6 @@ const Calender = () => {
    * Handling click on event on calendar
    */
   const handleEventClick = (arg) => {
-    console.log("HANDLE EVENT CLICK ->", arg.event);
     // const event = arg.event;
     const event = arg.event;
 
@@ -165,18 +168,6 @@ const Calender = () => {
         ? date_r(st_date)
         : date_r(st_date) + " to " + date_r(ed_date);
 
-    // setEvent({
-    //   id: event.id,
-    //   title: event.title,
-    //   start: event.start,
-    //   end: event.end,
-    //   className: event.classNames,
-    //   category: event.classNames[0],
-    //   location: event._def.extendedProps.location,
-    //   description: event._def.extendedProps.description,
-    //   defaultDate: er_date,
-    //   datetag: r_date,
-    // });
     setEvent({
       id: event.id,
       title: event._def.title,
@@ -188,6 +179,14 @@ const Calender = () => {
       datetag: r_date,
     });
 
+    // finding invoice from calendar event name
+    const selectedInvoice = invoices?.find(
+      (invoice) => invoice.clientName === event._def.title
+    );
+
+    setSingleInvoice(selectedInvoice);
+
+    console.log("SELECTED INVOICE ->", selectedInvoice);
     setIsEdit(true);
     // setIsEditButton(false);
     toggle();
@@ -259,7 +258,7 @@ const Calender = () => {
     },
   });
 
-  document.title = "Calendar | Velzon - React Admin & Dashboard Template";
+  document.title = "Calendar";
   return (
     <React.Fragment>
       <DeleteModal
@@ -352,98 +351,139 @@ const Calender = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="d-flex ">
-                      <div className="flex-grow-1 d-flex align-items-center">
-                        <div className="flex-shrink-0 me-2">
-                          <i class="ri-calendar-event-line text-muted fs-22"></i>
+
+                    <div className="d-flex mt-2" style={{ gap: "20px" }}>
+                      <div className="d-flex ">
+                        <div className="flex-grow-1 d-flex align-items-center">
+                          <div className="flex-shrink-0 me-2">
+                            <i className="ri-calendar-event-line text-muted fs-17"></i>
+                          </div>
+                          <div className="flex-grow-1">
+                            <h6
+                              className="d-block fw-semibold mb-0 fs-17"
+                              id="event-start-date-tag"
+                            >
+                              {event?.start}
+                            </h6>
+                          </div>
                         </div>
-                        <div className="flex-grow-1">
-                          <h6
-                            className="d-block fw-semibold mb-0 fs-16"
-                            id="event-start-date-tag"
-                          >
-                            {event?.start}
-                          </h6>
+                      </div>
+
+                      <div className="d-flex ">
+                        <div className="flex-grow-1 d-flex align-items-center">
+                          <div className="flex-shrink-0 me-2">
+                            <i className="ri-earth-line text-muted fs-17"></i>
+                          </div>
+                          <div className="flex-grow-1">
+                            <h6
+                              className="d-block fw-semibold mb-0 fs-17"
+                              id="event-start-date-tag"
+                            >
+                              {event?.genre}
+                            </h6>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="d-flex ">
-                      <div className="flex-grow-1 d-flex align-items-center">
-                        <div className="flex-shrink-0 me-2">
-                          <i class="ri-pages-line text-muted fs-22"></i>
-                        </div>
-                        <div className="flex-grow-1">
-                          <h6
-                            className="d-block fw-semibold mb-0 fs-16"
-                            id="event-start-date-tag"
-                          >
-                            {event?.genre}
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="d-flex ">
-                      <div className="flex-grow-1 d-flex align-items-center">
-                        <div className="flex-shrink-0 me-2">
-                          <i class="ri-timer-line text-muted fs-22"></i>
-                        </div>
-                        <div className="flex-grow-1">
-                          <h6
-                            className="d-block fw-semibold mb-0 fs-16"
-                            id="event-start-date-tag"
-                          >
-                            {event?.status}
-                          </h6>
+                    <div className="d-flex " style={{ gap: "20px" }}>
+                      <div className="d-flex ">
+                        <div className="flex-grow-1 d-flex align-items-center">
+                          <div className="flex-shrink-0 me-2">
+                            <i className="ri-timer-line text-muted fs-17"></i>
+                          </div>
+                          <div className="flex-grow-1">
+                            <h6
+                              className="d-block fw-semibold mb-0 fs-17"
+                              id="event-start-date-tag"
+                            >
+                              {event?.status}
+                            </h6>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="d-flex ">
-                      <div className="flex-grow-1 d-flex align-items-center">
-                        <div className="flex-shrink-0 me-2">
-                          <i class="ri-youtube-line text-muted fs-22"></i>
-                        </div>
-                        <div className="flex-grow-1">
-                          <h6
-                            className="d-block fw-semibold mb-0 fs-16"
-                            id="event-start-date-tag"
-                          >
-                            <a href={event?.youtubeLink}>YouTube</a>
-                          </h6>
+
+                      <div className="d-flex ">
+                        <div className="flex-grow-1 d-flex align-items-center">
+                          <div className="flex-shrink-0 me-2">
+                            <i className="ri-youtube-line text-muted fs-17"></i>
+                          </div>
+                          <div className="flex-grow-1">
+                            <h6
+                              className="d-block fw-semibold mb-0 fs-17"
+                              id="event-start-date-tag"
+                            >
+                              <a href={event?.youtubeLink}>YouTube Link</a>
+                            </h6>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="table-responsive mt-2">
-                    <h4>Payments</h4>
-                    <table className="table table-bordered table-nowrap align-middle mb-0">
-                      <thead>
-                        <tr>
-                          <th scope="col" style={{ width: "40%" }}>
-                            Amount
-                          </th>
-                          <th scope="col" style={{ width: "40%" }}>
-                            Date
-                          </th>
-                        </tr>
-                      </thead>
+                  <div className="table-responsive mt-4">
+                    <div className="d-flex justify-content-between">
+                      <div>
+                        <h5>Payments</h5>
+                      </div>
 
-                      <tbody>
-                        <tr>
-                          <td>₹₹2500 </td>
-                          <td>"22/05/2024 "</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <span className="fs-15">Total Amount Paid</span>
-                          </td>
-                          <td>
-                            <span className="fs-15">₹5000</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                      <div className="d-flex " style={{ gap: "10px" }}>
+                        {singleInvoice && (
+                          <>
+                            <span className="fs-15 fw-bold text-muted">
+                              Total - ₹{singleInvoice.totalAmount}
+                            </span>
+                            <span className="fs-15 fw-bold text-muted">
+                              Balance - ₹{singleInvoice.balance}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {singleInvoice ? (
+                      <table className="table table-bordered table-nowrap align-middle mb-0">
+                        <thead>
+                          <tr>
+                            <th scope="col" style={{ width: "40%" }}>
+                              Amount
+                            </th>
+                            <th scope="col" style={{ width: "40%" }}>
+                              Date
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {singleInvoice?.payments.map((payment) => (
+                            <tr key={payment.id}>
+                              <td>₹{payment.paymentAmount} </td>
+                              <td>{payment.paymentDate}</td>
+                            </tr>
+                          ))}
+
+                          <tr>
+                            <td>
+                              <span className="fs-15">Total Amount Paid</span>
+                            </td>
+                            <td>
+                              {/* <span className="fs-15">₹5000</span> */}
+                              <span className="fs-15">
+                                ₹
+                                {singleInvoice?.payments.reduce((acc, curr) => {
+                                  return acc + parseInt(curr.paymentAmount);
+                                }, 0)}
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p className="fs-22 text-muted fst-italic">
+                        {" "}
+                        No Payments Made Yet{" "}
+                      </p>
+                    )}
                   </div>
                 </ModalBody>
               </Modal>

@@ -71,12 +71,8 @@ const Invoice = () => {
     setIsEditingInvoice(false);
   }
 
-  function payements_view_tog_list(invoice) {
-    // const filteredInvoice = payments?.find((inv) => inv?.id === invoice?.id);
-    // setCurrentInvoicePayments(filteredInvoice ? filteredInvoice.payments : []);
+  function payements_view_tog_list() {
     setPayments_view_modal_list(!payments_view_modal_list);
-
-    // dispatch(getInvoicePayments(invoice));
   }
 
   function add_Payment_tog_list() {
@@ -282,7 +278,7 @@ const Invoice = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        payements_view_tog_list(invoice);
+                                        payements_view_tog_list();
                                         setListInvoiceId(invoice.id);
                                         dispatch(
                                           getPayments({ invoiceId: invoice.id })
