@@ -41,6 +41,7 @@ import UpcommingEvents from "./UpcommingEvents";
 // } from "../../slices/calendar/thunk";
 import { createSelector } from "reselect";
 import { getLeads } from "../../slices/AddLead/thunk";
+import { getEvents } from "../../slices/Report/thunk";
 import { getPayments } from "../../slices/Payment/thunk";
 import { getInvoices } from "../../slices/Invoice/thunk";
 
@@ -65,14 +66,13 @@ const Calender = () => {
       isEventUpdated: calender?.isEventUpdated,
     })
   );
-  // Inside your component
-  const { events, categories, isEventUpdated } = useSelector(
-    selectLayoutProperties
-  );
 
   const { leads } = useSelector((state) => state.AddLead);
   const { payments } = useSelector((state) => state.Payment);
   const { invoices } = useSelector((state) => state.Invoice);
+  const { allEvents } = useSelector((state) => state.Report);
+
+  console.log("ALL EVENTS IN CALENDAR ->", allEvents);
 
   const leadsCalendarData = leads?.map((lead) => {
     let dateStr = lead.projectDueDate;
@@ -95,10 +95,26 @@ const Calender = () => {
     };
   });
 
+  const eventsCalendarData = allEvents?.map((event) => {
+    let dateStr = event.eventDate;
+
+    // Split the date string into day, month, and year components
+    let [day, month, year] = dateStr.split("/");
+
+    // Rearrange and format the components into "YYYY-MM-DD"
+    let formattedDateStr = `${year}-${month}-${day}`;
+
+    return {
+      id: event.id,
+      title: event.clientNameOfEvent + " - " + event.eventName,
+      start: formattedDateStr,
+      className: "bg-danger-subtle",
+    };
+  });
+
   useEffect(() => {
-    // dispatch(onGetEvents());
-    // dispatch(onGetCategories());
     dispatch(getLeads());
+    dispatch(getEvents());
     dispatch(getInvoices());
   }, [dispatch]);
 
@@ -310,7 +326,7 @@ const Calender = () => {
                           // right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
                           right: "dayGridMonth,listWeek",
                         }}
-                        events={leadsCalendarData}
+                        events={[...leadsCalendarData, ...eventsCalendarData]}
                         editable={true}
                         // droppable={true}
                         selectable={true}

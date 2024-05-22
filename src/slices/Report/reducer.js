@@ -4,7 +4,7 @@ import { getEvents, createEvent, removeEvent, updateEvent } from "./thunk";
 import { toast } from "react-toastify";
 
 export const initialState = {
-  events: [],
+  allEvents: [],
   leadEvents: [],
   error: "",
 };
@@ -19,12 +19,11 @@ const eventSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getEvents.fulfilled, (state, action) => {
-      console.log("EVENTS GOT FROM BACKEND ->", action.payload);
-
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.leadEvents = action.payload?.data.leadEvents;
+        state.allEvents = action.payload?.data.allEvents;
         state.error = "";
       }
     });
