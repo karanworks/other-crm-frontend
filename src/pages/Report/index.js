@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import YoutubeLogo from "./youtube_logo.webp";
 import EventsViewModal from "../Report/EventsViewModal";
+import AddEventModal from "./AddEventModal";
 
 const Report = () => {
   const [events_view_modal, setEvents_view_modal] = useState(false);
@@ -117,6 +118,25 @@ const Report = () => {
       isEditingLead
         ? dispatch(updateLead({ values, listLeadId }))
         : dispatch(createLead(values));
+
+      setmodal_list(false);
+    },
+  });
+  const eventValidation = useFormik({
+    initialValues: {
+      eventName: "",
+      eventDate: "",
+      clientName: "",
+    },
+    validationSchema: Yup.object({
+      eventName: Yup.string().required("Please enter event name"),
+      eventDate: Yup.string().required("Please enter event date"),
+      clientName: Yup.string().required("Please eneter client name"),
+    }),
+    onSubmit: (values) => {
+      // isEditingLead
+      //   ? dispatch(updateLead({ values, listLeadId }))
+      //   : dispatch(createLead(values));
 
       setmodal_list(false);
     },
@@ -446,12 +466,20 @@ const Report = () => {
           setmodal_delete(false);
         }}
       />
+
       <EventsViewModal
         events_view_modal={events_view_modal}
         events_view_tog_list={events_view_tog_list}
         add_event_tog_list={add_event_tog_list}
         event_tog_delete={event_tog_delete}
         setListEventId={setListEventId}
+      />
+
+      <AddEventModal
+        add_event_view_modal={add_event_view_modal}
+        add_event_tog_list={add_event_tog_list}
+        eventValidation={eventValidation}
+        isEditingEvent={isEditingEvent}
       />
     </React.Fragment>
   );
