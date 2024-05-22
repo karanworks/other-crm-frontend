@@ -43,11 +43,23 @@ const AddLead = () => {
 
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
 
+  const [eventContainer, setEventContainer] = useState([]);
+
+  function handleAddEventContainer() {
+    setEventContainer([
+      ...eventContainer,
+      {
+        id: eventContainer.length,
+        eventName: "",
+        eventDate: "",
+        clientName: "",
+      },
+    ]);
+  }
+
   const dispatch = useDispatch();
 
   const { userData, dropdowns } = useSelector((state) => state.AddLead);
-
-  console.log("USER DATA ->", userData);
 
   useEffect(() => {
     dispatch(getLeads());
@@ -86,6 +98,45 @@ const AddLead = () => {
     setSingleCategoryOption(selectedSingle);
   }
 
+  function handleEventNameChange(id, newName, clientName) {
+    setEventContainer((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === id ? { ...event, eventName: newName, clientName } : event
+      )
+    );
+
+    validation.setFieldValue(
+      "events",
+      eventContainer.map((event) =>
+        event.id === id ? { ...event, eventName: newName, clientName } : event
+      )
+    );
+  }
+
+  function handleEventDateChange(id, newDate, clientName) {
+    setEventContainer((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === id ? { ...event, eventDate: newDate, clientName } : event
+      )
+    );
+
+    validation.setFieldValue(
+      "events",
+      eventContainer.map((event) =>
+        event.id === id ? { ...event, eventDate: newDate, clientName } : event
+      )
+    );
+  }
+
+  function handleDeleteEventContainer(eventContainerId) {
+    const filteredEventContainers = eventContainer?.filter((container) => {
+      return container.id !== eventContainerId;
+    });
+
+    setEventContainer(filteredEventContainers);
+    validation.setFieldValue("events", filteredEventContainers);
+  }
+
   // formik setup
   const validation = useFormik({
     initialValues: {
@@ -93,6 +144,7 @@ const AddLead = () => {
       projectGenre: "",
       projectStatus: "",
       youtubeLink: "",
+      events: "",
       // projectDueDate: "",
     },
     validationSchema: Yup.object({
@@ -100,6 +152,7 @@ const AddLead = () => {
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
       youtubeLink: Yup.string(),
+      events: Yup.array(),
       // projectDueDate: Yup.string(),
       // .required("Please select project due date"),
     }),
@@ -149,79 +202,95 @@ const AddLead = () => {
                     Create Lead
                   </h4>
 
-                  {userData?.roleId === 1 ? (
-                    <ButtonGroup>
-                      <UncontrolledDropdown isOpen={addDropdownOpen}>
-                        <DropdownToggle
-                          tag="button"
-                          className="btn btn-primary"
-                          onClick={() => setAddDropdownOpen(!addDropdownOpen)}
-                        >
-                          Add Dropdown <i className="mdi mdi-chevron-down"></i>
-                        </DropdownToggle>
-                        <DropdownMenu className="dropdown-menu-md p-4">
-                          <Form onSubmit={(e) => dropdownHandleSubmit(e)}>
-                            <div className="mb-2">
-                              <Label htmlFor="category" className="form-label">
-                                Dropdown Category
-                              </Label>
-                              <Select
-                                id="category"
-                                name="category"
-                                value={singleCategoryOption}
-                                onChange={(category) => {
-                                  handleSelectSingle(category);
-                                  dropdownValidation.setFieldValue(
-                                    "category",
-                                    category.value
-                                  );
-                                }}
-                                options={projectCategoryOptions}
-                                placeholder="Select Category"
-                              />
-                            </div>
+                  <div className="d-flex" style={{ gap: "5px" }}>
+                    {userData?.roleId === 1 ? (
+                      <ButtonGroup>
+                        <UncontrolledDropdown isOpen={addDropdownOpen}>
+                          <DropdownToggle
+                            tag="button"
+                            className="btn btn-primary"
+                            onClick={() => setAddDropdownOpen(!addDropdownOpen)}
+                          >
+                            Add Dropdown{" "}
+                            <i className="mdi mdi-chevron-down"></i>
+                          </DropdownToggle>
+                          <DropdownMenu className="dropdown-menu-md p-4">
+                            <Form onSubmit={(e) => dropdownHandleSubmit(e)}>
+                              <div className="mb-2">
+                                <Label
+                                  htmlFor="category"
+                                  className="form-label"
+                                >
+                                  Dropdown Category
+                                </Label>
+                                <Select
+                                  id="category"
+                                  name="category"
+                                  value={singleCategoryOption}
+                                  onChange={(category) => {
+                                    handleSelectSingle(category);
+                                    dropdownValidation.setFieldValue(
+                                      "category",
+                                      category.value
+                                    );
+                                  }}
+                                  options={projectCategoryOptions}
+                                  placeholder="Select Category"
+                                />
+                              </div>
 
-                            <div className="mb-2">
-                              <Label
-                                htmlFor="dropdownName"
-                                className="form-label"
-                              >
-                                Dropdown Name
-                              </Label>
+                              <div className="mb-2">
+                                <Label
+                                  htmlFor="dropdownName"
+                                  className="form-label"
+                                >
+                                  Dropdown Name
+                                </Label>
 
-                              <Input
-                                id="dropdownName"
-                                name="dropdownName"
-                                className="form-control"
-                                placeholder="Hindi, Bhojpuri etc."
-                                type="text"
-                                onChange={dropdownValidation.handleChange}
-                                onBlur={dropdownValidation.handleBlur}
-                                value={dropdownValidation.values.dropdownName}
-                                invalid={
-                                  dropdownValidation.touched.dropdownName &&
-                                  dropdownValidation.errors.dropdownName
-                                    ? true
-                                    : false
-                                }
-                              />
+                                <Input
+                                  id="dropdownName"
+                                  name="dropdownName"
+                                  className="form-control"
+                                  placeholder="Hindi, Bhojpuri etc."
+                                  type="text"
+                                  onChange={dropdownValidation.handleChange}
+                                  onBlur={dropdownValidation.handleBlur}
+                                  value={dropdownValidation.values.dropdownName}
+                                  invalid={
+                                    dropdownValidation.touched.dropdownName &&
+                                    dropdownValidation.errors.dropdownName
+                                      ? true
+                                      : false
+                                  }
+                                />
 
-                              {dropdownValidation.touched.dropdownName &&
-                              dropdownValidation.errors.dropdownName ? (
-                                <FormFeedback type="invalid">
-                                  {dropdownValidation.errors.dropdownName}
-                                </FormFeedback>
-                              ) : null}
-                            </div>
+                                {dropdownValidation.touched.dropdownName &&
+                                dropdownValidation.errors.dropdownName ? (
+                                  <FormFeedback type="invalid">
+                                    {dropdownValidation.errors.dropdownName}
+                                  </FormFeedback>
+                                ) : null}
+                              </div>
 
-                            <Button type="submit" className="btn btn-primary">
-                              Add
-                            </Button>
-                          </Form>
-                        </DropdownMenu>
-                      </UncontrolledDropdown>
-                    </ButtonGroup>
-                  ) : null}
+                              <Button type="submit" className="btn btn-primary">
+                                Add
+                              </Button>
+                            </Form>
+                          </DropdownMenu>
+                        </UncontrolledDropdown>
+                      </ButtonGroup>
+                    ) : null}
+
+                    <button
+                      className="btn btn-primary d-flex"
+                      style={{ gap: "5px" }}
+                      onClick={handleAddEventContainer}
+                    >
+                      {" "}
+                      <i className="ri-calendar-event-line"></i>
+                      <span>Add Event</span>
+                    </button>
+                  </div>
                 </CardHeader>
 
                 <CardBody>
@@ -349,6 +418,70 @@ const AddLead = () => {
                           }}
                         />
                       </div>
+
+                      {eventContainer?.length !== 0 && (
+                        <div>
+                          <span className="fs-18">Events</span>
+                          <div>
+                            {eventContainer?.map((eventWrapper) => (
+                              <div
+                                className="d-flex mb-2"
+                                style={{ gap: "10px" }}
+                                key={eventWrapper.id}
+                              >
+                                <div>
+                                  <Input
+                                    className="form-control"
+                                    placeholder="Enter event name"
+                                    type="text"
+                                    value={eventWrapper.eventName}
+                                    onChange={(e) =>
+                                      handleEventNameChange(
+                                        eventWrapper.id,
+                                        e.target.value,
+                                        validation.values.clientName
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div>
+                                  <Flatpickr
+                                    className="form-control"
+                                    placeholder="Select event date"
+                                    options={{
+                                      dateFormat: "d M, Y",
+                                    }}
+                                    onChange={(date) => {
+                                      const formattedDate = new Date(
+                                        date
+                                      ).toLocaleDateString("en-GB");
+
+                                      handleEventDateChange(
+                                        eventWrapper.id,
+                                        formattedDate,
+                                        validation.values.clientName
+                                      );
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger btn-icon "
+                                    onClick={() =>
+                                      handleDeleteEventContainer(
+                                        eventWrapper.id
+                                      )
+                                    }
+                                  >
+                                    <i className="ri-delete-bin-5-line"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       <div className="text-end">
                         <button type="submit" className="btn btn-primary">

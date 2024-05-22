@@ -25,8 +25,21 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import YoutubeLogo from "./youtube_logo.webp";
+import EventsViewModal from "../Report/EventsViewModal";
 
 const Report = () => {
+  const [events_view_modal, setEvents_view_modal] = useState(false);
+
+  const [event_modal_delete, setEvent_modal_delete] = useState(false);
+
+  const [add_event_view_modal, setAddEvent_view_modal] = useState(false);
+
+  const [isEditingEvent, setIsEditingEvent] = useState(false);
+
+  const [listEventId, setListEventId] = useState(null);
+
+  // separater
+
   const [modal_list, setmodal_list] = useState(false);
 
   const [isEditingLead, setIsEditingLead] = useState(false);
@@ -62,6 +75,19 @@ const Report = () => {
   // toggles delete lead confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
+  }
+
+  function events_view_tog_list() {
+    setEvents_view_modal(!events_view_modal);
+  }
+
+  function event_tog_delete() {
+    setEvent_modal_delete(!event_modal_delete);
+  }
+
+  function add_event_tog_list() {
+    setAddEvent_view_modal(!add_event_view_modal);
+    setIsEditingEvent(false);
   }
 
   useEffect(() => {
@@ -331,6 +357,19 @@ const Report = () => {
                               </td>
                               <td>
                                 <div className="d-flex gap-2">
+                                  <div className="viewEvents">
+                                    <button
+                                      className="btn btn-sm btn-success e"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => {
+                                        events_view_tog_list();
+                                      }}
+                                    >
+                                      View Events
+                                    </button>
+                                  </div>
+
                                   <div className="edit">
                                     <button
                                       className="btn btn-sm btn-primary edit-item-btn"
@@ -406,6 +445,13 @@ const Report = () => {
           dispatch(removeLead(listLeadId));
           setmodal_delete(false);
         }}
+      />
+      <EventsViewModal
+        events_view_modal={events_view_modal}
+        events_view_tog_list={events_view_tog_list}
+        add_event_tog_list={add_event_tog_list}
+        event_tog_delete={event_tog_delete}
+        setListEventId={setListEventId}
       />
     </React.Fragment>
   );
