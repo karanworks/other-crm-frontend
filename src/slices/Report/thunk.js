@@ -8,9 +8,9 @@ import {
 
 export const getEvents = createAsyncThunk(
   "report/getEvents",
-  async (clientName) => {
+  async (leadMobileNo) => {
     try {
-      const response = await getEventsApi(clientName);
+      const response = await getEventsApi(leadMobileNo);
 
       return response;
     } catch (error) {

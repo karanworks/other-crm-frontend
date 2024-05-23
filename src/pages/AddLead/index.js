@@ -54,6 +54,7 @@ const AddLead = () => {
         id: eventContainer.length,
         eventName: "",
         eventDate: "",
+        leadMobileNo: "",
         clientName: "",
       },
     ]);
@@ -100,32 +101,40 @@ const AddLead = () => {
     setSingleCategoryOption(selectedSingle);
   }
 
-  function handleEventNameChange(id, newName, clientName) {
+  function handleEventNameChange(id, newName, leadMobileNo, clientName) {
     setEventContainer((prevEvents) =>
       prevEvents.map((event) =>
-        event.id === id ? { ...event, eventName: newName, clientName } : event
+        event.id === id
+          ? { ...event, eventName: newName, leadMobileNo, clientName }
+          : event
       )
     );
 
     validation.setFieldValue(
       "events",
       eventContainer.map((event) =>
-        event.id === id ? { ...event, eventName: newName, clientName } : event
+        event.id === id
+          ? { ...event, eventName: newName, leadMobileNo, clientName }
+          : event
       )
     );
   }
 
-  function handleEventDateChange(id, newDate, clientName) {
+  function handleEventDateChange(id, newDate, leadMobileNo, clientName) {
     setEventContainer((prevEvents) =>
       prevEvents.map((event) =>
-        event.id === id ? { ...event, eventDate: newDate, clientName } : event
+        event.id === id
+          ? { ...event, eventDate: newDate, leadMobileNo, clientName }
+          : event
       )
     );
 
     validation.setFieldValue(
       "events",
       eventContainer.map((event) =>
-        event.id === id ? { ...event, eventDate: newDate, clientName } : event
+        event.id === id
+          ? { ...event, eventDate: newDate, leadMobileNo, clientName }
+          : event
       )
     );
   }
@@ -143,20 +152,21 @@ const AddLead = () => {
   const validation = useFormik({
     initialValues: {
       clientName: "",
+      mobileNo: "",
       projectGenre: "",
       projectStatus: "",
       youtubeLink: "",
       events: "",
-      // projectDueDate: "",
+      projectDueDate: "",
     },
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please enter client name"),
+      mobileNo: Yup.string().required("Please enter mobile no"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
       youtubeLink: Yup.string(),
       events: Yup.array(),
-      // projectDueDate: Yup.string(),
-      // .required("Please select project due date"),
+      projectDueDate: Yup.string().required("Please select project due date"),
     }),
     onSubmit: (values) => {
       const { events } = values;
@@ -336,6 +346,35 @@ const AddLead = () => {
                           </FormFeedback>
                         ) : null}
                       </div>
+                      <div className="mb-3">
+                        <Label htmlFor="mobileNo" className="form-label">
+                          Mobile No
+                        </Label>
+
+                        <Input
+                          id="mobileNo"
+                          name="mobileNo"
+                          className="form-control"
+                          placeholder="Enter mobile name"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.mobileNo || ""}
+                          invalid={
+                            validation.touched.mobileNo &&
+                            validation.errors.mobileNo
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validation.touched.mobileNo &&
+                        validation.errors.mobileNo ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.mobileNo}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
 
                       <div className="mb-3">
                         <Label htmlFor="projectGenre" className="form-label">
@@ -447,6 +486,7 @@ const AddLead = () => {
                                       handleEventNameChange(
                                         eventWrapper.id,
                                         e.target.value,
+                                        validation.values.mobileNo,
                                         validation.values.clientName
                                       )
                                     }
@@ -467,6 +507,7 @@ const AddLead = () => {
                                       handleEventDateChange(
                                         eventWrapper.id,
                                         formattedDate,
+                                        validation.values.mobileNo,
                                         validation.values.clientName
                                       );
                                     }}

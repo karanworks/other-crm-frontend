@@ -18,8 +18,6 @@ function AddEventModal({
   eventFormHandleSubmit,
   isEditingEvent,
 }) {
-  console.log("IS EDITING EVENT ->", isEditingEvent);
-
   return (
     <Modal
       isOpen={add_event_view_modal}

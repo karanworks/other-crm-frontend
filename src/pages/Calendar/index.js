@@ -31,14 +31,6 @@ import DeleteModal from "../../Components/Common/DeleteModal";
 import SimpleBar from "simplebar-react";
 import UpcommingEvents from "./UpcommingEvents";
 
-// import {
-//   getEvents as onGetEvents,
-//   getCategories as onGetCategories,
-//   addNewEvent as onAddNewEvent,
-//   deleteEvent as onDeleteEvent,
-//   updateEvent as onUpdateEvent,
-//   resetCalendar,
-// } from "../../slices/calendar/thunk";
 import { createSelector } from "reselect";
 import { getLeads } from "../../slices/AddLead/thunk";
 import { getEvents } from "../../slices/Report/thunk";
@@ -72,8 +64,6 @@ const Calender = () => {
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Report);
 
-  console.log("ALL EVENTS IN CALENDAR ->", allEvents);
-
   const leadsCalendarData = leads?.map((lead) => {
     let dateStr = lead.projectDueDate;
 
@@ -95,6 +85,66 @@ const Calender = () => {
     };
   });
 
+  // const calendarArray = [
+  //   {
+  //     id: 23,
+  //     title: "something",
+  //     start: "2024-05-12",
+  //     className: "bg-primary",
+  //   },
+  //   {
+  //     id: 24,
+  //     title: "something",
+  //     start: "2024-05-13",
+  //     className: "bg-primary",
+  //   },
+  //   {
+  //     id: 25,
+  //     title: "something",
+  //     start: "2024-05-14",
+  //     className: "bg-primary",
+  //   },
+  //   {
+  //     id: 26,
+  //     title: "something",
+  //     start: "2024-05-15",
+  //     className: "bg-primary",
+  //   },
+  // ];
+
+  // const calendarArray2 = [
+  //   {
+  //     id: 33,
+  //     title: "nothing",
+  //     start: "2024-05-23",
+  //     className: "bg-danger",
+  //   },
+  //   {
+  //     id: 34,
+  //     title: "nothing",
+  //     start: "2024-05-24",
+  //     className: "bg-danger",
+  //   },
+  //   {
+  //     id: 35,
+  //     title: "nothing",
+  //     start: "2024-05-25",
+  //     className: "bg-danger",
+  //   },
+  //   {
+  //     id: 36,
+  //     title: "nothing",
+  //     start: "2024-05-26",
+  //     className: "bg-danger",
+  //   },
+  // ];
+
+  // const allEventsThroughLeads = leads
+  //   ?.map((lead) => {
+  //     return lead.events;
+  //   })
+  //   .flat();
+
   const eventsCalendarData = allEvents?.map((event) => {
     let dateStr = event.eventDate;
 
@@ -106,11 +156,15 @@ const Calender = () => {
 
     return {
       id: event.id,
-      title: event.clientNameOfEvent + " - " + event.eventName,
+      title: event.clientName + " - " + event.eventName,
       start: formattedDateStr,
       className: "bg-danger-subtle",
     };
   });
+
+  const calendarData = [...eventsCalendarData, ...leadsCalendarData];
+
+  console.log("CALENDAR DATA FROM BACKEND ->", calendarData);
 
   useEffect(() => {
     dispatch(getLeads());
@@ -202,7 +256,6 @@ const Calender = () => {
 
     setSingleInvoice(selectedInvoice);
 
-    console.log("SELECTED INVOICE ->", selectedInvoice);
     setIsEdit(true);
     // setIsEditButton(false);
     toggle();
@@ -297,8 +350,8 @@ const Calender = () => {
                       style={{ height: "400px" }}
                     >
                       <div id="upcoming-event-list">
-                        {leadsCalendarData &&
-                          leadsCalendarData.map((event, key) => (
+                        {calendarData &&
+                          calendarData.map((event, key) => (
                             <UpcommingEvents event={event} key={key} />
                           ))}
                       </div>
@@ -326,7 +379,7 @@ const Calender = () => {
                           // right: "dayGridMonth,dayGridWeek,dayGridDay,listWeek",
                           right: "dayGridMonth,listWeek",
                         }}
-                        events={[...leadsCalendarData, ...eventsCalendarData]}
+                        events={calendarData}
                         editable={true}
                         // droppable={true}
                         selectable={true}
@@ -334,6 +387,7 @@ const Calender = () => {
                         eventClick={handleEventClick}
                         // drop={onDrop}
                       />
+                      {/* {console.log("CHECKING CALENDAR ->", )} */}
                     </CardBody>
                   </Card>
                 </Col>

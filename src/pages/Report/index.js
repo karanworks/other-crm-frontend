@@ -45,6 +45,8 @@ const Report = () => {
   // needed this for creating event
   const [selectedClientName, setSelectedClientName] = useState("");
 
+  const [selectedLeadMobileNo, setSelectedLeadMobileNo] = useState("");
+
   // separater
 
   const [modal_list, setmodal_list] = useState(false);
@@ -95,20 +97,18 @@ const Report = () => {
       projectGenre: "",
       projectStatus: "",
       youtubeLink: "",
-      // projectDueDate: "",
+      projectDueDate: "",
     },
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please enter client name"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
       youtubeLink: Yup.string(),
-      // projectDueDate: Yup.string(),
-      // .required("Please select project due date"),
+      projectDueDate: Yup.string().required("Please select project due date"),
     }),
     onSubmit: (values) => {
-      isEditingLead
-        ? dispatch(updateLead({ values, listLeadId }))
-        : dispatch(createLead(values));
+      isEditingLead && dispatch(updateLead({ values, listLeadId }));
+      // : dispatch(createLead(values));
 
       setmodal_list(false);
     },
@@ -125,7 +125,13 @@ const Report = () => {
     onSubmit: (values) => {
       isEditingEvent
         ? dispatch(updateEvent({ ...values, listEventId }))
-        : dispatch(createEvent({ ...values, clientName: selectedClientName }));
+        : dispatch(
+            createEvent({
+              ...values,
+              clientName: selectedClientName,
+              leadMobileNo: selectedLeadMobileNo,
+            })
+          );
 
       setAddEvent_view_modal(false);
     },
@@ -202,6 +208,9 @@ const Report = () => {
                             <th className="sort" data-sort="client_name">
                               Client Name
                             </th>
+                            <th className="sort" data-sort="mobile_no">
+                              Mobile No
+                            </th>
                             <th className="sort" data-sort="project_genre">
                               Project Genre
                             </th>
@@ -236,6 +245,7 @@ const Report = () => {
                                 </div>
                               </th>
                               <td className="client-name">{lead.clientName}</td>
+                              <td className="client-name">{lead.mobileNo}</td>
                               <td className="project-genre">
                                 {lead.projectGenre}
                               </td>
@@ -268,8 +278,9 @@ const Report = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => {
                                         events_view_tog_list();
-                                        dispatch(getEvents(lead.clientName));
+                                        dispatch(getEvents(lead.mobileNo));
                                         setSelectedClientName(lead.clientName);
+                                        setSelectedLeadMobileNo(lead.mobileNo);
                                       }}
                                     >
                                       View Events
