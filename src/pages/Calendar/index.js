@@ -238,6 +238,7 @@ const Calender = () => {
         ? date_r(st_date)
         : date_r(st_date) + " to " + date_r(ed_date);
 
+    // console.log("EVENT ->", event._def.ui.classNames);
     setEvent({
       id: event.id,
       title: event._def.title,
@@ -245,6 +246,7 @@ const Calender = () => {
       status: event._def.extendedProps.projectStatus,
       genre: event._def.extendedProps.projectGenre,
       youtubeLink: event._def.extendedProps.youtubeLink,
+      className: event._def.ui.classNames[0],
       defaultDate: er_date,
       datetag: r_date,
     });
@@ -416,13 +418,13 @@ const Calender = () => {
                             className="d-block fw-semibold mb-0 fs-36"
                             id="event-start-date-tag"
                           >
-                            {event?.title}
+                            {event?.title?.split(" - ")[0]}
                           </h6>
                         </div>
                       </div>
                     </div>
 
-                    <div className="d-flex mt-2" style={{ gap: "20px" }}>
+                    {event?.className === "bg-danger-subtle" && (
                       <div className="d-flex ">
                         <div className="flex-grow-1 d-flex align-items-center">
                           <div className="flex-shrink-0 me-2">
@@ -430,131 +432,157 @@ const Calender = () => {
                           </div>
                           <div className="flex-grow-1">
                             <h6
-                              className="d-block fw-semibold mb-0 fs-17"
+                              className="d-block fw-semibold mb-0 fs-20"
                               id="event-start-date-tag"
                             >
-                              {event?.start}
+                              Event - {event?.title?.split(" - ")[1]}
                             </h6>
                           </div>
                         </div>
                       </div>
+                    )}
 
-                      <div className="d-flex ">
-                        <div className="flex-grow-1 d-flex align-items-center">
-                          <div className="flex-shrink-0 me-2">
-                            <i className="ri-earth-line text-muted fs-17"></i>
+                    {event?.className === "bg-danger-subtle" ? null : (
+                      <div className="d-flex mt-2" style={{ gap: "20px" }}>
+                        <div className="d-flex ">
+                          <div className="flex-grow-1 d-flex align-items-center">
+                            <div className="flex-shrink-0 me-2">
+                              <i className="ri-calendar-event-line text-muted fs-17"></i>
+                            </div>
+                            <div className="flex-grow-1">
+                              <h6
+                                className="d-block fw-semibold mb-0 fs-17"
+                                id="event-start-date-tag"
+                              >
+                                {event?.start}
+                              </h6>
+                            </div>
                           </div>
-                          <div className="flex-grow-1">
-                            <h6
-                              className="d-block fw-semibold mb-0 fs-17"
-                              id="event-start-date-tag"
-                            >
-                              {event?.genre}
-                            </h6>
+                        </div>
+
+                        <div className="d-flex ">
+                          <div className="flex-grow-1 d-flex align-items-center">
+                            <div className="flex-shrink-0 me-2">
+                              <i className="ri-earth-line text-muted fs-17"></i>
+                            </div>
+                            <div className="flex-grow-1">
+                              <h6
+                                className="d-block fw-semibold mb-0 fs-17"
+                                id="event-start-date-tag"
+                              >
+                                {event?.genre}
+                              </h6>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="d-flex " style={{ gap: "20px" }}>
-                      <div className="d-flex ">
-                        <div className="flex-grow-1 d-flex align-items-center">
-                          <div className="flex-shrink-0 me-2">
-                            <i className="ri-timer-line text-muted fs-17"></i>
+                    )}
+                    {event?.className === "bg-danger-subtle" ? null : (
+                      <div className="d-flex " style={{ gap: "20px" }}>
+                        <div className="d-flex ">
+                          <div className="flex-grow-1 d-flex align-items-center">
+                            <div className="flex-shrink-0 me-2">
+                              <i className="ri-timer-line text-muted fs-17"></i>
+                            </div>
+                            <div className="flex-grow-1">
+                              <h6
+                                className="d-block fw-semibold mb-0 fs-17"
+                                id="event-start-date-tag"
+                              >
+                                {event?.status}
+                              </h6>
+                            </div>
                           </div>
-                          <div className="flex-grow-1">
-                            <h6
-                              className="d-block fw-semibold mb-0 fs-17"
-                              id="event-start-date-tag"
-                            >
-                              {event?.status}
-                            </h6>
+                        </div>
+
+                        <div className="d-flex ">
+                          <div className="flex-grow-1 d-flex align-items-center">
+                            <div className="flex-shrink-0 me-2">
+                              <i className="ri-youtube-line text-muted fs-17"></i>
+                            </div>
+                            <div className="flex-grow-1">
+                              <h6
+                                className="d-block fw-semibold mb-0 fs-17"
+                                id="event-start-date-tag"
+                              >
+                                <a href={event?.youtubeLink}>YouTube Link</a>
+                              </h6>
+                            </div>
                           </div>
                         </div>
                       </div>
-
-                      <div className="d-flex ">
-                        <div className="flex-grow-1 d-flex align-items-center">
-                          <div className="flex-shrink-0 me-2">
-                            <i className="ri-youtube-line text-muted fs-17"></i>
-                          </div>
-                          <div className="flex-grow-1">
-                            <h6
-                              className="d-block fw-semibold mb-0 fs-17"
-                              id="event-start-date-tag"
-                            >
-                              <a href={event?.youtubeLink}>YouTube Link</a>
-                            </h6>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="table-responsive mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div>
-                        <h5>Payments</h5>
-                      </div>
-
-                      <div className="d-flex " style={{ gap: "10px" }}>
-                        {singleInvoice && (
-                          <>
-                            <span className="fs-15 fw-bold text-muted">
-                              Total - ₹{singleInvoice.totalAmount}
-                            </span>
-                            <span className="fs-15 fw-bold text-muted">
-                              Balance - ₹{singleInvoice.balance}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    {singleInvoice ? (
-                      <table className="table table-bordered table-nowrap align-middle mb-0">
-                        <thead>
-                          <tr>
-                            <th scope="col" style={{ width: "40%" }}>
-                              Amount
-                            </th>
-                            <th scope="col" style={{ width: "40%" }}>
-                              Date
-                            </th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {singleInvoice?.payments.map((payment) => (
-                            <tr key={payment.id}>
-                              <td>₹{payment.paymentAmount} </td>
-                              <td>{payment.paymentDate}</td>
-                            </tr>
-                          ))}
-
-                          <tr>
-                            <td>
-                              <span className="fs-15">Total Amount Paid</span>
-                            </td>
-                            <td>
-                              {/* <span className="fs-15">₹5000</span> */}
-                              <span className="fs-15">
-                                ₹
-                                {singleInvoice?.payments.reduce((acc, curr) => {
-                                  return acc + parseInt(curr.paymentAmount);
-                                }, 0)}
-                              </span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    ) : (
-                      <p className="fs-22 text-muted fst-italic">
-                        {" "}
-                        No Payments Made Yet{" "}
-                      </p>
                     )}
                   </div>
+
+                  {event?.className === "bg-danger-subtle" ? null : (
+                    <div className="table-responsive mt-4">
+                      <div className="d-flex justify-content-between">
+                        <div>
+                          <h5>Payments</h5>
+                        </div>
+
+                        <div className="d-flex " style={{ gap: "10px" }}>
+                          {singleInvoice && (
+                            <>
+                              <span className="fs-15 fw-bold text-muted">
+                                Total - ₹{singleInvoice.totalAmount}
+                              </span>
+                              <span className="fs-15 fw-bold text-muted">
+                                Balance - ₹{singleInvoice.balance}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {singleInvoice ? (
+                        <table className="table table-bordered table-nowrap align-middle mb-0">
+                          <thead>
+                            <tr>
+                              <th scope="col" style={{ width: "40%" }}>
+                                Amount
+                              </th>
+                              <th scope="col" style={{ width: "40%" }}>
+                                Date
+                              </th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {singleInvoice?.payments.map((payment) => (
+                              <tr key={payment.id}>
+                                <td>₹{payment.paymentAmount} </td>
+                                <td>{payment.paymentDate}</td>
+                              </tr>
+                            ))}
+
+                            <tr>
+                              <td>
+                                <span className="fs-15">Total Amount Paid</span>
+                              </td>
+                              <td>
+                                {/* <span className="fs-15">₹5000</span> */}
+                                <span className="fs-15">
+                                  ₹
+                                  {singleInvoice?.payments.reduce(
+                                    (acc, curr) => {
+                                      return acc + parseInt(curr.paymentAmount);
+                                    },
+                                    0
+                                  )}
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p className="fs-22 text-muted fst-italic">
+                          {" "}
+                          No Payments Made Yet{" "}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </ModalBody>
               </Modal>
             </Col>
