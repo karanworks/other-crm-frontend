@@ -359,7 +359,7 @@ const Report = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(removeLead(listLeadId));
+          dispatch(updateLead({ listLeadId, status: 0 }));
           setmodal_delete(false);
         }}
       />
@@ -378,7 +378,7 @@ const Report = () => {
         event_modal_delete={event_modal_delete}
         event_tog_delete={event_tog_delete}
         handleDeleteEvent={() => {
-          dispatch(removeEvent(listEventId));
+          dispatch(updateEvent({ listEventId, status: 0 }));
           event_tog_delete();
         }}
       />

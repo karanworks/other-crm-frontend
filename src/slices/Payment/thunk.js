@@ -13,14 +13,6 @@ import {
   updateBalanceOnPaymentUpdation,
 } from "../Invoice/reducer";
 
-// import {
-//   getLeads as getLeadsApi,
-//   createLead as createLeadApi,
-//   removeLead as removeLeadApi,
-//   updateLead as updateLeadApi,
-//   createDropdown as createDropdownApi,
-// } from "../../helpers/fakebackend_helper";
-
 export const getPayments = createAsyncThunk(
   "payment/getPayments",
   async ({ invoiceId }) => {

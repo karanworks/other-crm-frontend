@@ -29,7 +29,11 @@ export const createLead = createAsyncThunk("leads/createLead", async (data) => {
 
 export const updateLead = createAsyncThunk("leads/updateLead", async (data) => {
   try {
-    const response = await updateLeadApi(data.listLeadId, data.values);
+    const response = await updateLeadApi(
+      data.listLeadId,
+      data.values,
+      data.status
+    );
     console.log("response while updating lead", response);
     return response;
   } catch (error) {
@@ -37,18 +41,18 @@ export const updateLead = createAsyncThunk("leads/updateLead", async (data) => {
   }
 });
 
-export const removeLead = createAsyncThunk(
-  "leads/removeLead",
-  async (leadId) => {
-    try {
-      const response = await removeLeadApi(leadId);
+// export const removeLead = createAsyncThunk(
+//   "leads/removeLead",
+//   async (leadId) => {
+//     try {
+//       const response = await removeLeadApi(leadId);
 
-      return response;
-    } catch (error) {
-      console.log("error inside remove lead thunk", error);
-    }
-  }
-);
+//       return response;
+//     } catch (error) {
+//       console.log("error inside remove lead thunk", error);
+//     }
+//   }
+// );
 
 // *****************************************************************
 // *************************** DROPDOWNS ***************************

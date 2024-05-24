@@ -380,18 +380,18 @@ export const createLead = (data) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/lead/create`, data);
 };
 
-export const updateLead = (leadId, data) => {
-  return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/edit`,
-    data
-  );
+export const updateLead = (leadId, data, status) => {
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/edit`, {
+    ...data,
+    status,
+  });
 };
 
-export const removeLead = (leadId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
-  );
-};
+// export const removeLead = (leadId) => {
+//   return api.delete(
+//     `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
+//   );
+// };
 
 // *****************************************************************
 // ************************ PROJECT DROPDOWN ***********************
@@ -485,18 +485,18 @@ export const createEvent = (events) => {
   });
 };
 
-export const updateEvent = ({ eventName, eventDate, eventId }) => {
+export const updateEvent = ({ eventName, eventDate, eventId, status }) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/event/${eventId}/edit`,
     {
       eventName,
       eventDate,
+      status,
     }
   );
 };
 
 export const removeEvent = (eventId) => {
-  console.log("REMOVE EVENT ID IN BACKEND HELPER ->", eventId);
   return api.delete(
     `${process.env.REACT_APP_SERVER_URL}/event/${eventId}/delete`
   );

@@ -49,37 +49,50 @@ const eventSlice = createSlice({
       } else {
         const updatedEventId = action.payload.data?.updatedEvent.id;
 
-        state.leadEvents = state.leadEvents.map((event) => {
-          if (event.id == updatedEventId) {
-            event = action.payload.data.updatedEvent;
-            return event;
-          } else {
-            return event;
-          }
-        });
+        if (action.payload.data?.updatedEvent.status === 0) {
+          state.leadEvents = state.leadEvents.filter(
+            (event) => event.id !== updatedEventId
+          );
+          state.error = "";
 
-        state.error = "";
-        toast.success("Event details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          toast.error("Event has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.leadEvents = state.leadEvents.map((event) => {
+            if (event.id == updatedEventId) {
+              event = action.payload.data.updatedEvent;
+              return event;
+            } else {
+              return event;
+            }
+          });
+
+          state.error = "";
+          toast.success("Event details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeEvent.fulfilled, (state, action) => {
-      const deletedEventId = action.payload.data.deletedEvent.id;
-      state.leadEvents = state.leadEvents.filter(
-        (event) => event.id !== deletedEventId
-      );
-      state.error = "";
+    // builder.addCase(removeEvent.fulfilled, (state, action) => {
+    //   const deletedEventId = action.payload.data.deletedEvent.id;
+    //   state.leadEvents = state.leadEvents.filter(
+    //     (event) => event.id !== deletedEventId
+    //   );
+    //   state.error = "";
 
-      toast.error("Event has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    //   toast.error("Event has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 

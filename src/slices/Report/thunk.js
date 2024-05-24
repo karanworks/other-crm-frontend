@@ -35,9 +35,14 @@ export const createEvent = createAsyncThunk(
 
 export const updateEvent = createAsyncThunk(
   "report/updateEvent",
-  async ({ eventName, eventDate, listEventId: eventId }) => {
+  async ({ eventName, eventDate, listEventId: eventId, status }) => {
     try {
-      const response = await updateEventApi({ eventName, eventDate, eventId });
+      const response = await updateEventApi({
+        eventName,
+        eventDate,
+        eventId,
+        status,
+      });
 
       return response;
     } catch (error) {
@@ -46,15 +51,15 @@ export const updateEvent = createAsyncThunk(
   }
 );
 
-export const removeEvent = createAsyncThunk(
-  "report/removeEvent",
-  async (listEventId) => {
-    try {
-      const response = await removeEventApi(listEventId);
+// export const removeEvent = createAsyncThunk(
+//   "report/removeEvent",
+//   async (listEventId) => {
+//     try {
+//       const response = await removeEventApi(listEventId);
 
-      return response;
-    } catch (error) {
-      console.log("error inside remove event thunk", error);
-    }
-  }
-);
+//       return response;
+//     } catch (error) {
+//       console.log("error inside remove event thunk", error);
+//     }
+//   }
+// );

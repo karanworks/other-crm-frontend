@@ -55,36 +55,47 @@ const leadSlice = createSlice({
       } else {
         const updatedLeadId = action.payload.data?.updatedLead.id;
 
-        state.leads = state.leads.map((lead) => {
-          if (lead.id == updatedLeadId) {
-            lead = action.payload.data.updatedLead;
-            return lead;
-          } else {
-            return lead;
-          }
-        });
+        if (action.payload.data?.updatedLead.status === 0) {
+          state.leads = state.leads.filter((lead) => lead.id !== updatedLeadId);
+          state.error = "";
 
-        state.alreadyExistsError = null;
-        state.error = "";
-        toast.success("Lead details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          toast.error("Lead has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.leads = state.leads.map((lead) => {
+            if (lead.id == updatedLeadId) {
+              lead = action.payload.data.updatedLead;
+              return lead;
+            } else {
+              return lead;
+            }
+          });
+
+          state.alreadyExistsError = null;
+          state.error = "";
+          toast.success("Lead details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeLead.fulfilled, (state, action) => {
-      const deletedLeadId = action.payload.data.deletedLead.id;
-      state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
-      state.error = "";
+    // builder.addCase(removeLead.fulfilled, (state, action) => {
+    //   const deletedLeadId = action.payload.data.deletedLead.id;
+    //   state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
+    //   state.error = "";
 
-      toast.error("Lead has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    //   toast.error("Lead has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
 
     // *****************************************************************
     // *************************** DROPDOWNS ***************************
