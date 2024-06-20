@@ -3,9 +3,10 @@ export const POST_FAKE_REGISTER = "/auth/signup";
 
 //LOGIN
 // export const POST_FAKE_LOGIN = "/auth/signin";
-export const POST_LOGIN = "http://localhost:3003/login";
+// export const POST_LOGIN = "http://localhost:3003/login";
+// export const POST_LOGIN = "https://allbhojpurisongs.com/index.php/login";
 // export const POST_LOGIN = "https://vickyvox.in/api/api.php/login";
-// export const POST_LOGIN = "http://vickyvox.in:3003/login";
+export const POST_LOGIN = "https://vickyvox.in:3003/login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
 export const POST_FAKE_PASSWORD_FORGET = "/auth/forgot-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";

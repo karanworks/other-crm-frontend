@@ -25,6 +25,8 @@ const rolesSlice = createSlice({
       state.roles = action.payload?.data;
     });
     builder.addCase(getMenus.fulfilled, (state, action) => {
+      console.log("GETTING MENUS IN REDUCER ->", action.payload);
+
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
