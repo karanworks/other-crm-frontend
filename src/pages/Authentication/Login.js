@@ -14,7 +14,8 @@ import {
   Spinner,
 } from "reactstrap";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
-import webwersLogo from "../../assets/images/webwersLogo.png";
+import vedoRecordsLogo from "../../assets/images/vedo-records-logo.png";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -105,9 +106,7 @@ const Login = (props) => {
                 <Card className="mt-4">
                   <CardBody className="p-4">
                     <div className="text-center">
-                      <img src={webwersLogo} style={{ height: "150px" }} />
-                      {/* <h5 className="text-primary">Welcome Back !</h5> */}
-                      <p className="text-muted">WebWers Admin Login</p>
+                      <img src={vedoRecordsLogo} style={{ height: "150px" }} />
                     </div>
                     {error && error ? (
                       <Alert color="danger"> {error} </Alert>

@@ -20,7 +20,9 @@ function UserFormModal({
   isEditingUser, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   alreadyRegisteredError, // gives error if user already registered with same - id, email, agentMobile
   handleRoleChange,
+  handleBranchChange,
   roles,
+  branchDropdowns,
 }) {
   return (
     <Modal
@@ -96,6 +98,41 @@ function UserFormModal({
               {roles?.map((role) => (
                 <option value={role.id} key={role.id}>
                   {role.name}
+                </option>
+              ))}
+            </Input>
+
+            {validation.touched.roleId && validation.errors.roleId ? (
+              <FormFeedback type="invalid">
+                {validation.errors.roleId}
+              </FormFeedback>
+            ) : null}
+          </div>
+          <div className="mb-2">
+            <Label htmlFor="branchId" className="form-label">
+              Select Branch
+            </Label>
+            <Input
+              id="branchId"
+              name="branchId"
+              className="form-control"
+              type="select"
+              onChange={handleBranchChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.branchId || ""}
+              invalid={
+                validation.touched.branchId && validation.errors.branchId
+                  ? true
+                  : false
+              }
+            >
+              <option value="" disabled>
+                Select Branch
+              </option>
+
+              {branchDropdowns?.map((branchDropdown) => (
+                <option value={branchDropdown.id} key={branchDropdown.id}>
+                  {branchDropdown.branchDropdownName}
                 </option>
               ))}
             </Input>

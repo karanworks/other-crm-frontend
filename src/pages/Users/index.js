@@ -26,11 +26,18 @@ import {
   removeUser,
   updateUser,
 } from "../../slices/Users/thunk";
+import {
+  createBranchDropdown,
+  getBranchDropdowns,
+} from "../../slices/BranchDropdown/thunk";
 import { useNavigate } from "react-router-dom";
+import AddBranchModal from "./AddBranchModal";
 
 const Users = () => {
   // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
+  // branch modal
+  const [branch_modal_list, set_branch_modal_list] = useState(false);
   // this state triggers when editing the user
   const [isEditingUser, setIsEditingUser] = useState(false);
   // delete user confirmation modal state
@@ -43,6 +50,7 @@ const Users = () => {
   const [selectedCampaigns, setSelectedCampaigns] = useState(null);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+  const { branchDropdowns } = useSelector((state) => state.BranchDropdowns);
 
   const dispatch = useDispatch();
 
@@ -50,6 +58,9 @@ const Users = () => {
   function tog_list() {
     setmodal_list(!modal_list);
     setIsEditingUser(false);
+  }
+  function branch_tog_list() {
+    set_branch_modal_list(!branch_modal_list);
   }
 
   // toggles delete user confirmation modal
@@ -78,6 +89,7 @@ const Users = () => {
 
   useEffect(() => {
     dispatch(getUsers());
+    dispatch(getBranchDropdowns());
   }, [dispatch]);
 
   // formik setup
@@ -85,12 +97,14 @@ const Users = () => {
     initialValues: {
       name: "",
       roleId: "",
+      branchId: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Please enter Name"),
       roleId: Yup.string().required("Please select user role"),
+      branchId: Yup.string().required("Please select branch"),
       email: Yup.string().required("Please enter CRM Email"),
       password: Yup.string().required("Please enter CRM Password"),
     }),
@@ -111,8 +125,35 @@ const Users = () => {
     return false;
   }
 
+  const branchValidation = useFormik({
+    initialValues: {
+      branchName: "",
+    },
+    validationSchema: Yup.object({
+      branchName: Yup.string().required("Please Enter Branch Name"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      dispatch(createBranchDropdown(values));
+
+      resetForm();
+    },
+  });
+
+  // this function also gets triggered (with onSubmit method of formik) when submitting the register / edit user from
+  function branchFormHandleSubmit(e) {
+    e.preventDefault();
+
+    branchValidation.handleSubmit();
+
+    set_branch_modal_list(false);
+    return false;
+  }
+
   function handleRoleChange(e) {
     validation.setFieldValue("roleId", e.target.value);
+  }
+  function handleBranchChange(e) {
+    validation.setFieldValue("branchId", e.target.value);
   }
 
   // to update the values of register form when editing the user
@@ -137,7 +178,7 @@ const Users = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Users" pageTitle="System Configuration" />
+          <BreadCrumb title="Users" pageTitle="Admin Tools" />
           <Row>
             <Col lg={12}>
               <Card>
@@ -147,7 +188,7 @@ const Users = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="userList">
-                    <Row className="g-4 mb-3">
+                    <Row className="g-2 mb-3">
                       <Col className="col-sm-auto">
                         <div>
                           <Button
@@ -158,6 +199,19 @@ const Users = () => {
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             Add User
+                          </Button>
+                        </div>
+                      </Col>
+                      <Col className="col-sm-auto">
+                        <div>
+                          <Button
+                            color="primary"
+                            className="add-btn me-1"
+                            onClick={() => branch_tog_list()}
+                            id="create-btn"
+                          >
+                            <i className="ri-add-line align-bottom me-1"></i>{" "}
+                            Add Branch
                           </Button>
                         </div>
                       </Col>
@@ -186,8 +240,11 @@ const Users = () => {
                             <th className="sort" data-sort="name">
                               Name
                             </th>
-                            <th className="sort" data-sort="device_id">
+                            <th className="sort" data-sort="email">
                               email
+                            </th>
+                            <th className="sort" data-sort="branch">
+                              branch
                             </th>
 
                             <th className="sort" data-sort="action">
@@ -215,6 +272,7 @@ const Users = () => {
                               </td>
                               <td className="name">{user?.username}</td>
                               <td className="email">{user?.email}</td>
+                              <td className="branch">{user?.branch}</td>
 
                               <td>
                                 <div className="d-flex gap-2">
@@ -298,7 +356,9 @@ const Users = () => {
         isEditingUser={isEditingUser}
         alreadyRegisteredError={alreadyRegisteredError}
         handleRoleChange={handleRoleChange}
+        handleBranchChange={handleBranchChange}
         roles={roles}
+        branchDropdowns={branchDropdowns}
       />
 
       {/* Remove Modal */}
@@ -310,6 +370,13 @@ const Users = () => {
           dispatch(removeUser({ userId: listUserId }));
           setmodal_delete(false);
         }}
+      />
+
+      <AddBranchModal
+        branch_modal_list={branch_modal_list}
+        branch_tog_list={branch_tog_list}
+        branchFormHandleSubmit={branchFormHandleSubmit}
+        branchValidation={branchValidation}
       />
     </React.Fragment>
   );

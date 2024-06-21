@@ -62,6 +62,8 @@ const Report = () => {
   const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
   const { leadEvents } = useSelector((state) => state.Report);
 
+  console.log("REPORT ->", leads);
+
   // toggles register / edit lead modal
   function tog_list() {
     setmodal_list(!modal_list);
@@ -223,6 +225,9 @@ const Report = () => {
                             >
                               Project YouTube Link
                             </th>
+                            <th className="sort" data-sort="added_by">
+                              Added By
+                            </th>
                             <th className="sort" data-sort="project_status">
                               Project Status
                             </th>
@@ -262,6 +267,24 @@ const Report = () => {
                                     width="50px"
                                   />
                                 </a>
+                              </td>
+                              <td className="added_by">
+                                <div>
+                                  <div
+                                    style={{ borderBottom: "1px solid gray" }}
+                                  >
+                                    <span> {lead.addedBy.username}</span>
+                                  </div>
+                                  <div>
+                                    <span
+                                      className="text-muted"
+                                      style={{ fontSize: "13px" }}
+                                    >
+                                      {" "}
+                                      {lead.addedBy.branch}
+                                    </span>
+                                  </div>
+                                </div>
                               </td>
                               <td className="project-status">
                                 <span className="badge border border-primary text-primary fs-13">

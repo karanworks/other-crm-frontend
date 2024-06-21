@@ -151,30 +151,37 @@ const AddLead = () => {
   // formik setup
   const validation = useFormik({
     initialValues: {
-      clientName: "",
       mobileNo: "",
+      clientName: "",
+      address: "",
+      task: "",
       projectGenre: "",
-      projectStatus: "",
       youtubeLink: "",
-      events: "",
       projectDueDate: "",
+      description: "",
+      projectStatus: "",
+      events: "",
     },
     validationSchema: Yup.object({
       clientName: Yup.string().required("Please enter client name"),
       mobileNo: Yup.string().required("Please enter mobile no"),
+      address: Yup.string().required("Please enter address"),
+      task: Yup.string().required("Please enter task"),
+      description: Yup.string().required("Please enter description"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
       youtubeLink: Yup.string(),
       events: Yup.array(),
       projectDueDate: Yup.string().required("Please select project due date"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       const { events } = values;
       if (events) {
         dispatch(createEvent(events));
       }
 
       dispatch(createLead(values));
+      resetForm();
     },
   });
 
@@ -318,35 +325,6 @@ const AddLead = () => {
                       onSubmit={(e) => formHandleSubmit(e)}
                     >
                       <div className="mb-3">
-                        <Label htmlFor="clientName" className="form-label">
-                          Client Name
-                        </Label>
-
-                        <Input
-                          id="clientName"
-                          name="clientName"
-                          className="form-control"
-                          placeholder="Enter client name"
-                          type="text"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.clientName || ""}
-                          invalid={
-                            validation.touched.clientName &&
-                            validation.errors.clientName
-                              ? true
-                              : false
-                          }
-                        />
-
-                        {validation.touched.clientName &&
-                        validation.errors.clientName ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.clientName}
-                          </FormFeedback>
-                        ) : null}
-                      </div>
-                      <div className="mb-3">
                         <Label htmlFor="mobileNo" className="form-label">
                           Mobile No
                         </Label>
@@ -377,6 +355,94 @@ const AddLead = () => {
                       </div>
 
                       <div className="mb-3">
+                        <Label htmlFor="clientName" className="form-label">
+                          Client Name
+                        </Label>
+
+                        <Input
+                          id="clientName"
+                          name="clientName"
+                          className="form-control"
+                          placeholder="Enter client name"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.clientName || ""}
+                          invalid={
+                            validation.touched.clientName &&
+                            validation.errors.clientName
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validation.touched.clientName &&
+                        validation.errors.clientName ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.clientName}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                      <div className="mb-3">
+                        <Label htmlFor="address" className="form-label">
+                          Address
+                        </Label>
+
+                        <Input
+                          id="address"
+                          name="address"
+                          className="form-control"
+                          placeholder="Enter address"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.address || ""}
+                          invalid={
+                            validation.touched.address &&
+                            validation.errors.address
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validation.touched.address &&
+                        validation.errors.address ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.address}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                      <div className="mb-3">
+                        <Label htmlFor="task" className="form-label">
+                          Task
+                        </Label>
+
+                        <Input
+                          id="task"
+                          name="task"
+                          className="form-control"
+                          placeholder="Enter task"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.task || ""}
+                          invalid={
+                            validation.touched.task && validation.errors.task
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validation.touched.task && validation.errors.task ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.task}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                      <div className="mb-3">
                         <Label htmlFor="projectGenre" className="form-label">
                           Project Genre
                         </Label>
@@ -393,26 +459,6 @@ const AddLead = () => {
                           }}
                           options={SingleGenreOptions}
                           placeholder="Select Genre"
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <Label htmlFor="projectStatus" className="form-label">
-                          Project Status
-                        </Label>
-                        <Select
-                          id="projectStatus"
-                          name="projectStatus"
-                          value={selectedSingleStatus}
-                          onChange={(status) => {
-                            handleSelectSingleStatus(status);
-                            validation.setFieldValue(
-                              "projectStatus",
-                              status.value
-                            );
-                          }}
-                          options={SingleStatusOptions}
-                          placeholder="Select Status"
                         />
                       </div>
 
@@ -445,6 +491,7 @@ const AddLead = () => {
                           </FormFeedback>
                         ) : null}
                       </div>
+
                       <div className="mb-3">
                         <Label className="form-label">Project Due Date</Label>
                         <Flatpickr
@@ -463,6 +510,56 @@ const AddLead = () => {
                               formattedDate
                             );
                           }}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <Label htmlFor="description" className="form-label">
+                          Description
+                        </Label>
+
+                        <Input
+                          id="description"
+                          name="description"
+                          className="form-control"
+                          placeholder="Enter description"
+                          type="text"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.description || ""}
+                          invalid={
+                            validation.touched.description &&
+                            validation.errors.description
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validation.touched.description &&
+                        validation.errors.description ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.description}
+                          </FormFeedback>
+                        ) : null}
+                      </div>
+
+                      <div className="mb-3">
+                        <Label htmlFor="projectStatus" className="form-label">
+                          Project Status
+                        </Label>
+                        <Select
+                          id="projectStatus"
+                          name="projectStatus"
+                          value={selectedSingleStatus}
+                          onChange={(status) => {
+                            handleSelectSingleStatus(status);
+                            validation.setFieldValue(
+                              "projectStatus",
+                              status.value
+                            );
+                          }}
+                          options={SingleStatusOptions}
+                          placeholder="Select Status"
                         />
                       </div>
 

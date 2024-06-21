@@ -37,6 +37,7 @@ export const getUsers = () => {
 };
 
 export const createUser = (data) => {
+  console.log("USER DATA CHECKING FOR BRANCH NAME ->", data);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/user/register`, data);
 };
 export const removeUser = (userId) => {
@@ -499,6 +500,20 @@ export const updateEvent = ({ eventName, eventDate, eventId, status }) => {
 export const removeEvent = (eventId) => {
   return api.delete(
     `${process.env.REACT_APP_SERVER_URL}/event/${eventId}/delete`
+  );
+};
+
+// *****************************************************************
+// ************************ BRANCH DROPDOWN ***********************
+// *****************************************************************
+
+export const getBranchDropdowns = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/branch-dropdown/`);
+};
+export const createBranchDropdown = (branchName) => {
+  return api.create(
+    `${process.env.REACT_APP_SERVER_URL}/branch-dropdown/create`,
+    { branchName }
   );
 };
 
