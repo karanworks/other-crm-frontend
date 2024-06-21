@@ -62,8 +62,6 @@ const Report = () => {
   const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
   const { leadEvents } = useSelector((state) => state.Report);
 
-  console.log("REPORT ->", leads);
-
   // toggles register / edit lead modal
   function tog_list() {
     setmodal_list(!modal_list);
@@ -157,17 +155,29 @@ const Report = () => {
     setmodal_list(!modal_list);
     setListLeadId(lead.id);
 
-    validation.values.clientName = lead.clientName;
-    validation.values.projectGenre = lead.projectGenre;
-    validation.values.projectStatus = lead.projectStatus;
-    validation.values.youtubeLink = lead.youtubeLink;
+    console.log("LEAD EDIT ->", lead);
+
+    // validation.values.clientName = lead.clientName;
+    // validation.values.projectGenre = lead.projectGenre;
+    // validation.values.projectStatus = lead.projectStatus;
+    // validation.values.youtubeLink = lead.youtubeLink;
     // YOUTUBELINK, DUE DATE FIELD REMAINING HERE
+
+    validation.setValues({
+      clientName: lead.clientName,
+      projectGenre: lead.projectGenre,
+      projectStatus: lead.projectStatus,
+      youtubeLink: lead.youtubeLink,
+      projectDueDate: lead.projectDueDate,
+    });
   }
 
   function handleEditEvent(event) {
     setIsEditingEvent(true);
     setListEventId(event.id);
     setAddEvent_view_modal(!add_event_view_modal);
+
+    console.log("EVENT EDIT DATE ->", event);
 
     eventValidation.setValues({
       eventName: event.eventName,

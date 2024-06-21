@@ -177,7 +177,8 @@ function AddLeadModal({
               className="form-control"
               placeholder="Select Project Due Date"
               options={{
-                dateFormat: "d M, Y",
+                dateFormat: "d/m/Y",
+                defaultDate: validation.values.projectDueDate || "",
               }}
               onChange={(date) => {
                 const formattedDate = new Date(date).toLocaleDateString(
