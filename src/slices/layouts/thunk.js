@@ -48,7 +48,7 @@ export const changeLayoutMode = (layoutMode) => async (dispatch) => {
  * @param {*} param0
  */
 export const changeSidebarTheme = (theme) => async (dispatch) => {
-  // console.log("DATA SIDE BAR THEME THUNK ->", theme);
+  console.log("DATA SIDE BAR THEME THUNK ->", theme);
   try {
     changeHTMLAttribute("data-sidebar", theme);
     dispatch(changeSidebarThemeAction(theme));

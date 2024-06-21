@@ -243,10 +243,10 @@ const Users = () => {
                               Name
                             </th>
                             <th className="sort" data-sort="email">
-                              email
+                              Email
                             </th>
                             <th className="sort" data-sort="branch">
-                              branch
+                              Branch
                             </th>
 
                             <th className="sort" data-sort="action">

@@ -116,7 +116,7 @@ const Layout = (props) => {
   const onChangeLayoutMode = (value) => {
     if (changeLayoutMode) {
       dispatch(changeLayoutMode(value));
-      dispatch(changeSidebarTheme("dark"));
+      dispatch(changeSidebarTheme(value));
     }
   };
 
