@@ -6,6 +6,7 @@ import logoSm from "../assets/images/logo-sm.png";
 import logoDark from "../assets/images/logo-dark.png";
 import logoLight from "../assets/images/logo-light.png";
 import webwersLogo from "../assets/images/webwersLogo.png";
+import vedoRecordsLogo from "../assets/images/vedo-records-logo.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -23,6 +24,7 @@ const Sidebar = ({ layoutType }) => {
     }
   });
 
+  console.log("LAYOUT TYPE IN SIDEBAR ->", layoutType);
   const addEventListenerOnSmHoverMenu = () => {
     // add listener Sidebar Hover icon on change layout from setting
     if (
@@ -51,7 +53,7 @@ const Sidebar = ({ layoutType }) => {
             </span>
             <span className="logo-lg">
               <img
-                src={webwersLogo}
+                src={vedoRecordsLogo}
                 alt=""
                 style={{ height: "100%", width: "100%" }}
               />
@@ -64,7 +66,7 @@ const Sidebar = ({ layoutType }) => {
             </span>
             <span className="logo-lg">
               <img
-                src={webwersLogo}
+                src={vedoRecordsLogo}
                 alt=""
                 style={{ height: "100%", width: "100%" }}
               />
@@ -101,9 +103,24 @@ const Sidebar = ({ layoutType }) => {
                 <ul className="navbar-nav" id="navbar-nav">
                   <VerticalLayout layoutType={layoutType} />
                 </ul>
+                <div
+                  className="sidebar-footer"
+                  style={{
+                    position: "absolute",
+                    bottom: "0",
+                    paddingLeft: "24px",
+                  }}
+                >
+                  <span className="fw-bold">Powered by</span>
+                  <img
+                    src={webwersLogo}
+                    alt="webwers"
+                    style={{ height: "40%", width: "40%", marginLeft: "5px" }}
+                  />
+                </div>
               </Container>
             </SimpleBar>
-            <div className="sidebar-background"></div>
+            {/* <div className="sidebar-background"></div> */}
           </React.Fragment>
         )}
       </div>

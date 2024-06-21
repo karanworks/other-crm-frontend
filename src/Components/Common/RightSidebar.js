@@ -168,14 +168,14 @@ const RightSidebar = () => {
       )}
 
       <div>
-        {/* <div className="customizer-setting d-none d-md-block">
+        <div className="customizer-setting d-none d-md-block">
           <div
             onClick={toggleLeftCanvas}
             className="btn-primary rounded-pill shadow-lg btn btn-icon btn-lg p-2"
           >
             <i className="mdi mdi-spin mdi-cog-outline fs-22"></i>
           </div>
-        </div> */}
+        </div>
         <Offcanvas
           isOpen={open}
           toggle={toggleLeftCanvas}
@@ -1141,18 +1141,18 @@ const RightSidebar = () => {
                             <input
                               className="form-check-input"
                               type="radio"
-                              name="data-sidebar"
-                              id="sidebar-color-dark"
-                              value={leftSidebarTypes.DARK}
-                              checked={
-                                leftSidebarType === leftSidebarTypes.DARK
-                              }
-                              onChange={(e) => {
-                                setShow(false);
-                                if (e.target.checked) {
-                                  dispatch(changeSidebarTheme(e.target.value));
-                                }
-                              }}
+                              // name="data-sidebar"
+                              // id="sidebar-color-dark"
+                              // value={leftSidebarTypes.DARK}
+                              // checked={
+                              //   leftSidebarType === leftSidebarTypes.DARK
+                              // }
+                              // onChange={(e) => {
+                              //   setShow(false);
+                              //   if (e.target.checked) {
+                              //     dispatch(changeSidebarTheme(e.target.value));
+                              //   }
+                              // }}
                             />
                             <label
                               className="form-check-label p-0 avatar-md w-100"
