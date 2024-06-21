@@ -25,8 +25,6 @@ export const postFakeRegister = (data) =>
 
 // Login Method
 export const postLogin = (data) => {
-  console.log("post login data ->", data);
-
   return api.create(url.POST_LOGIN, data);
 };
 // *****************************************************************
@@ -37,7 +35,6 @@ export const getUsers = () => {
 };
 
 export const createUser = (data) => {
-  console.log("USER DATA CHECKING FOR BRANCH NAME ->", data);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/user/register`, data);
 };
 export const removeUser = (userId) => {
@@ -355,7 +352,6 @@ export const createDesign = (
   });
 };
 export const updateDesign = ({ designId, audioText }) => {
-  console.log("FRONTEND API CALL ->", designId, audioText);
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/ivr-design/${designId}/edit`,
     {
@@ -387,12 +383,23 @@ export const updateLead = (leadId, data, status) => {
     status,
   });
 };
+// *****************************************************************
+// ***************************** TASKS *****************************
+// *****************************************************************
+export const getTasks = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/tasks`);
+};
 
-// export const removeLead = (leadId) => {
-//   return api.delete(
-//     `${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/delete`
-//   );
-// };
+export const createTask = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/task/create`, data);
+};
+
+export const updateTask = (taskId, data, status) => {
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/task/${taskId}/edit`, {
+    ...data,
+    status,
+  });
+};
 
 // *****************************************************************
 // ************************ PROJECT DROPDOWN ***********************
@@ -476,7 +483,6 @@ export const removePayment = ({ invoiceId, paymentId }) => {
 // *****************************************************************
 
 export const getEvents = (leadMobileNo) => {
-  console.log("MOBILE NUMBER IN BACKEND HELPER ->", leadMobileNo);
   return api.get(`${process.env.REACT_APP_SERVER_URL}/${leadMobileNo}/events`);
 };
 
@@ -649,8 +655,8 @@ export const getTaskList = () => api.get(url.GET_TASK_LIST);
 export const addNewTask = (task) => api.create(url.ADD_NEW_TASK, task);
 
 // update Task
-export const updateTask = (task) =>
-  api.update(url.UPDATE_TASK + "/" + task._id, task);
+// export const updateTask = (task) =>
+//   api.update(url.UPDATE_TASK + "/" + task._id, task);
 
 // delete Task
 export const deleteTask = (task) => api.delete(url.DELETE_TASK + "/" + task);
@@ -896,8 +902,8 @@ export const getJobApplicationList = () => api.get(url.GET_APPLICATION_LIST);
 export const getAPIKey = () => api.get(url.GET_API_KEY);
 
 // Kanban Board
-export const getTasks = () => api.get(url.GET_TASKS);
-export const addNewTasks = (card) => api.create(url.ADD_TASKS, card);
-export const updateTasks = (card) => api.put(url.UPDATE_TASKS, card);
-export const deleteTasks = (card) =>
-  api.delete(url.DELETE_TASKS, { headers: { card } });
+// export const getTasks = () => api.get(url.GET_TASKS);
+// export const addNewTasks = (card) => api.create(url.ADD_TASKS, card);
+// export const updateTasks = (card) => api.put(url.UPDATE_TASKS, card);
+// export const deleteTasks = (card) =>
+//   api.delete(url.DELETE_TASKS, { headers: { card } });

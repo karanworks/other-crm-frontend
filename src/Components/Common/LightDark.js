@@ -5,8 +5,6 @@ import { layoutModeTypes } from "../../Components/constants/layout";
 import { useDispatch } from "react-redux";
 
 const LightDark = ({ layoutMode, onChangeLayoutMode }) => {
-  // console.log("LAYOUT MODE IN LIGHT DARK BUTTON ->", layoutMode);
-
   const mode =
     layoutMode === layoutModeTypes["DARKMODE"]
       ? layoutModeTypes["LIGHTMODE"]

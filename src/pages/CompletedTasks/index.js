@@ -12,7 +12,7 @@ import { getLeads } from "../../slices/AddLead/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 
-const PendingTasks = () => {
+const CompletedTasks = () => {
   const { leads } = useSelector((state) => state.AddLead);
 
   const dispatch = useDispatch();
@@ -46,17 +46,17 @@ const PendingTasks = () => {
     dispatch(getLeads());
   }, [dispatch]);
 
-  document.title = "Pending Tasks";
+  document.title = "Completed Tasks";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Pending Task" pageTitle="Lead Management" />
+          <BreadCrumb title="Completed Tasks" pageTitle="Lead Management" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Pending Tasks</h4>
+                  <h4 className="card-title mb-0">Completed Tasks</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -167,4 +167,4 @@ const PendingTasks = () => {
   );
 };
 
-export default PendingTasks;
+export default CompletedTasks;

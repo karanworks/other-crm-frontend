@@ -82,7 +82,6 @@ const Login = (props) => {
     }),
     onSubmit: (values) => {
       // this code works for default login feature
-      console.log("onsubmit being called", values);
       dispatch(loginUser(values, props.router.navigate));
     },
   });

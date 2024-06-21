@@ -19,8 +19,6 @@ const invoiceSlice = createSlice({
   reducers: {
     // these actions are for instant updation of balance
     updateBalanceOnPaymentCreation(state, action) {
-      console.log("invoice payload on payment ->", action.payload);
-
       const payment = action.payload.data;
 
       state.invoices = state.invoices.map((invoice) => {

@@ -164,8 +164,6 @@ const Calender = () => {
 
   const calendarData = [...eventsCalendarData, ...leadsCalendarData];
 
-  console.log("CALENDAR DATA FROM BACKEND ->", calendarData);
-
   useEffect(() => {
     dispatch(getLeads());
     dispatch(getEvents());
@@ -238,7 +236,6 @@ const Calender = () => {
         ? date_r(st_date)
         : date_r(st_date) + " to " + date_r(ed_date);
 
-    // console.log("EVENT ->", event._def.ui.classNames);
     setEvent({
       id: event.id,
       title: event._def.title,
@@ -389,7 +386,6 @@ const Calender = () => {
                         eventClick={handleEventClick}
                         // drop={onDrop}
                       />
-                      {/* {console.log("CHECKING CALENDAR ->", )} */}
                     </CardBody>
                   </Card>
                 </Col>

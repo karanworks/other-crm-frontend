@@ -155,8 +155,6 @@ const Report = () => {
     setmodal_list(!modal_list);
     setListLeadId(lead.id);
 
-    console.log("LEAD EDIT ->", lead);
-
     // validation.values.clientName = lead.clientName;
     // validation.values.projectGenre = lead.projectGenre;
     // validation.values.projectStatus = lead.projectStatus;
@@ -176,8 +174,6 @@ const Report = () => {
     setIsEditingEvent(true);
     setListEventId(event.id);
     setAddEvent_view_modal(!add_event_view_modal);
-
-    console.log("EVENT EDIT DATE ->", event);
 
     eventValidation.setValues({
       eventName: event.eventName,
@@ -288,7 +284,7 @@ const Report = () => {
                                   <div>
                                     <span
                                       className="text-muted"
-                                      style={{ fontSize: "13px" }}
+                                      style={{ fontSize: "12px" }}
                                     >
                                       {" "}
                                       {lead.addedBy.branch}

@@ -24,7 +24,6 @@ const Sidebar = ({ layoutType }) => {
     }
   });
 
-  // console.log("LAYOUT TYPE IN SIDEBAR ->", layoutType);
   const addEventListenerOnSmHoverMenu = () => {
     // add listener Sidebar Hover icon on change layout from setting
     if (

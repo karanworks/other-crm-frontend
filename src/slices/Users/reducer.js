@@ -54,7 +54,6 @@ const usersSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        console.log("updated user reducer ->", action.payload);
         const updatedUserId = action.payload.data.updatedUser.id;
         state.users = state.users.map((user) => {
           if (user.id == updatedUserId) {

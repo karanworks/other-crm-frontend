@@ -137,9 +137,9 @@ function UserFormModal({
               ))}
             </Input>
 
-            {validation.touched.role && validation.errors.role ? (
+            {validation.touched.branchId && validation.errors.branchId ? (
               <FormFeedback type="invalid">
-                {validation.errors.role}
+                {validation.errors.branchId}
               </FormFeedback>
             ) : null}
           </div>

@@ -20,7 +20,6 @@ const CoverTwosVerify = () => {
       } else {
         getInputElement(index).blur();
         // Submit code
-        console.log("submit code");
       }
     }
   };

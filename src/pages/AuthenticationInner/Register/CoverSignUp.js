@@ -35,9 +35,7 @@ const CoverSignUp = () => {
         .matches(RegExp("(.*[0-9].*)"), "At least one number")
         .required("This field is required"),
     }),
-    onSubmit: (values) => {
-      // console.log(values);
-    },
+    onSubmit: (values) => {},
   });
 
   return (

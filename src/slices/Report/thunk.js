@@ -23,7 +23,6 @@ export const createEvent = createAsyncThunk(
   "report/createEvent",
   async (data) => {
     try {
-      console.log("EVENTS IN CREATE EVENT THUNK ->", data);
       const response = await createEventApi(data);
 
       return response;

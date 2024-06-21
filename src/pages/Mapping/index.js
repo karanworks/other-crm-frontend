@@ -139,7 +139,6 @@ const Mapping = () => {
   }
 
   function formHandleSubmit(e) {
-    console.log("handle submit called");
     e.preventDefault();
     roleValidation.handleSubmit();
     setmodal_list(false);

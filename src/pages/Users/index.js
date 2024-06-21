@@ -164,7 +164,9 @@ const Users = () => {
 
     // setting the value of role according to roleId because in select element roleId is used as value
     const roleName = roles.find((role) => role.id === userData.roleId);
-    const branch = branchDropdowns.find((branch) => branch.id === branch.id);
+    const branch = branchDropdowns.find(
+      (br) => br.branchDropdownName === userData.branch
+    );
 
     validation.setValues({
       name: userData.username,

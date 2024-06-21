@@ -49,9 +49,7 @@ const CoverPasswCreate = () => {
         })
         .required("Confirm Password Required"),
     }),
-    onSubmit: (values) => {
-      // console.log(values);
-    },
+    onSubmit: (values) => {},
   });
   return (
     <React.Fragment>

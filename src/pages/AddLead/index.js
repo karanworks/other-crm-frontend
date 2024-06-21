@@ -504,7 +504,6 @@ const AddLead = () => {
                             const formattedDate = new Date(
                               date
                             ).toLocaleDateString("en-GB");
-                            console.log("DUE DATE ->", formattedDate);
                             validation.setFieldValue(
                               "projectDueDate",
                               formattedDate

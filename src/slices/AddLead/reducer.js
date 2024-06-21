@@ -48,8 +48,6 @@ const leadSlice = createSlice({
     });
 
     builder.addCase(updateLead.fulfilled, (state, action) => {
-      console.log("action payload while updating", action.payload);
-
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
