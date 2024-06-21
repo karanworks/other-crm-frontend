@@ -8,9 +8,10 @@ import {
   ModalHeader,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
+import { label } from "yet-another-react-lightbox";
 
 function AddLeadModal({
   modal_list, // modal state
@@ -42,6 +43,21 @@ function AddLeadModal({
   function handleSelectSingleGenre(selectedSingle) {
     setSelectedSingleGenre(selectedSingle);
   }
+
+  // Use useEffect to set the initial values for the select fields when editing a lead
+  useEffect(() => {
+    if (isEditingLead) {
+      const genre = SingleGenreOptions.find(
+        (option) => option.value === validation.values.projectGenre
+      );
+      setSelectedSingleGenre(genre);
+
+      const status = SingleStatusOptions.find(
+        (option) => option.value === validation.values.projectStatus
+      );
+      setSelectedSingleStatus(status);
+    }
+  }, [isEditingLead]);
 
   function handleSelectSingleStatus(selectedSingle) {
     setSelectedSingleStatus(selectedSingle);
