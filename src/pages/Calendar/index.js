@@ -34,7 +34,7 @@ import UpcommingEvents from "./UpcommingEvents";
 import { createSelector } from "reselect";
 // import { getLeads } from "../../slices/AddLead/thunk";
 import { getClients } from "../../slices/AddClient/thunk";
-import { getEvents } from "../../slices/Report/thunk";
+import { getEvents } from "../../slices/Event/thunk";
 import { getPayments } from "../../slices/Payment/thunk";
 import { getInvoices } from "../../slices/Invoice/thunk";
 

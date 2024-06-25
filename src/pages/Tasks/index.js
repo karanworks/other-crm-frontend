@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 import EventsViewModal from "./EventsViewModal";
 import AddEventModal from "./AddEventModal";
-import { createEvent, getEvents, updateEvent } from "../../slices/Report/thunk";
+import { createEvent, getEvents, updateEvent } from "../../slices/Event/thunk";
 import EventRemoveModal from "./EventRemoveModal";
 import { getTasks, updateTask } from "../../slices/Task/thunk";
 

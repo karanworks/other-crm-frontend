@@ -32,7 +32,7 @@ import {
   createDropdown,
 } from "../../slices/AddClient/thunk";
 
-import { createEvent } from "../../slices/Report/thunk";
+import { createEvent } from "../../slices/Event/thunk";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 
