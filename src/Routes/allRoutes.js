@@ -16,7 +16,7 @@ import UserProfile from "../pages/Authentication/user-profile";
 //APi Key
 import Mapping from "../pages/Mapping";
 
-import AddLead from "../pages/AddLead";
+import AddClient from "../pages/AddClient";
 import Invoice from "../pages/Invoice";
 import PendingTasks from "../pages/PendingTasks";
 import Calendar from "../pages/Calendar";
@@ -27,7 +27,7 @@ import Tasks from "../pages/Tasks";
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
   { path: "/roles", component: <Mapping /> },
-  { path: "/add-lead", component: <AddLead /> },
+  { path: "/add-client", component: <AddClient /> },
   { path: "/clients", component: <Clients /> },
   { path: "/tasks", component: <Tasks /> },
   { path: "/invoice", component: <Invoice /> },

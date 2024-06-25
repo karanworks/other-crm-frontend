@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  getLeads,
-  createLead,
-  removeLead,
-  updateLead,
+  getClients,
+  createClient,
+  updateClient,
   createDropdown,
 } from "./thunk";
 
@@ -11,35 +10,36 @@ import { toast } from "react-toastify";
 
 export const initialState = {
   userData: null,
-  leads: [],
+  clients: [],
   dropdowns: [],
   error: "",
 };
 
-const leadSlice = createSlice({
-  name: "leads",
+const clientSlice = createSlice({
+  name: "clients",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getLeads.fulfilled, (state, action) => {
+    builder.addCase(getClients.fulfilled, (state, action) => {
+      console.log("CLIENT ACTION PAYLOAD ->", action.payload);
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.userData = action.payload.data;
-        state.leads = action.payload?.data.leads;
+        state.clients = action.payload?.data.clients;
         state.dropdowns = action.payload.data.dropdowns;
         state.error = "";
       }
     });
 
-    builder.addCase(createLead.fulfilled, (state, action) => {
+    builder.addCase(createClient.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        state.leads = [...state.leads, action.payload.data];
+        state.clients = [...state.clients, action.payload.data];
         state.error = "";
 
-        toast.success("Lead has been added !", {
+        toast.success("Client has been added !", {
           position: "bottom-center",
           autoClose: 3000,
           theme: "colored",
@@ -47,34 +47,36 @@ const leadSlice = createSlice({
       }
     });
 
-    builder.addCase(updateLead.fulfilled, (state, action) => {
+    builder.addCase(updateClient.fulfilled, (state, action) => {
       if (action.payload.status == "failure") {
         state.error = action.payload.message;
       } else {
-        const updatedLeadId = action.payload.data?.updatedLead.id;
+        const updatedClientId = action.payload.data?.updatedClient.id;
 
-        if (action.payload.data?.updatedLead.status === 0) {
-          state.leads = state.leads.filter((lead) => lead.id !== updatedLeadId);
+        if (action.payload.data?.updatedClient.status === 0) {
+          state.clients = state.clients.filter(
+            (client) => client.id !== updatedClientId
+          );
           state.error = "";
 
-          toast.error("Lead has been removed !", {
+          toast.error("Client has been removed !", {
             position: "bottom-center",
             autoClose: 3000,
             theme: "colored",
           });
         } else {
-          state.leads = state.leads.map((lead) => {
-            if (lead.id == updatedLeadId) {
-              lead = action.payload.data.updatedLead;
-              return lead;
+          state.clients = state.clients.map((client) => {
+            if (client.id == updatedClientId) {
+              client = action.payload.data.updatedClient;
+              return client;
             } else {
-              return lead;
+              return client;
             }
           });
 
           state.alreadyExistsError = null;
           state.error = "";
-          toast.success("Lead details updated !", {
+          toast.success("Client details updated !", {
             position: "bottom-center",
             autoClose: 3000,
             theme: "colored",
@@ -82,18 +84,6 @@ const leadSlice = createSlice({
         }
       }
     });
-
-    // builder.addCase(removeLead.fulfilled, (state, action) => {
-    //   const deletedLeadId = action.payload.data.deletedLead.id;
-    //   state.leads = state.leads.filter((lead) => lead.id !== deletedLeadId);
-    //   state.error = "";
-
-    //   toast.error("Lead has been removed !", {
-    //     position: "bottom-center",
-    //     autoClose: 3000,
-    //     theme: "colored",
-    //   });
-    // });
 
     // *****************************************************************
     // *************************** DROPDOWNS ***************************
@@ -116,4 +106,4 @@ const leadSlice = createSlice({
   },
 });
 
-export default leadSlice.reducer;
+export default clientSlice.reducer;

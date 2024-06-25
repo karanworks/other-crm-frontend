@@ -367,21 +367,24 @@ export const removeDesign = ({ designId }) => {
 };
 
 // *****************************************************************
-// **************************** ADD LEAD ***************************
+// ***************************** CLIENT ****************************
 // *****************************************************************
-export const getLeads = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/leads`);
+export const getClients = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/clients`);
 };
 
-export const createLead = (data) => {
-  return api.create(`${process.env.REACT_APP_SERVER_URL}/lead/create`, data);
+export const createClient = (data) => {
+  return api.create(`${process.env.REACT_APP_SERVER_URL}/client/create`, data);
 };
 
-export const updateLead = (leadId, data, status) => {
-  return api.update(`${process.env.REACT_APP_SERVER_URL}/lead/${leadId}/edit`, {
-    ...data,
-    status,
-  });
+export const updateClient = (clientId, data, status) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/client/${clientId}/edit`,
+    {
+      ...data,
+      status,
+    }
+  );
 };
 // *****************************************************************
 // ***************************** TASKS *****************************
@@ -391,6 +394,7 @@ export const getTasks = () => {
 };
 
 export const createTask = (data) => {
+  console.log("TASK CREATE BACKEND HELPER ->", data);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/task/create`, data);
 };
 

@@ -18,7 +18,7 @@ function InvoiceModal({
   formHandleSubmit,
   validation,
   isEditingInvoice,
-  leads,
+  clients,
 }) {
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
 
@@ -26,7 +26,7 @@ function InvoiceModal({
     setSelectedSingleStatus(selectedSingle);
   }
 
-  let SingleStatusOptions = leads?.map((lead) => {
+  let SingleStatusOptions = clients?.map((lead) => {
     return { value: lead.clientName, label: lead.clientName };
   });
 

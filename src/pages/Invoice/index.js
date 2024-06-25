@@ -33,7 +33,8 @@ import {
   updatePayment,
 } from "../../slices/Payment/thunk";
 
-import { getLeads } from "../../slices/AddLead/thunk";
+// import { getLeads } from "../../slices/AddLead/thunk";
+import { getClients } from "../../slices/AddClient/thunk";
 
 import { useSelector } from "react-redux";
 import PaymentsViewModal from "./PaymentsViewModal";
@@ -63,7 +64,7 @@ const Invoice = () => {
   const dispatch = useDispatch();
 
   const { invoices, error } = useSelector((state) => state.Invoice);
-  const { leads } = useSelector((state) => state.AddLead);
+  const { clients } = useSelector((state) => state.AddClient);
   const { payments } = useSelector((state) => state.Payment);
 
   function tog_list() {
@@ -89,7 +90,7 @@ const Invoice = () => {
 
   useEffect(() => {
     dispatch(getInvoices());
-    dispatch(getLeads());
+    dispatch(getClients());
   }, [dispatch]);
 
   // formik setup
@@ -352,7 +353,7 @@ const Invoice = () => {
         formHandleSubmit={formHandleSubmit}
         validation={validation}
         isEditingInvoice={isEditingInvoice}
-        leads={leads}
+        clients={clients}
       />
 
       {/* Remove Modal */}

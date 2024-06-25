@@ -8,12 +8,13 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { getLeads } from "../../slices/AddLead/thunk";
+// import { getLeads } from "../../slices/AddLead/thunk";
+import { getClients } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 
 const PendingTasks = () => {
-  const { leads } = useSelector((state) => state.AddLead);
+  const { clients } = useSelector((state) => state.AddClient);
 
   const dispatch = useDispatch();
 
@@ -34,7 +35,7 @@ const PendingTasks = () => {
     }
   }
 
-  const pastLeads = leads
+  const pastLeads = clients
     ?.map(function (lead) {
       if (isDatePast(lead.projectDueDate)) {
         return lead;
@@ -43,7 +44,7 @@ const PendingTasks = () => {
     .filter(Boolean);
 
   useEffect(() => {
-    dispatch(getLeads());
+    dispatch(getClients());
   }, [dispatch]);
 
   document.title = "Pending Tasks";

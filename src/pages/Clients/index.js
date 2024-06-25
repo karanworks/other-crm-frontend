@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,67 +8,34 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import LeadRemoveModal from "./LeadRemoveModal";
+import LeadRemoveModal from "./ClientRemoveModal";
 import { useDispatch } from "react-redux";
 
-import {
-  getLeads,
-  createLead,
-  removeLead,
-  updateLead,
-} from "../../slices/AddLead/thunk";
+import { getClients, updateClient } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
-import YoutubeLogo from "./youtube_logo.webp";
-import EventsViewModal from "../Tasks/EventsViewModal";
-// import AddTaskModal from "./AddTaskModal2";
 import AddTaskModal from "./AddTaskModal";
-import {
-  createEvent,
-  getEvents,
-  updateEvent,
-  removeEvent,
-} from "../../slices/Report/thunk";
-import { getTasks } from "../../slices/Task/thunk";
-import EventRemoveModal from "./EventRemoveModal";
 import EditClientModal from "./EditClientModal";
+import { createTask } from "../../slices/Task/thunk";
+import ClientRemoveModal from "./ClientRemoveModal";
 
 const Clients = () => {
   const [add_task_modal, setAdd_task_modal] = useState(false);
 
-  const [event_modal_delete, setEvent_modal_delete] = useState(false);
-
-  // const [add_task_view_modal, setAddTask_view_modal] = useState(false);
-  // const [add_event_view_modal, setAddEvent_view_modal] = useState(false);
-
-  const [isEditingEvent, setIsEditingEvent] = useState(false);
-
-  const [listEventId, setListEventId] = useState(null);
-
-  // needed this for creating event
   const [selectedClientName, setSelectedClientName] = useState("");
 
-  const [selectedLeadMobileNo, setSelectedLeadMobileNo] = useState("");
-
-  // separater
-
-  // const [modal_list, setmodal_list] = useState(false);
+  const [selectedClientId, setSelectedClientId] = useState("");
 
   const [edit_client_modal, setEdit_client_modal] = useState(false);
-
-  // const [isEditingLead, setIsEditingLead] = useState(false);
 
   const [isEditingClient, setIsEditingClient] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  // const [listLeadId, setListLeadId] = useState(null);
-
   const [listClientId, setListClientId] = useState(null);
 
   const dispatch = useDispatch();
 
-  const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
-  const { leadEvents } = useSelector((state) => state.Report);
+  const { clients, dropdowns, error } = useSelector((state) => state.AddClient);
 
   // toggles register / edit lead modal
   function edit_client_tog_list() {
@@ -86,17 +52,8 @@ const Clients = () => {
     setAdd_task_modal(!add_task_modal);
   }
 
-  function event_tog_delete() {
-    setEvent_modal_delete(!event_modal_delete);
-  }
-
-  function add_event_tog_list() {
-    setAddEvent_view_modal(!add_event_view_modal);
-    setIsEditingEvent(false);
-  }
-
   useEffect(() => {
-    dispatch(getLeads());
+    dispatch(getClients());
   }, [dispatch]);
 
   // formik setup
@@ -118,9 +75,15 @@ const Clients = () => {
       description: Yup.string(),
     }),
     onSubmit: (values) => {
-      // : dispatch(createLead(values));
+      dispatch(
+        createTask({
+          ...values,
+          clientId: selectedClientId,
+          clientName: selectedClientName,
+        })
+      );
 
-      setEdit_client_modal(false);
+      setAdd_task_modal(false);
     },
   });
   const clientValidation = useFormik({
@@ -135,18 +98,9 @@ const Clients = () => {
       address: Yup.string().required("Please enter address"),
     }),
     onSubmit: (values) => {
-      // isEditingEvent
-      //   ? dispatch(updateEvent({ ...values, listEventId }))
-      //   : dispatch(
-      //       createEvent({
-      //         ...values,
-      //         clientName: selectedClientName,
-      //         leadMobileNo: selectedLeadMobileNo,
-      //       })
-      //     );
-      isEditingClient && dispatch(updateLead({ values, listClientId }));
-
-      setAddEvent_view_modal(false);
+      console.log("CLIENT VALUES WHILE EDITING ->", values);
+      isEditingClient && dispatch(updateClient({ values, listClientId }));
+      setEdit_client_modal(false);
     },
   });
 
@@ -156,7 +110,7 @@ const Clients = () => {
     taskValidation.handleSubmit();
     return false;
   }
-  function eventFormHandleSubmit(e) {
+  function editClientHandleSubmit(e) {
     e.preventDefault();
     clientValidation.handleSubmit();
     return false;
@@ -164,7 +118,7 @@ const Clients = () => {
 
   // to update the values of register form when editing the lead
   function handleEditClient(client) {
-    console.log("EDIT CLIENT CALLED ->", client);
+    console.log("CLIENT WHEN EDIT BUTTON CLICKED ->", client);
     setIsEditingClient(true);
     setEdit_client_modal(!edit_client_modal);
     setListClientId(client.id);
@@ -228,7 +182,7 @@ const Clients = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {leads?.map((client) => (
+                          {clients?.map((client) => (
                             <tr key={client?.id}>
                               <th scope="row">
                                 <div className="form-check">
@@ -282,9 +236,7 @@ const Clients = () => {
                                         setSelectedClientName(
                                           client.clientName
                                         );
-                                        setSelectedLeadMobileNo(
-                                          client.mobileNo
-                                        );
+                                        setSelectedClientId(client.id);
                                       }}
                                     >
                                       Add Task
@@ -351,48 +303,26 @@ const Clients = () => {
       <EditClientModal
         edit_client_modal={edit_client_modal}
         edit_client_tog_list={edit_client_tog_list}
-        formHandleSubmit={formHandleSubmit}
+        editClientHandleSubmit={editClientHandleSubmit}
         clientValidation={clientValidation}
         isEditingClient={isEditingClient}
         dropdowns={dropdowns}
       />
 
       {/* Remove Modal */}
-      <LeadRemoveModal
+      <ClientRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(updateLead({ listClientId, status: 0 }));
+          dispatch(updateClient({ listClientId, status: 0 }));
           setmodal_delete(false);
-        }}
-      />
-
-      {/* <EventsViewModal
-        events_view_modal={events_view_modal}
-        events_view_tog_list={events_view_tog_list}
-        add_event_tog_list={add_event_tog_list}
-        event_tog_delete={event_tog_delete}
-        setListEventId={setListEventId}
-        leadEvents={leadEvents}
-        handleEditEvent={handleEditEvent}
-      /> */}
-
-      <EventRemoveModal
-        event_modal_delete={event_modal_delete}
-        event_tog_delete={event_tog_delete}
-        handleDeleteEvent={() => {
-          dispatch(updateEvent({ listEventId, status: 0 }));
-          event_tog_delete();
         }}
       />
 
       <AddTaskModal
         add_task_modal={add_task_modal}
         add_task_tog_list={add_task_tog_list}
-        // eventValidation={eventValidation}
-        isEditingEvent={isEditingEvent}
-        eventFormHandleSubmit={eventFormHandleSubmit}
         formHandleSubmit={formHandleSubmit}
         taskValidation={taskValidation}
         dropdowns={dropdowns}

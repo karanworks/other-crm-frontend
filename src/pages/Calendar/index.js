@@ -32,7 +32,8 @@ import SimpleBar from "simplebar-react";
 import UpcommingEvents from "./UpcommingEvents";
 
 import { createSelector } from "reselect";
-import { getLeads } from "../../slices/AddLead/thunk";
+// import { getLeads } from "../../slices/AddLead/thunk";
+import { getClients } from "../../slices/AddClient/thunk";
 import { getEvents } from "../../slices/Report/thunk";
 import { getPayments } from "../../slices/Payment/thunk";
 import { getInvoices } from "../../slices/Invoice/thunk";
@@ -59,13 +60,13 @@ const Calender = () => {
     })
   );
 
-  const { leads } = useSelector((state) => state.AddLead);
+  const { clients } = useSelector((state) => state.AddClient);
   const { payments } = useSelector((state) => state.Payment);
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Report);
 
-  const leadsCalendarData = leads?.map((lead) => {
-    let dateStr = lead.projectDueDate;
+  const clientsCalendarData = clients?.map((client) => {
+    let dateStr = client.projectDueDate;
 
     // Split the date string into day, month, and year components
     let [day, month, year] = dateStr.split("/");
@@ -162,10 +163,10 @@ const Calender = () => {
     };
   });
 
-  const calendarData = [...eventsCalendarData, ...leadsCalendarData];
+  const calendarData = [...eventsCalendarData, ...clientsCalendarData];
 
   useEffect(() => {
-    dispatch(getLeads());
+    dispatch(getClients());
     dispatch(getEvents());
     dispatch(getInvoices());
   }, [dispatch]);

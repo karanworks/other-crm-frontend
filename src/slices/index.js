@@ -7,7 +7,7 @@ import LayoutReducer from "./layouts/reducer";
 import LoginReducer from "./auth/login/reducer";
 import UsersReducer from "./Users/reducer";
 import MappingReducer from "./Mapping/reducer";
-import AddLeadReducer from "./AddLead/reducer";
+import AddClientReducer from "./AddClient/reducer";
 import InvoiceReducer from "./Invoice/reducer";
 import PaymentReducer from "./Payment/reducer";
 import ReportReducer from "./Report/reducer";
@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
   Account: AccountReducer,
   Users: UsersReducer,
   Mapping: MappingReducer,
-  AddLead: AddLeadReducer,
+  AddClient: AddClientReducer,
   Invoice: InvoiceReducer,
   Payment: PaymentReducer,
   Report: ReportReducer,

@@ -9,7 +9,8 @@ import * as Yup from "yup";
 import AddLeadModal from "./AddLeadModal";
 import LeadRemoveModal from "./LeadRemoveModal";
 import { useDispatch } from "react-redux";
-import { getLeads, updateLead } from "../../slices/AddLead/thunk";
+// import { getLeads, updateLead } from "../../slices/AddLead/thunk";
+import { getClients, updateClient } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 import EventsViewModal from "./EventsViewModal";
@@ -46,7 +47,7 @@ const Tasks = () => {
 
   const dispatch = useDispatch();
 
-  const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
+  const { leads, dropdowns, error } = useSelector((state) => state.AddClient);
   const { leadEvents } = useSelector((state) => state.Report);
   const { tasks } = useSelector((state) => state.Task);
 
@@ -75,7 +76,7 @@ const Tasks = () => {
   }
 
   useEffect(() => {
-    dispatch(getLeads());
+    dispatch(getClients());
     dispatch(getTasks());
   }, [dispatch]);
 
@@ -96,7 +97,7 @@ const Tasks = () => {
       projectDueDate: Yup.string().required("Please select project due date"),
     }),
     onSubmit: (values) => {
-      isEditingLead && dispatch(updateLead({ values, listLeadId }));
+      // isEditingLead && dispatch(updateClient({ values, listLeadId }));
       // : dispatch(createLead(values));
 
       setmodal_list(false);
@@ -373,7 +374,7 @@ const Tasks = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(updateLead({ listLeadId, status: 0 }));
+          dispatch(updateClient({ listLeadId, status: 0 }));
           setmodal_delete(false);
         }}
       />

@@ -16,7 +16,7 @@ import { label } from "yet-another-react-lightbox";
 function EditClientModal({
   edit_client_modal, // modal state
   edit_client_tog_list, // to change modal state
-  formHandleSubmit, // submit function for form
+  editClientHandleSubmit, // submit function for form
   clientValidation, // to get the values from formik
   isEditingClient, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   dropdowns,
@@ -80,7 +80,10 @@ function EditClientModal({
         {" "}
         Create New Lead
       </ModalHeader>
-      <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
+      <Form
+        className="tablelist-form"
+        onSubmit={(e) => editClientHandleSubmit(e)}
+      >
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
             <Label htmlFor="clientName" className="form-label">

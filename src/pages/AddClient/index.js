@@ -27,16 +27,16 @@ import { useDispatch } from "react-redux";
 import Flatpickr from "react-flatpickr";
 
 import {
-  getLeads,
-  createLead,
+  getClients,
+  createClient,
   createDropdown,
-} from "../../slices/AddLead/thunk";
+} from "../../slices/AddClient/thunk";
 
 import { createEvent } from "../../slices/Report/thunk";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 
-const AddLead = () => {
+const AddClient = () => {
   const [singleCategoryOption, setSingleCategoryOption] = useState(null);
 
   const [addDropdownOpen, setAddDropdownOpen] = useState(false);
@@ -62,10 +62,10 @@ const AddLead = () => {
 
   const dispatch = useDispatch();
 
-  const { userData, dropdowns } = useSelector((state) => state.AddLead);
+  const { userData, dropdowns } = useSelector((state) => state.AddClient);
 
   useEffect(() => {
-    dispatch(getLeads());
+    dispatch(getClients());
   }, [dispatch]);
 
   let SingleGenreOptions = dropdowns
@@ -180,9 +180,7 @@ const AddLead = () => {
         dispatch(createEvent(events));
       }
 
-      console.log("VALUES WHILE CREATING LEAD ->", values);
-
-      dispatch(createLead(values));
+      dispatch(createClient(values));
       resetForm();
     },
   });
@@ -215,18 +213,18 @@ const AddLead = () => {
     return false;
   }
 
-  document.title = "Add Lead";
+  document.title = "Add Client";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Add Lead" pageTitle="Lead Management" />
+          <BreadCrumb title="Add Client" pageTitle="Lead Management" />
           <Row className="d-flex ">
             <Col lg={6}>
               <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                   <h4 className="card-title mb-0" style={{ fontSize: "20px" }}>
-                    Create Lead
+                    Create Client
                   </h4>
 
                   <div className="d-flex" style={{ gap: "5px" }}>
@@ -632,7 +630,7 @@ const AddLead = () => {
 
                       <div className="text-end">
                         <button type="submit" className="btn btn-primary">
-                          Save Lead
+                          Save Client
                         </button>
                       </div>
                     </Form>
@@ -648,4 +646,4 @@ const AddLead = () => {
   );
 };
 
-export default AddLead;
+export default AddClient;

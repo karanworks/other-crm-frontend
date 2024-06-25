@@ -1,15 +1,15 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function EventRemoveModal({
-  event_modal_delete,
-  event_tog_delete,
-  handleDeleteEvent,
+function ClientRemoveModal({
+  modal_delete, // delete user confirmation modal
+  setmodal_delete, // change user confirmation modal state
+  handleDeleteCampaign, // function to delete a user
 }) {
   return (
     <Modal
-      isOpen={event_modal_delete}
+      isOpen={modal_delete}
       toggle={() => {
-        payment_tog_delete();
+        setmodal_delete(!modal_delete);
       }}
       className="modal zoomIn mt-0 mb-0"
       id="deleteRecordModal"
@@ -18,7 +18,7 @@ function EventRemoveModal({
       <div className="modal-header">
         <Button
           type="button"
-          onClick={() => event_tog_delete()}
+          onClick={() => setmodal_delete(false)}
           className="btn-close"
           aria-label="Close"
         ></Button>
@@ -34,7 +34,7 @@ function EventRemoveModal({
           <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
             <h4>Are you Sure ?</h4>
             <p className="mx-4 mb-0">
-              Do you really want to Remove this payment ?
+              Do you really want to Remove this Record ?
             </p>
           </div>
         </div>
@@ -42,7 +42,7 @@ function EventRemoveModal({
           <button
             type="button"
             className="btn w-sm btn-light"
-            onClick={() => event_tog_delete()}
+            onClick={() => setmodal_delete(false)}
           >
             Close
           </button>
@@ -50,7 +50,7 @@ function EventRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteEvent}
+            onClick={handleDeleteCampaign}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +60,4 @@ function EventRemoveModal({
   );
 }
 
-export default EventRemoveModal;
+export default ClientRemoveModal;
