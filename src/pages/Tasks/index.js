@@ -6,10 +6,9 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import AddLeadModal from "./AddLeadModal";
-import LeadRemoveModal from "./LeadRemoveModal";
+import AddTaskModal from "./AddTaskModal";
+import TaskRemoveModal from "./TaskRemoveModal";
 import { useDispatch } from "react-redux";
-// import { getLeads, updateLead } from "../../slices/AddLead/thunk";
 import { getClients, updateClient } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
@@ -17,7 +16,7 @@ import EventsViewModal from "./EventsViewModal";
 import AddEventModal from "./AddEventModal";
 import { createEvent, getEvents, updateEvent } from "../../slices/Report/thunk";
 import EventRemoveModal from "./EventRemoveModal";
-import { getTasks } from "../../slices/Task/thunk";
+import { getTasks, updateTask } from "../../slices/Task/thunk";
 
 const Tasks = () => {
   const [events_view_modal, setEvents_view_modal] = useState(false);
@@ -39,22 +38,26 @@ const Tasks = () => {
 
   const [modal_list, setmodal_list] = useState(false);
 
-  const [isEditingLead, setIsEditingLead] = useState(false);
+  const [isEditingTask, setIsEditingTask] = useState(false);
 
   const [modal_delete, setmodal_delete] = useState(false);
 
-  const [listLeadId, setListLeadId] = useState(null);
+  const [listTaskId, setListTaskId] = useState(null);
+
+  const [selectedTaskClientId, setSelectedTaskClientId] = useState(null);
+
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   const dispatch = useDispatch();
 
   const { leads, dropdowns, error } = useSelector((state) => state.AddClient);
-  const { leadEvents } = useSelector((state) => state.Report);
+  const { leadEvents } = useSelector((state) => state.Event);
   const { tasks } = useSelector((state) => state.Task);
 
   // toggles register / edit lead modal
   function tog_list() {
     setmodal_list(!modal_list);
-    setIsEditingLead(false);
+    setIsEditingTask(false);
   }
 
   // toggles delete lead confirmation modal
@@ -83,21 +86,23 @@ const Tasks = () => {
   // formik setup
   const validation = useFormik({
     initialValues: {
-      clientName: "",
+      taskName: "",
       projectGenre: "",
       projectStatus: "",
       youtubeLink: "",
       projectDueDate: "",
+      description: "",
     },
     validationSchema: Yup.object({
-      clientName: Yup.string().required("Please enter client name"),
+      taskName: Yup.string().required("Please enter client name"),
       projectGenre: Yup.string().required("Please enter project genre"),
       projectStatus: Yup.string().required("Please select project status"),
-      youtubeLink: Yup.string(),
       projectDueDate: Yup.string().required("Please select project due date"),
+      youtubeLink: Yup.string(),
+      description: Yup.string().required("Please enter description"),
     }),
     onSubmit: (values) => {
-      // isEditingLead && dispatch(updateClient({ values, listLeadId }));
+      isEditingTask && dispatch(updateTask({ values, listTaskId }));
       // : dispatch(createLead(values));
 
       setmodal_list(false);
@@ -118,8 +123,8 @@ const Tasks = () => {
         : dispatch(
             createEvent({
               ...values,
-              clientName: selectedClientName,
-              leadMobileNo: selectedLeadMobileNo,
+              clientId: selectedTaskClientId,
+              taskId: selectedTaskId,
             })
           );
 
@@ -140,17 +145,18 @@ const Tasks = () => {
   }
 
   // to update the values of register form when editing the lead
-  function handleEditLead(lead) {
-    setIsEditingLead(true);
+  function handleEditTask(task) {
+    setIsEditingTask(true);
     setmodal_list(!modal_list);
-    setListLeadId(lead.id);
+    setListTaskId(task.id);
 
     validation.setValues({
-      clientName: lead.clientName,
-      projectGenre: lead.projectGenre,
-      projectStatus: lead.projectStatus,
-      youtubeLink: lead.youtubeLink,
-      projectDueDate: lead.projectDueDate,
+      taskName: task.task,
+      projectGenre: task.projectGenre,
+      projectStatus: task.projectStatus,
+      youtubeLink: task.youtubeLink,
+      projectDueDate: task.projectDueDate,
+      description: task.description,
     });
   }
 
@@ -229,7 +235,7 @@ const Tasks = () => {
                         </thead>
                         <tbody className="list form-check-all">
                           {tasks?.map((task) => (
-                            <tr>
+                            <tr key={task.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -293,9 +299,9 @@ const Tasks = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => {
                                         events_view_tog_list();
-                                        dispatch(getEvents(lead.mobileNo));
-                                        setSelectedClientName(lead.clientName);
-                                        setSelectedLeadMobileNo(lead.mobileNo);
+                                        dispatch(getEvents(task.id));
+                                        setSelectedTaskClientId(task.clientId);
+                                        setSelectedTaskId(task.id);
                                       }}
                                     >
                                       View Events
@@ -308,7 +314,7 @@ const Tasks = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        // handleEditLead(lead);
+                                        handleEditTask(task);
                                       }}
                                     >
                                       Edit
@@ -320,8 +326,8 @@ const Tasks = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
-                                        // setListLeadId(lead.id);
-                                        // setmodal_delete(true);
+                                        setListTaskId(task.id);
+                                        setmodal_delete(true);
                                       }}
                                     >
                                       Remove
@@ -359,22 +365,22 @@ const Tasks = () => {
       </div>
 
       {/* Add Modal */}
-      <AddLeadModal
+      <AddTaskModal
         modal_list={modal_list}
         tog_list={tog_list}
         formHandleSubmit={formHandleSubmit}
         validation={validation}
-        isEditingLead={isEditingLead}
+        isEditingTask={isEditingTask}
         dropdowns={dropdowns}
       />
 
       {/* Remove Modal */}
-      <LeadRemoveModal
+      <TaskRemoveModal
         modal_delete={modal_delete}
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
-        handleDeleteCampaign={() => {
-          dispatch(updateClient({ listLeadId, status: 0 }));
+        handleDeleteTask={() => {
+          dispatch(updateTask({ listTaskId, status: 0 }));
           setmodal_delete(false);
         }}
       />

@@ -231,8 +231,6 @@ const Clients = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => {
                                         add_task_tog_list();
-                                        // dispatch(getEvents(lead.mobileNo));
-                                        // dispatch(getTasks(lead.id));
                                         setSelectedClientName(
                                           client.clientName
                                         );

@@ -10,7 +10,7 @@ import MappingReducer from "./Mapping/reducer";
 import AddClientReducer from "./AddClient/reducer";
 import InvoiceReducer from "./Invoice/reducer";
 import PaymentReducer from "./Payment/reducer";
-import ReportReducer from "./Report/reducer";
+import EventReducer from "./Event/reducer";
 import BranchDropdownsReducer from "./BranchDropdown/reducer";
 import TaskReducer from "./Task/reducer";
 
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
   AddClient: AddClientReducer,
   Invoice: InvoiceReducer,
   Payment: PaymentReducer,
-  Report: ReportReducer,
+  Event: EventReducer,
   BranchDropdowns: BranchDropdownsReducer,
   Task: TaskReducer,
   ForgetPassword: ForgetPasswordReducer,

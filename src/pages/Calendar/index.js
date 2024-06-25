@@ -63,7 +63,7 @@ const Calender = () => {
   const { clients } = useSelector((state) => state.AddClient);
   const { payments } = useSelector((state) => state.Payment);
   const { invoices } = useSelector((state) => state.Invoice);
-  const { allEvents } = useSelector((state) => state.Report);
+  const { allEvents } = useSelector((state) => state.Event);
 
   const clientsCalendarData = clients?.map((client) => {
     let dateStr = client.projectDueDate;

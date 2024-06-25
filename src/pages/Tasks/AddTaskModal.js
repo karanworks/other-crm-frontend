@@ -13,12 +13,12 @@ import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import { label } from "yet-another-react-lightbox";
 
-function AddLeadModal({
+function AddTaskModal({
   modal_list, // modal state
   tog_list, // to change modal state
   formHandleSubmit, // submit function for form
   validation, // to get the values from formik
-  isEditingLead, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
+  isEditingTask, // state of whether we are editing the user or not, if we are editing the user then form fields will have the values of that user
   dropdowns,
 }) {
   const [selectedSingleGenre, setSelectedSingleGenre] = useState(null);
@@ -46,7 +46,7 @@ function AddLeadModal({
 
   // Use useEffect to set the initial values for the select fields when editing a lead
   useEffect(() => {
-    if (isEditingLead) {
+    if (isEditingTask) {
       const genre = SingleGenreOptions.find(
         (option) => option.value === validation.values.projectGenre
       );
@@ -57,7 +57,7 @@ function AddLeadModal({
       );
       setSelectedSingleStatus(status);
     }
-  }, [isEditingLead]);
+  }, [isEditingTask]);
 
   function handleSelectSingleStatus(selectedSingle) {
     setSelectedSingleStatus(selectedSingle);
@@ -78,34 +78,34 @@ function AddLeadModal({
         }}
       >
         {" "}
-        Create New Lead
+        Update Task
       </ModalHeader>
       <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
-            <Label htmlFor="clientName" className="form-label">
-              Client Name
+            <Label htmlFor="taskName" className="form-label">
+              Task Name
             </Label>
 
             <Input
-              id="clientName"
-              name="clientName"
+              id="taskName"
+              name="taskName"
               className="form-control"
-              placeholder="Enter client name"
+              placeholder="Enter task name"
               type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
-              value={validation.values.clientName || ""}
+              value={validation.values.taskName || ""}
               invalid={
-                validation.touched.clientName && validation.errors.clientName
+                validation.touched.taskName && validation.errors.taskName
                   ? true
                   : false
               }
             />
 
-            {validation.touched.clientName && validation.errors.clientName ? (
+            {validation.touched.taskName && validation.errors.taskName ? (
               <FormFeedback type="invalid">
-                {validation.errors.clientName}
+                {validation.errors.taskName}
               </FormFeedback>
             ) : null}
           </div>
@@ -189,9 +189,37 @@ function AddLeadModal({
             />
           </div>
 
+          <div className="mb-2">
+            <Label htmlFor="description" className="form-label">
+              Description
+            </Label>
+
+            <Input
+              id="description"
+              name="description"
+              className="form-control"
+              placeholder="Enter description"
+              type="text"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              value={validation.values.description || ""}
+              invalid={
+                validation.touched.description && validation.errors.description
+                  ? true
+                  : false
+              }
+            />
+
+            {validation.touched.description && validation.errors.description ? (
+              <FormFeedback type="invalid">
+                {validation.errors.description}
+              </FormFeedback>
+            ) : null}
+          </div>
+
           <div className="text-end">
             <button type="submit" className="btn btn-primary">
-              {isEditingLead ? "Update Lead" : "Save Lead"}
+              {isEditingTask ? "Update Task" : "Save Task"}
             </button>
           </div>
         </ModalBody>
@@ -200,4 +228,4 @@ function AddLeadModal({
   );
 }
 
-export default AddLeadModal;
+export default AddTaskModal;

@@ -1,10 +1,6 @@
 import { Button, Modal, ModalBody } from "reactstrap";
 
-function LeadRemoveModal({
-  modal_delete, // delete user confirmation modal
-  setmodal_delete, // change user confirmation modal state
-  handleDeleteCampaign, // function to delete a user
-}) {
+function TaskRemoveModal({ modal_delete, setmodal_delete, handleDeleteTask }) {
   return (
     <Modal
       isOpen={modal_delete}
@@ -50,7 +46,7 @@ function LeadRemoveModal({
             type="button"
             className="btn w-sm btn-primary"
             id="delete-record"
-            onClick={handleDeleteCampaign}
+            onClick={handleDeleteTask}
           >
             Yes, Delete It!
           </button>
@@ -60,4 +56,4 @@ function LeadRemoveModal({
   );
 }
 
-export default LeadRemoveModal;
+export default TaskRemoveModal;

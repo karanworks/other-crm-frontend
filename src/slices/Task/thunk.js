@@ -27,8 +27,10 @@ export const createTask = createAsyncThunk("tasks/createTask", async (data) => {
 
 export const updateTask = createAsyncThunk("tasks/updateTask", async (data) => {
   try {
+    console.log("UPDATED TASK THUNK ->", data);
+
     const response = await updateTaskApi(
-      data.listLeadId,
+      data.listTaskId,
       data.values,
       data.status
     );

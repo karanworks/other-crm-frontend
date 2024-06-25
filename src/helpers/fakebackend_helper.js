@@ -394,11 +394,12 @@ export const getTasks = () => {
 };
 
 export const createTask = (data) => {
-  console.log("TASK CREATE BACKEND HELPER ->", data);
   return api.create(`${process.env.REACT_APP_SERVER_URL}/task/create`, data);
 };
 
 export const updateTask = (taskId, data, status) => {
+  console.log("TASK UDPATED BACKEND HELPER ->", taskId, data, status);
+
   return api.update(`${process.env.REACT_APP_SERVER_URL}/task/${taskId}/edit`, {
     ...data,
     status,
@@ -486,13 +487,13 @@ export const removePayment = ({ invoiceId, paymentId }) => {
 // ***************************** EVENTS ****************************
 // *****************************************************************
 
-export const getEvents = (mobileNo) => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/${mobileNo}/events`);
+export const getEvents = (taskId) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/${taskId}/events`);
 };
 
-export const createEvent = (events) => {
+export const createEvent = (event) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/event/create`, {
-    events,
+    event,
   });
 };
 
