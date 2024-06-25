@@ -180,6 +180,8 @@ const AddLead = () => {
         dispatch(createEvent(events));
       }
 
+      console.log("VALUES WHILE CREATING LEAD ->", values);
+
       dispatch(createLead(values));
       resetForm();
     },
@@ -220,7 +222,7 @@ const AddLead = () => {
         <Container fluid>
           <BreadCrumb title="Add Lead" pageTitle="Lead Management" />
           <Row className="d-flex ">
-            <Col lg={4}>
+            <Col lg={6}>
               <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                   <h4 className="card-title mb-0" style={{ fontSize: "20px" }}>

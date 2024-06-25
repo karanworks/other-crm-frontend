@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
@@ -12,26 +9,16 @@ import * as Yup from "yup";
 import AddLeadModal from "./AddLeadModal";
 import LeadRemoveModal from "./LeadRemoveModal";
 import { useDispatch } from "react-redux";
-
-import {
-  getLeads,
-  createLead,
-  removeLead,
-  updateLead,
-} from "../../slices/AddLead/thunk";
+import { getLeads, updateLead } from "../../slices/AddLead/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
-import EventsViewModal from "../Report/EventsViewModal";
+import EventsViewModal from "./EventsViewModal";
 import AddEventModal from "./AddEventModal";
-import {
-  createEvent,
-  getEvents,
-  updateEvent,
-  removeEvent,
-} from "../../slices/Report/thunk";
+import { createEvent, getEvents, updateEvent } from "../../slices/Report/thunk";
 import EventRemoveModal from "./EventRemoveModal";
+import { getTasks } from "../../slices/Task/thunk";
 
-const Report = () => {
+const Tasks = () => {
   const [events_view_modal, setEvents_view_modal] = useState(false);
 
   const [event_modal_delete, setEvent_modal_delete] = useState(false);
@@ -61,6 +48,7 @@ const Report = () => {
 
   const { leads, dropdowns, error } = useSelector((state) => state.AddLead);
   const { leadEvents } = useSelector((state) => state.Report);
+  const { tasks } = useSelector((state) => state.Task);
 
   // toggles register / edit lead modal
   function tog_list() {
@@ -88,6 +76,7 @@ const Report = () => {
 
   useEffect(() => {
     dispatch(getLeads());
+    dispatch(getTasks());
   }, [dispatch]);
 
   // formik setup
@@ -155,12 +144,6 @@ const Report = () => {
     setmodal_list(!modal_list);
     setListLeadId(lead.id);
 
-    // validation.values.clientName = lead.clientName;
-    // validation.values.projectGenre = lead.projectGenre;
-    // validation.values.projectStatus = lead.projectStatus;
-    // validation.values.youtubeLink = lead.youtubeLink;
-    // YOUTUBELINK, DUE DATE FIELD REMAINING HERE
-
     validation.setValues({
       clientName: lead.clientName,
       projectGenre: lead.projectGenre,
@@ -181,17 +164,17 @@ const Report = () => {
     });
   }
 
-  document.title = "Report";
+  document.title = "Tasks";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Report" pageTitle="Lead Management" />
+          <BreadCrumb title="Tasks" pageTitle="Lead Management" />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Report</h4>
+                  <h4 className="card-title mb-0">Tasks</h4>
                 </CardHeader>
 
                 <CardBody>
@@ -213,38 +196,39 @@ const Report = () => {
                                 />
                               </div>
                             </th>
+                            <th className="sort" data-sort="task_name">
+                              Task Name
+                            </th>
                             <th className="sort" data-sort="client_name">
                               Client Name
-                            </th>
-                            <th className="sort" data-sort="mobile_no">
-                              Mobile No
                             </th>
                             <th className="sort" data-sort="project_genre">
                               Project Genre
                             </th>
+                            <th className="sort" data-sort="project_status">
+                              Project Status
+                            </th>
                             <th className="sort" data-sort="project_due_date">
                               Project Due Date
                             </th>
-                            <th
-                              className="sort"
-                              data-sort="project_youtube_link"
-                            >
-                              Project YouTube Link
+                            <th className="sort" data-sort="youtube_link">
+                              Youtube Link
+                            </th>
+                            <th className="sort" data-sort="description">
+                              Description
                             </th>
                             <th className="sort" data-sort="added_by">
                               Added By
                             </th>
-                            <th className="sort" data-sort="project_status">
-                              Project Status
-                            </th>
+
                             <th className="sort" data-sort="action">
                               Action
                             </th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {leads?.map((lead) => (
-                            <tr key={lead?.id}>
+                          {tasks?.map((task) => (
+                            <tr>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -255,16 +239,19 @@ const Report = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="client-name">{lead.clientName}</td>
-                              <td className="client-name">{lead.mobileNo}</td>
-                              <td className="project-genre">
-                                {lead.projectGenre}
+                              <td className="task-name">{task.task}</td>
+                              <td className="client-name">{task.clientName}</td>
+                              <td className="project_genre">
+                                {task.projectGenre}
                               </td>
-                              <td className="project-date">
-                                {lead.projectDueDate}
+                              <td className="project_status">
+                                {task.projectStatus}
                               </td>
-                              <td className="project-youtube-link">
-                                <a href={lead.youtubeLink} target="blank">
+                              <td className="project_due_date">
+                                {task.projectDueDate}
+                              </td>
+                              <td className="youtube_link">
+                                <a href={task.youtubeLink} target="blank">
                                   {/* Youtube Link */}
 
                                   <img
@@ -274,12 +261,13 @@ const Report = () => {
                                   />
                                 </a>
                               </td>
+                              <td className="address">{task.description}</td>
                               <td className="added_by">
                                 <div>
                                   <div
                                     style={{ borderBottom: "1px solid gray" }}
                                   >
-                                    <span> {lead.addedBy.username}</span>
+                                    <span> {task.addedBy.username}</span>
                                   </div>
                                   <div>
                                     <span
@@ -287,17 +275,14 @@ const Report = () => {
                                       style={{ fontSize: "12px" }}
                                     >
                                       {" "}
-                                      {lead.addedBy.branch}
+                                      {task.addedBy.branch
+                                        ? task.addedBy.branch
+                                        : "Admin"}
                                     </span>
                                   </div>
                                 </div>
                               </td>
-                              <td className="project-status">
-                                <span className="badge border border-primary text-primary fs-13">
-                                  {" "}
-                                  {lead.projectStatus}
-                                </span>
-                              </td>
+
                               <td>
                                 <div className="d-flex gap-2">
                                   <div className="viewEvents">
@@ -322,7 +307,7 @@ const Report = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                       onClick={() => {
-                                        handleEditLead(lead);
+                                        // handleEditLead(lead);
                                       }}
                                     >
                                       Edit
@@ -334,8 +319,8 @@ const Report = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => {
-                                        setListLeadId(lead.id);
-                                        setmodal_delete(true);
+                                        // setListLeadId(lead.id);
+                                        // setmodal_delete(true);
                                       }}
                                     >
                                       Remove
@@ -423,4 +408,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default Tasks;

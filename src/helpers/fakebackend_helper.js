@@ -482,8 +482,8 @@ export const removePayment = ({ invoiceId, paymentId }) => {
 // ***************************** EVENTS ****************************
 // *****************************************************************
 
-export const getEvents = (leadMobileNo) => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/${leadMobileNo}/events`);
+export const getEvents = (mobileNo) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/${mobileNo}/events`);
 };
 
 export const createEvent = (events) => {

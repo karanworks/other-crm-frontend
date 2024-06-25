@@ -19,6 +19,8 @@ const taskSlice = createSlice({
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
+        console.log("TASKS HERE ->", action?.payload.data);
+
         state.userData = action.payload.data;
         state.tasks = action.payload?.data.tasks;
         state.error = "";

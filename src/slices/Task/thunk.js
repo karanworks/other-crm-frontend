@@ -6,9 +6,9 @@ import {
   updateTask as updateTaskApi,
 } from "../../helpers/fakebackend_helper";
 
-export const getTasks = createAsyncThunk("tasks/getTasks", async () => {
+export const getTasks = createAsyncThunk("tasks/getTasks", async (mobileNo) => {
   try {
-    const response = await getTasksApi();
+    const response = await getTasksApi(mobileNo);
 
     return response;
   } catch (error) {

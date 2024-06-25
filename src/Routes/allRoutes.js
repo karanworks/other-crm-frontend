@@ -18,16 +18,18 @@ import Mapping from "../pages/Mapping";
 
 import AddLead from "../pages/AddLead";
 import Invoice from "../pages/Invoice";
-import Report from "../pages/Report";
 import PendingTasks from "../pages/PendingTasks";
 import Calendar from "../pages/Calendar";
 import CompletedTasks from "../pages/CompletedTasks";
+import Clients from "../pages/Clients";
+import Tasks from "../pages/Tasks";
 
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
   { path: "/roles", component: <Mapping /> },
   { path: "/add-lead", component: <AddLead /> },
-  { path: "/report", component: <Report /> },
+  { path: "/clients", component: <Clients /> },
+  { path: "/tasks", component: <Tasks /> },
   { path: "/invoice", component: <Invoice /> },
   { path: "/pending-tasks", component: <PendingTasks /> },
   { path: "/completed-tasks", component: <CompletedTasks /> },
