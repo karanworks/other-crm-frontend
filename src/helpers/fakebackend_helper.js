@@ -528,6 +528,14 @@ export const createBranchDropdown = (branchName) => {
   );
 };
 
+// *****************************************************************
+// ************************** PENDING TASKS ************************
+// *****************************************************************
+
+export const getPendingTasks = () => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/pending-tasks`);
+};
+
 // postForgetPwd
 export const postFakeForgetPwd = (data) =>
   api.create(url.POST_FAKE_PASSWORD_FORGET, data);

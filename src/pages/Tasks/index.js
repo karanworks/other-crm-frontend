@@ -60,6 +60,20 @@ const Tasks = () => {
     setIsEditingTask(false);
   }
 
+  function utcToIstDateFormatter(dateString) {
+    const tempDate = dateString;
+
+    const dateObj = tempDate && new Date(tempDate);
+
+    const options = {
+      day: "2-digit", // Ensure two digits for day
+      month: "2-digit", // Ensure two digits for month
+      year: "numeric", // Four-digit year
+    };
+
+    return dateObj?.toLocaleDateString("en-IN", options);
+  }
+
   // toggles delete lead confirmation modal
   function tog_delete() {
     setmodal_delete(!modal_delete);
@@ -255,7 +269,7 @@ const Tasks = () => {
                                 {task.projectStatus}
                               </td>
                               <td className="project_due_date">
-                                {task.projectDueDate}
+                                {utcToIstDateFormatter(task.projectDueDate)}
                               </td>
                               <td className="youtube_link">
                                 <a href={task.youtubeLink} target="blank">

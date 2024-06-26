@@ -21,7 +21,6 @@ const clientSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getClients.fulfilled, (state, action) => {
-      console.log("CLIENT ACTION PAYLOAD ->", action.payload);
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {

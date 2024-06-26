@@ -13,6 +13,7 @@ import PaymentReducer from "./Payment/reducer";
 import EventReducer from "./Event/reducer";
 import BranchDropdownsReducer from "./BranchDropdown/reducer";
 import TaskReducer from "./Task/reducer";
+import PendingTasksReducer from "./PendingTasks/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   Event: EventReducer,
   BranchDropdowns: BranchDropdownsReducer,
   Task: TaskReducer,
+  PendingTasks: PendingTasksReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
