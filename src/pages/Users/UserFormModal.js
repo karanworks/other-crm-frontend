@@ -9,8 +9,6 @@ import {
   ModalHeader,
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
-import Select from "react-select";
-import { useState } from "react";
 
 function UserFormModal({
   modal_list, // modal state
@@ -180,7 +178,7 @@ function UserFormModal({
               name="password"
               className="form-control"
               placeholder="Enter Password"
-              type="password"
+              type="text"
               onChange={validation.handleChange}
               onBlur={validation.handleBlur}
               value={validation.values.password || ""}

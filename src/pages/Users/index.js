@@ -30,7 +30,6 @@ import {
   createBranchDropdown,
   getBranchDropdowns,
 } from "../../slices/BranchDropdown/thunk";
-import { useNavigate } from "react-router-dom";
 import AddBranchModal from "./AddBranchModal";
 
 const Users = () => {
@@ -46,8 +45,6 @@ const Users = () => {
   const [listUserId, setListUserId] = useState(null);
   // fetching all the roles
   const [roles, setRoles] = useState([]);
-  // campaigns that a user is in
-  const [selectedCampaigns, setSelectedCampaigns] = useState(null);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
   const { branchDropdowns } = useSelector((state) => state.BranchDropdowns);
@@ -108,10 +105,12 @@ const Users = () => {
       email: Yup.string().required("Please enter CRM Email"),
       password: Yup.string().required("Please enter CRM Password"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       isEditingUser
         ? dispatch(updateUser({ values, userId: listUserId }))
         : dispatch(createUser(values));
+
+      resetForm();
     },
   });
 

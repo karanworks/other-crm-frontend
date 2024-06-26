@@ -74,7 +74,7 @@ const Clients = () => {
       youtubeLink: Yup.string(),
       description: Yup.string(),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       dispatch(
         createTask({
           ...values,
@@ -84,6 +84,7 @@ const Clients = () => {
       );
 
       setAdd_task_modal(false);
+      resetForm();
     },
   });
   const clientValidation = useFormik({
@@ -97,10 +98,10 @@ const Clients = () => {
       mobileNo: Yup.string().required("Please enter mobile no"),
       address: Yup.string().required("Please enter address"),
     }),
-    onSubmit: (values) => {
-      console.log("CLIENT VALUES WHILE EDITING ->", values);
+    onSubmit: (values, { resetForm }) => {
       isEditingClient && dispatch(updateClient({ values, listClientId }));
       setEdit_client_modal(false);
+      resetForm();
     },
   });
 
@@ -118,7 +119,6 @@ const Clients = () => {
 
   // to update the values of register form when editing the lead
   function handleEditClient(client) {
-    console.log("CLIENT WHEN EDIT BUTTON CLICKED ->", client);
     setIsEditingClient(true);
     setEdit_client_modal(!edit_client_modal);
     setListClientId(client.id);

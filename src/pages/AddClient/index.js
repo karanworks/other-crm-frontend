@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,10 +31,10 @@ import {
   createClient,
   createDropdown,
 } from "../../slices/AddClient/thunk";
-
 import { createEvent } from "../../slices/Event/thunk";
 import { useSelector } from "react-redux";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const AddClient = () => {
   const [singleCategoryOption, setSingleCategoryOption] = useState(null);
@@ -46,6 +46,10 @@ const AddClient = () => {
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
 
   const [eventContainer, setEventContainer] = useState([]);
+
+  const flatpickrRef = useRef(null);
+
+  const navigate = useNavigate();
 
   function handleAddEventContainer() {
     setEventContainer([
@@ -174,7 +178,7 @@ const AddClient = () => {
       events: Yup.array(),
       projectDueDate: Yup.string().required("Please select project due date"),
     }),
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values, { resetForm, setFieldValue }) => {
       const { events } = values;
       if (events) {
         dispatch(createEvent(events));
@@ -182,6 +186,14 @@ const AddClient = () => {
 
       dispatch(createClient(values));
       resetForm();
+      setSelectedSingleGenre(null);
+      setSelectedSingleStatus(null);
+      if (flatpickrRef.current) {
+        flatpickrRef.current.flatpickr.clear();
+      }
+      setTimeout(() => {
+        navigate("/clients");
+      }, 2000);
     },
   });
 
@@ -194,9 +206,10 @@ const AddClient = () => {
       category: Yup.string().required("Please select category"),
       dropdownName: Yup.string().required("Please enter dropdown name "),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       dispatch(createDropdown(values));
       setAddDropdownOpen(false);
+      resetForm();
     },
   });
 
@@ -306,7 +319,7 @@ const AddClient = () => {
                       </ButtonGroup>
                     ) : null}
 
-                    <button
+                    {/* <button
                       className="btn btn-primary d-flex"
                       style={{ gap: "5px" }}
                       onClick={handleAddEventContainer}
@@ -314,7 +327,7 @@ const AddClient = () => {
                       {" "}
                       <i className="ri-calendar-event-line"></i>
                       <span>Add Event</span>
-                    </button>
+                    </button> */}
                   </div>
                 </CardHeader>
 
@@ -495,6 +508,7 @@ const AddClient = () => {
                       <div className="mb-3">
                         <Label className="form-label">Project Due Date</Label>
                         <Flatpickr
+                          ref={flatpickrRef}
                           className="form-control"
                           placeholder="Select Project Due Date"
                           options={{

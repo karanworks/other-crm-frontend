@@ -67,9 +67,7 @@ const Calender = () => {
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Event);
 
-  console.log("ALL EVENT DATA ->", allEvents);
-
-  const clientsCalendarData = tasks?.map((task) => {
+  const tasksCalendarData = tasks?.map((task) => {
     let dateStr = task.projectDueDate;
 
     const utcDate = new Date(dateStr);
@@ -91,7 +89,7 @@ const Calender = () => {
 
     return {
       id: task.id,
-      title: task.clientName,
+      title: task.task,
       start: formattedDateStr,
       className: "bg-primary-subtle",
       projectDueDate: task.projectDueDate,
@@ -178,7 +176,7 @@ const Calender = () => {
     };
   });
 
-  const calendarData = [...eventsCalendarData, ...clientsCalendarData];
+  const calendarData = [...eventsCalendarData, ...tasksCalendarData];
 
   useEffect(() => {
     dispatch(getClients());

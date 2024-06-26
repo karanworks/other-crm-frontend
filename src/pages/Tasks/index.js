@@ -61,17 +61,21 @@ const Tasks = () => {
   }
 
   function utcToIstDateFormatter(dateString) {
-    const tempDate = dateString;
+    // Create a Date object from the UTC date string
+    const utcDate = new Date(dateString);
 
-    const dateObj = tempDate && new Date(tempDate);
+    // Get the time in milliseconds
+    const utcTime = utcDate.getTime();
 
-    const options = {
-      day: "2-digit", // Ensure two digits for day
-      month: "2-digit", // Ensure two digits for month
-      year: "numeric", // Four-digit year
-    };
+    // Define the IST offset in milliseconds (IST is UTC + 5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000;
 
-    return dateObj?.toLocaleDateString("en-IN", options);
+    // Calculate the IST time
+    const istTime = new Date(utcTime + istOffset);
+
+    // Format the IST date to a readable string
+    return istTime.toISOString().replace("T", " ").slice(0, 19);
+    //  dateObj?.toLocaleDateString("en-IN", options);
   }
 
   // toggles delete lead confirmation modal
