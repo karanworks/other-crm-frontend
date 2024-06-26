@@ -8,51 +8,39 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-// import { getLeads } from "../../slices/AddLead/thunk";
-import { getClients } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
+import { getCompletedTasks } from "../../slices/CompletedTasks/thunk";
 
 const CompletedTasks = () => {
-  const { clients } = useSelector((state) => state.AddClient);
+  const { completedTasks } = useSelector((state) => state.CompletedTasks);
 
   const dispatch = useDispatch();
 
-  function isDatePast(dateString) {
-    // Split the date string into day, month, and year
-    var parts = dateString.split("/");
-    // JavaScript counts months from 0 to 11, so we subtract 1 from the month
-    var dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
-
-    // Get the current date
-    var currentDate = new Date();
-
-    // Compare the dates
-    if (dateObject < currentDate) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  const pastLeads = clients
-    ?.map(function (lead) {
-      if (isDatePast(lead.projectDueDate)) {
-        return lead;
-      }
-    })
-    .filter(Boolean);
-
   useEffect(() => {
-    dispatch(getClients());
+    dispatch(getCompletedTasks());
   }, [dispatch]);
+
+  function utcToIstDateFormatter(dateString) {
+    const tempDate = dateString;
+
+    const dateObj = tempDate && new Date(tempDate);
+
+    const options = {
+      day: "2-digit", // Ensure two digits for day
+      month: "2-digit", // Ensure two digits for month
+      year: "numeric", // Four-digit year
+    };
+
+    return dateObj?.toLocaleDateString("en-IN", options);
+  }
 
   document.title = "Completed Tasks";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Completed Tasks" pageTitle="Lead Management" />
+          <BreadCrumb title="Completed Task" pageTitle="Lead Management" />
           <Row>
             <Col lg={12}>
               <Card>
@@ -79,29 +67,35 @@ const CompletedTasks = () => {
                                 />
                               </div>
                             </th>
+                            <th className="sort" data-sort="task_name">
+                              Task Name
+                            </th>
                             <th className="sort" data-sort="client_name">
                               Client Name
                             </th>
                             <th className="sort" data-sort="project_genre">
                               Project Genre
                             </th>
+                            <th className="sort" data-sort="project_status">
+                              Project Status
+                            </th>
                             <th className="sort" data-sort="project_due_date">
                               Project Due Date
                             </th>
-                            <th
-                              className="sort"
-                              data-sort="project_youtube_link"
-                            >
-                              Project YouTube Link
+                            <th className="sort" data-sort="youtube_link">
+                              Youtube Link
                             </th>
-                            <th className="sort" data-sort="project_status">
-                              Project Status
+                            <th className="sort" data-sort="description">
+                              Description
+                            </th>
+                            <th className="sort" data-sort="added_by">
+                              Added By
                             </th>
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {pastLeads?.map((lead) => (
-                            <tr key={lead?.id}>
+                          {completedTasks?.map((task) => (
+                            <tr key={task.id}>
                               <th scope="row">
                                 <div className="form-check">
                                   <input
@@ -112,15 +106,19 @@ const CompletedTasks = () => {
                                   />
                                 </div>
                               </th>
-                              <td className="client-name">{lead.clientName}</td>
-                              <td className="project-genre">
-                                {lead.projectGenre}
+                              <td className="task-name">{task.task}</td>
+                              <td className="client-name">{task.clientName}</td>
+                              <td className="project_genre">
+                                {task.projectGenre}
                               </td>
-                              <td className="project-date">
-                                {lead.projectDueDate}
+                              <td className="project_status">
+                                {task.projectStatus}
                               </td>
-                              <td className="project-youtube-link">
-                                <a href={lead.youtubeLink} target="blank">
+                              <td className="project_due_date">
+                                {utcToIstDateFormatter(task.projectDueDate)}
+                              </td>
+                              <td className="youtube_link">
+                                <a href={task.youtubeLink} target="blank">
                                   {/* Youtube Link */}
 
                                   <img
@@ -130,11 +128,26 @@ const CompletedTasks = () => {
                                   />
                                 </a>
                               </td>
-                              <td className="project-status">
-                                <span className="badge border border-primary text-primary fs-13">
-                                  {" "}
-                                  {lead.projectStatus}
-                                </span>
+                              <td className="address">{task.description}</td>
+                              <td className="added_by">
+                                <div>
+                                  <div
+                                    style={{ borderBottom: "1px solid gray" }}
+                                  >
+                                    <span> {task.addedBy.username}</span>
+                                  </div>
+                                  <div>
+                                    <span
+                                      className="text-muted"
+                                      style={{ fontSize: "12px" }}
+                                    >
+                                      {" "}
+                                      {task.addedBy.branch
+                                        ? task.addedBy.branch
+                                        : "Admin"}
+                                    </span>
+                                  </div>
+                                </div>
                               </td>
                             </tr>
                           ))}

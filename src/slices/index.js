@@ -14,6 +14,7 @@ import EventReducer from "./Event/reducer";
 import BranchDropdownsReducer from "./BranchDropdown/reducer";
 import TaskReducer from "./Task/reducer";
 import PendingTasksReducer from "./PendingTasks/reducer";
+import CompletedTasksReducer from "./CompletedTasks/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   BranchDropdowns: BranchDropdownsReducer,
   Task: TaskReducer,
   PendingTasks: PendingTasksReducer,
+  CompletedTasks: CompletedTasksReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
 });
