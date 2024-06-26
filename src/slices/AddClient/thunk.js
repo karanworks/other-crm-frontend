@@ -5,7 +5,21 @@ import {
   createClient as createClientApi,
   updateClient as updateClientApi,
   createDropdown as createDropdownApi,
+  clientAlreadyExist as clientAlreadyExistApi,
 } from "../../helpers/fakebackend_helper";
+
+export const clientAlreadyExist = createAsyncThunk(
+  "clients/clientAlreadyExist",
+  async (mobileNo) => {
+    try {
+      const response = await clientAlreadyExistApi(mobileNo);
+
+      return response;
+    } catch (error) {
+      console.log("error inside clients already exist thunk", error);
+    }
+  }
+);
 
 export const getClients = createAsyncThunk("clients/getClients", async () => {
   try {

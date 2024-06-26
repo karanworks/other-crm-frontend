@@ -4,6 +4,7 @@ import {
   createClient,
   updateClient,
   createDropdown,
+  clientAlreadyExist,
 } from "./thunk";
 
 import { toast } from "react-toastify";
@@ -20,6 +21,13 @@ const clientSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(clientAlreadyExist.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.error = "";
+      }
+    });
     builder.addCase(getClients.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
         state.error = action.payload.message;

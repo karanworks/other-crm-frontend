@@ -18,6 +18,7 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
   Label,
+  Alert,
 } from "reactstrap";
 
 import BreadCrumb from "../../Components/Common/BreadCrumb";
@@ -30,6 +31,7 @@ import {
   getClients,
   createClient,
   createDropdown,
+  clientAlreadyExist,
 } from "../../slices/AddClient/thunk";
 import { createEvent } from "../../slices/Event/thunk";
 import { useSelector } from "react-redux";
@@ -51,22 +53,11 @@ const AddClient = () => {
 
   const navigate = useNavigate();
 
-  function handleAddEventContainer() {
-    setEventContainer([
-      ...eventContainer,
-      {
-        id: eventContainer.length,
-        eventName: "",
-        eventDate: "",
-        leadMobileNo: "",
-        clientName: "",
-      },
-    ]);
-  }
-
   const dispatch = useDispatch();
 
-  const { userData, dropdowns } = useSelector((state) => state.AddClient);
+  const { userData, dropdowns, error } = useSelector(
+    (state) => state.AddClient
+  );
 
   useEffect(() => {
     dispatch(getClients());
@@ -178,19 +169,21 @@ const AddClient = () => {
       events: Yup.array(),
       projectDueDate: Yup.string().required("Please select project due date"),
     }),
-    onSubmit: (values, { resetForm, setFieldValue }) => {
+    onSubmit: (values, { resetForm }) => {
       const { events } = values;
       if (events) {
         dispatch(createEvent(events));
       }
 
       dispatch(createClient(values));
+
       resetForm();
       setSelectedSingleGenre(null);
       setSelectedSingleStatus(null);
       if (flatpickrRef.current) {
         flatpickrRef.current.flatpickr.clear();
       }
+
       setTimeout(() => {
         navigate("/clients");
       }, 2000);
@@ -332,6 +325,15 @@ const AddClient = () => {
                 </CardHeader>
 
                 <CardBody>
+                  {error ? (
+                    <Alert
+                      className="border-0 alert-warning text-center mb-2 mx-2"
+                      role="alert"
+                    >
+                      {error}
+                    </Alert>
+                  ) : null}
+
                   <div className="listjs-table" id="campaignList">
                     <Form
                       className="tablelist-form"
@@ -348,7 +350,12 @@ const AddClient = () => {
                           className="form-control"
                           placeholder="Enter mobile name"
                           type="text"
-                          onChange={validation.handleChange}
+                          onChange={(e) => {
+                            validation.handleChange(e);
+                            if (e.target.value.length >= 10) {
+                              dispatch(clientAlreadyExist(e.target.value));
+                            }
+                          }}
                           onBlur={validation.handleBlur}
                           value={validation.values.mobileNo || ""}
                           invalid={

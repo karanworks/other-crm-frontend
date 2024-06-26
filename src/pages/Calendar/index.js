@@ -61,9 +61,7 @@ const Calender = () => {
     })
   );
 
-  const { clients } = useSelector((state) => state.AddClient);
   const { tasks } = useSelector((state) => state.Task);
-  const { payments } = useSelector((state) => state.Payment);
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Event);
 
