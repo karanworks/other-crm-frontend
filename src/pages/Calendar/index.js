@@ -34,9 +34,10 @@ import UpcommingEvents from "./UpcommingEvents";
 import { createSelector } from "reselect";
 // import { getLeads } from "../../slices/AddLead/thunk";
 import { getClients } from "../../slices/AddClient/thunk";
-import { getEvents } from "../../slices/Event/thunk";
+import { getAllEvents } from "../../slices/Event/thunk";
 import { getPayments } from "../../slices/Payment/thunk";
 import { getInvoices } from "../../slices/Invoice/thunk";
+import { getTasks } from "../../slices/Task/thunk";
 
 const Calender = () => {
   const dispatch = useDispatch();
@@ -61,28 +62,42 @@ const Calender = () => {
   );
 
   const { clients } = useSelector((state) => state.AddClient);
+  const { tasks } = useSelector((state) => state.Task);
   const { payments } = useSelector((state) => state.Payment);
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Event);
 
-  const clientsCalendarData = clients?.map((client) => {
-    let dateStr = client.projectDueDate;
+  console.log("ALL EVENT DATA ->", allEvents);
 
-    // Split the date string into day, month, and year components
-    let [day, month, year] = dateStr.split("/");
+  const clientsCalendarData = tasks?.map((task) => {
+    let dateStr = task.projectDueDate;
 
-    // Rearrange and format the components into "YYYY-MM-DD"
-    let formattedDateStr = `${year}-${month}-${day}`;
+    const utcDate = new Date(dateStr);
+
+    // Get UTC time in milliseconds
+    const utcMilliseconds = utcDate.getTime();
+
+    // Define IST offset in milliseconds (+5 hours 30 minutes)
+    const istOffsetMilliseconds = 5.5 * 60 * 60 * 1000;
+
+    // Calculate IST time in milliseconds
+    const istMilliseconds = utcMilliseconds + istOffsetMilliseconds;
+
+    // Create a new Date object for IST time
+    const istDate = new Date(istMilliseconds);
+
+    // Format IST date as "YYYY-MM-DD"
+    const formattedDateStr = istDate.toISOString().split("T")[0];
 
     return {
-      id: lead.id,
-      title: lead.clientName,
+      id: task.id,
+      title: task.clientName,
       start: formattedDateStr,
       className: "bg-primary-subtle",
-      projectDueDate: lead.projectDueDate,
-      projectStatus: lead.projectStatus,
-      projectGenre: lead.projectGenre,
-      youtubeLink: lead.youtubeLink,
+      projectDueDate: task.projectDueDate,
+      projectStatus: task.projectStatus,
+      projectGenre: task.projectGenre,
+      youtubeLink: task.youtubeLink,
     };
   });
 
@@ -167,7 +182,8 @@ const Calender = () => {
 
   useEffect(() => {
     dispatch(getClients());
-    dispatch(getEvents());
+    dispatch(getTasks());
+    dispatch(getAllEvents());
     dispatch(getInvoices());
   }, [dispatch]);
 

@@ -1,17 +1,30 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getEvents as getEventsApi,
+  getAllEvents as getAllEventsApi,
   createEvent as createEventApi,
   removeEvent as removeEventApi,
   updateEvent as updateEventApi,
 } from "../../helpers/fakebackend_helper";
 
+export const getAllEvents = createAsyncThunk(
+  "events/getAllEvents",
+  async () => {
+    try {
+      const response = await getAllEventsApi();
+      console.log("ALL EVENTS RESPONSE ->", response);
+
+      return response;
+    } catch (error) {
+      console.log("error inside get events thunk", error);
+    }
+  }
+);
 export const getEvents = createAsyncThunk(
   "events/getEvents",
   async (taskId) => {
     try {
       const response = await getEventsApi(taskId);
-      console.log("TASK EVENTS ->", response);
 
       return response;
     } catch (error) {
