@@ -24,8 +24,6 @@ import {
   updateInvoice,
 } from "../../slices/Invoice/thunk";
 
-import { getInvoicePayments } from "../../slices/Payment/reducer";
-
 import {
   getPayments,
   createPayment,
@@ -33,7 +31,7 @@ import {
   updatePayment,
 } from "../../slices/Payment/thunk";
 
-// import { getLeads } from "../../slices/AddLead/thunk";
+import { updateTasks } from "../../slices/AddClient/reducer";
 import { getClients } from "../../slices/AddClient/thunk";
 
 import { useSelector } from "react-redux";
@@ -61,10 +59,14 @@ const Invoice = () => {
 
   const [listPaymentId, setListPaymentId] = useState(null);
 
+  const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
+
+  const [selectedSingleTask, setSelectedSingleTask] = useState(null);
+
   const dispatch = useDispatch();
 
   const { invoices, error } = useSelector((state) => state.Invoice);
-  const { clients } = useSelector((state) => state.AddClient);
+  const { clients, tasks } = useSelector((state) => state.AddClient);
   const { payments } = useSelector((state) => state.Payment);
 
   function tog_list() {
@@ -96,7 +98,8 @@ const Invoice = () => {
   // formik setup
   const validation = useFormik({
     initialValues: {
-      clientName: "",
+      clientId: "",
+      taskId: "",
       totalAmount: "",
       paymentAmount: "",
       paymentDate: "",
@@ -104,19 +107,23 @@ const Invoice = () => {
       paymentDueDate: "",
     },
     validationSchema: Yup.object({
-      clientName: Yup.string().required("Please select client"),
+      clientId: Yup.string().required("Please select client"),
+      taskId: Yup.string().required("Please select task"),
       totalAmount: Yup.string().required("Please enter total amount"),
       paymentAmount: Yup.string(),
       paymentDate: Yup.string(),
       paymentDueDate: Yup.string().required("Please select due date"),
     }),
 
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       isEditingInvoice
         ? dispatch(updateInvoice({ values, listInvoiceId }))
         : dispatch(createInvoice(values));
 
       setmodal_list(false);
+      resetForm();
+      setSelectedSingleStatus(null);
+      setSelectedSingleTask(null);
     },
   });
 
@@ -154,11 +161,12 @@ const Invoice = () => {
     setmodal_list(!modal_list);
     setListInvoiceId(invoice.id);
 
+    dispatch(updateTasks(invoice.clientId));
+
     validation.setValues({
-      clientName: invoice.clientName,
+      clientId: invoice.clientId,
+      taskId: invoice.taskId,
       totalAmount: invoice.totalAmount,
-      paymentAmount: invoice.paymentAmount,
-      paymentDate: invoice.paymentDate,
       paymentDueDate: invoice.paymentDueDate,
     });
   }
@@ -221,18 +229,21 @@ const Invoice = () => {
                                 />
                               </div>
                             </th>
-                            <th className="sort" data-sort="campaign_name">
+                            <th className="sort" data-sort="client_name">
                               Client Name
                             </th>
+                            <th className="sort" data-sort="task_name">
+                              Task Name
+                            </th>
 
-                            <th className="sort" data-sort="campaign_name">
+                            <th className="sort" data-sort="total_amount">
                               Total Amount
                             </th>
 
-                            <th className="sort" data-sort="callback">
+                            <th className="sort" data-sort="balance">
                               Balance
                             </th>
-                            <th className="sort" data-sort="dnc">
+                            <th className="sort" data-sort="due_date">
                               Due Date
                             </th>
 
@@ -255,6 +266,7 @@ const Invoice = () => {
                                 </div>
                               </th>
                               <td className="amount">{invoice.clientName}</td>
+                              <td className="amount">{invoice.taskName}</td>
                               <td className="amount">
                                 <span className="fs-13 badge border border-secondary text-secondary">
                                   ₹{invoice.totalAmount}
@@ -354,6 +366,12 @@ const Invoice = () => {
         validation={validation}
         isEditingInvoice={isEditingInvoice}
         clients={clients}
+        updateTasks={updateTasks}
+        tasks={tasks}
+        selectedSingleStatus={selectedSingleStatus}
+        setSelectedSingleStatus={setSelectedSingleStatus}
+        selectedSingleTask={selectedSingleTask}
+        setSelectedSingleTask={setSelectedSingleTask}
       />
 
       {/* Remove Modal */}

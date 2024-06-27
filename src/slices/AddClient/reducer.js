@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import {
   getClients,
   createClient,
@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 export const initialState = {
   userData: null,
   clients: [],
+  tasks: [], // tasks are being used in invoice page
   dropdowns: [],
   error: "",
 };
@@ -19,7 +20,15 @@ export const initialState = {
 const clientSlice = createSlice({
   name: "clients",
   initialState,
-  reducers: {},
+  reducers: {
+    updateTasks(state, action) {
+      const selectedClient = state.clients.find(
+        (client) => client.id === action.payload
+      );
+
+      state.tasks = selectedClient.tasks;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(clientAlreadyExist.fulfilled, (state, action) => {
       if (action.payload.status === "failure") {
@@ -29,6 +38,8 @@ const clientSlice = createSlice({
       }
     });
     builder.addCase(getClients.fulfilled, (state, action) => {
+      console.log("CLIENTS HERE ->", action.payload);
+
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
@@ -113,4 +124,5 @@ const clientSlice = createSlice({
   },
 });
 
+export const { updateTasks } = clientSlice.actions;
 export default clientSlice.reducer;

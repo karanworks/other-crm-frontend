@@ -9,8 +9,9 @@ import {
 } from "reactstrap";
 import "react-toastify/dist/ReactToastify.css";
 import Flatpickr from "react-flatpickr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
+import { useDispatch } from "react-redux";
 
 function InvoiceModal({
   modal_list,
@@ -19,16 +20,50 @@ function InvoiceModal({
   validation,
   isEditingInvoice,
   clients,
+  updateTasks,
+  tasks,
+  selectedSingleStatus,
+  setSelectedSingleStatus,
+  selectedSingleTask,
+  setSelectedSingleTask,
 }) {
-  const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
+  const dispatch = useDispatch();
 
   function handleSelectSingleStatus(selectedSingle) {
     setSelectedSingleStatus(selectedSingle);
   }
+  function handleSelectSingleTask(selectedSingle) {
+    setSelectedSingleTask(selectedSingle);
+  }
 
-  let SingleStatusOptions = clients?.map((lead) => {
-    return { value: lead.clientName, label: lead.clientName };
+  let SingleStatusOptions = clients?.map((client) => {
+    return {
+      value: client.clientName,
+      label: client.clientName,
+      id: client.id,
+    };
   });
+  let SingleTaskOptions = tasks?.map((task) => {
+    return {
+      value: task.task,
+      label: task.task,
+      id: task.id,
+    };
+  });
+
+  // Use useEffect to set the initial values for the select fields when editing a lead
+  useEffect(() => {
+    if (isEditingInvoice) {
+      const task = SingleTaskOptions.find(
+        (option) => option.id === validation.values.taskId
+      );
+      setSelectedSingleTask(task);
+      const client = SingleStatusOptions.find(
+        (option) => option.id === validation.values.clientId
+      );
+      setSelectedSingleStatus(client);
+    }
+  }, [isEditingInvoice]);
 
   return (
     <Modal
@@ -50,19 +85,36 @@ function InvoiceModal({
       <Form className="tablelist-form" onSubmit={(e) => formHandleSubmit(e)}>
         <ModalBody style={{ paddingTop: "0px" }}>
           <div className="mb-2">
-            <Label htmlFor="clientName" className="form-label">
+            <Label htmlFor="clientId" className="form-label">
               Client Name
             </Label>
             <Select
-              id="clientName"
-              name="clientName"
+              id="clientId"
+              name="clientId"
               value={selectedSingleStatus}
               onChange={(clientName) => {
                 handleSelectSingleStatus(clientName);
-                validation.setFieldValue("clientName", clientName.value);
+                validation.setFieldValue("clientId", clientName.id);
+                dispatch(updateTasks(clientName.id));
               }}
               options={SingleStatusOptions}
               placeholder="Select Client"
+            />
+          </div>
+          <div className="mb-2">
+            <Label htmlFor="taskId" className="form-label">
+              Select Task
+            </Label>
+            <Select
+              id="taskId"
+              name="taskId"
+              value={selectedSingleTask}
+              onChange={(taskName) => {
+                handleSelectSingleTask(taskName);
+                validation.setFieldValue("taskId", taskName.id);
+              }}
+              options={SingleTaskOptions}
+              placeholder="Select Task"
             />
           </div>
           <div className="mb-2">
@@ -150,7 +202,8 @@ function InvoiceModal({
               className="form-control"
               placeholder="Select payment due date"
               options={{
-                dateFormat: "d M, Y",
+                dateFormat: "d/m/Y",
+                defaultDate: validation.values.paymentDueDate || "",
               }}
               onChange={(date) => {
                 const formattedDate = new Date(date).toLocaleDateString(
