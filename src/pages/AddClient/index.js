@@ -186,7 +186,7 @@ const AddClient = () => {
 
       setTimeout(() => {
         navigate("/clients");
-      }, 2000);
+      }, 1000);
     },
   });
 

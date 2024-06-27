@@ -29,13 +29,6 @@ const Tasks = () => {
 
   const [listEventId, setListEventId] = useState(null);
 
-  // needed this for creating event
-  const [selectedClientName, setSelectedClientName] = useState("");
-
-  const [selectedLeadMobileNo, setSelectedLeadMobileNo] = useState("");
-
-  // separater
-
   const [modal_list, setmodal_list] = useState(false);
 
   const [isEditingTask, setIsEditingTask] = useState(false);
@@ -74,7 +67,7 @@ const Tasks = () => {
     const istTime = new Date(utcTime + istOffset);
 
     // Format the IST date to a readable string
-    return istTime.toISOString().replace("T", " ").slice(0, 19);
+    return istTime.toISOString().replace("T", " ").slice(0, 19).split(" ")[0];
     //  dateObj?.toLocaleDateString("en-IN", options);
   }
 
