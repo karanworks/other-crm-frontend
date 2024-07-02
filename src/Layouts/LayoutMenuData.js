@@ -17,6 +17,7 @@ const Navdata = () => {
   const [isAdminTools, setIsAdminTools] = useState(false);
   const [isLeadManagement, setIsLeadManagement] = useState(false);
   const [isPayments, setIsPayments] = useState(false);
+  const [isHome, setIsHome] = useState(false);
 
   //
   const [isAuth, setIsAuth] = useState(false);
@@ -50,6 +51,9 @@ const Navdata = () => {
     if (iscurrentState !== "Payments") {
       setIsPayments(false);
     }
+    if (iscurrentState !== "Home") {
+      setIsHome(false);
+    }
 
     if (iscurrentState !== "Auth") {
       setIsAuth(false);
@@ -63,7 +67,7 @@ const Navdata = () => {
     isAdminTools,
     isLeadManagement,
     isPayments,
-
+    isHome,
     isAuth,
     isPages,
   ]);
@@ -72,6 +76,7 @@ const Navdata = () => {
     AdminTools: isAdminTools,
     LeadManagement: isLeadManagement,
     Payments: isPayments,
+    Home: isHome,
   };
 
   const handleClick = (menuLabelId) => {
@@ -88,6 +93,10 @@ const Navdata = () => {
           updateIconSidebar(e);
         case "Payments":
           setIsPayments(!isPayments);
+          setIscurrentState(menuLabelId);
+          updateIconSidebar(e);
+        case "Home":
+          setIsHome(!isHome);
           setIscurrentState(menuLabelId);
           updateIconSidebar(e);
       }

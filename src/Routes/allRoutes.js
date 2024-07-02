@@ -23,6 +23,7 @@ import Calendar from "../pages/Calendar";
 import CompletedTasks from "../pages/CompletedTasks";
 import Clients from "../pages/Clients";
 import Tasks from "../pages/Tasks";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 const authProtectedRoutes = [
   { path: "/users", component: <Users /> },
@@ -34,6 +35,7 @@ const authProtectedRoutes = [
   { path: "/pending-tasks", component: <PendingTasks /> },
   { path: "/completed-tasks", component: <CompletedTasks /> },
   { path: "/calendar", component: <Calendar /> },
+  { path: "/dashboard", component: <Dashboard /> },
 
   //User Profile
   { path: "/profile", component: <UserProfile /> },
@@ -43,9 +45,9 @@ const authProtectedRoutes = [
   {
     path: "/",
     exact: true,
-    component: <Navigate to="/users" />,
+    component: <Navigate to="/dashboard" />,
   },
-  { path: "*", component: <Navigate to="/users" /> },
+  { path: "*", component: <Navigate to="/dashboard" /> },
 ];
 
 const publicRoutes = [

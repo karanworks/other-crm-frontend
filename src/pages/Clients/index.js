@@ -8,8 +8,8 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import LeadRemoveModal from "./ClientRemoveModal";
 import { useDispatch } from "react-redux";
+import Loader from "../../Components/Common/Loader";
 
 import { getClients, updateClient } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
@@ -33,6 +33,8 @@ const Clients = () => {
 
   const [listClientId, setListClientId] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const { clients, dropdowns, error } = useSelector((state) => state.AddClient);
@@ -53,7 +55,8 @@ const Clients = () => {
   }
 
   useEffect(() => {
-    dispatch(getClients());
+    setLoading(true);
+    dispatch(getClients()).finally(() => setLoading(false));
   }, [dispatch]);
 
   // formik setup
@@ -182,94 +185,113 @@ const Clients = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {clients?.map((client) => (
-                            <tr key={client?.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
-                              <td className="client-name">
-                                {client.clientName}
-                              </td>
-                              <td className="client-name">{client.mobileNo}</td>
-
-                              <td className="project-date">{client.address}</td>
-
-                              <td className="added_by">
-                                <div>
-                                  <div
-                                    style={{ borderBottom: "1px solid gray" }}
-                                  >
-                                    <span> {client.addedBy.username}</span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      className="text-muted"
-                                      style={{ fontSize: "12px" }}
-                                    >
-                                      {" "}
-                                      {client.addedBy.branch
-                                        ? client.addedBy.branch
-                                        : "Admin"}
-                                    </span>
-                                  </div>
-                                </div>
-                              </td>
-
-                              <td>
-                                <div className="d-flex gap-2">
-                                  <div className="viewEvents">
-                                    <button
-                                      className="btn btn-sm btn-success e"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        add_task_tog_list();
-                                        setSelectedClientName(
-                                          client.clientName
-                                        );
-                                        setSelectedClientId(client.id);
-                                      }}
-                                    >
-                                      Add Task
-                                    </button>
-                                  </div>
-
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        handleEditClient(client);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
-                                  </div>
-                                  <div className="remove">
-                                    <button
-                                      className="btn btn-sm btn-danger remove-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#deleteRecordModal"
-                                      onClick={() => {
-                                        setListClientId(client.id);
-                                        setmodal_delete(true);
-                                      }}
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
+                          {loading ? (
+                            <tr>
+                              <td
+                                colSpan={7}
+                                style={{
+                                  border: "none",
+                                  textAlign: "center",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <Loader />
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            clients?.map((client) => (
+                              <tr key={client?.id}>
+                                <th scope="row">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      name="checkAll"
+                                      value="option1"
+                                    />
+                                  </div>
+                                </th>
+                                <td className="client-name">
+                                  {client.clientName}
+                                </td>
+                                <td className="client-name">
+                                  {client.mobileNo}
+                                </td>
+
+                                <td className="project-date">
+                                  {client.address}
+                                </td>
+
+                                <td className="added_by">
+                                  <div>
+                                    <div
+                                      style={{ borderBottom: "1px solid gray" }}
+                                    >
+                                      <span> {client.addedBy.username}</span>
+                                    </div>
+                                    <div>
+                                      <span
+                                        className="text-muted"
+                                        style={{ fontSize: "12px" }}
+                                      >
+                                        {" "}
+                                        {client.addedBy.branch
+                                          ? client.addedBy.branch
+                                          : "Admin"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="d-flex gap-2">
+                                    <div className="viewEvents">
+                                      <button
+                                        className="btn btn-sm btn-success e"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          add_task_tog_list();
+                                          setSelectedClientName(
+                                            client.clientName
+                                          );
+                                          setSelectedClientId(client.id);
+                                        }}
+                                      >
+                                        Add Task
+                                      </button>
+                                    </div>
+
+                                    <div className="edit">
+                                      <button
+                                        className="btn btn-sm btn-primary edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          handleEditClient(client);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                    </div>
+                                    <div className="remove">
+                                      <button
+                                        className="btn btn-sm btn-danger remove-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteRecordModal"
+                                        onClick={() => {
+                                          setListClientId(client.id);
+                                          setmodal_delete(true);
+                                        }}
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>

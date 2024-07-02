@@ -65,37 +65,39 @@ const Calender = () => {
   const { invoices } = useSelector((state) => state.Invoice);
   const { allEvents } = useSelector((state) => state.Event);
 
-  const tasksCalendarData = tasks?.map((task) => {
-    let dateStr = task.projectDueDate;
+  const tasksCalendarData = tasks
+    ?.filter((task) => task.projectStatus !== "Completed")
+    .map((task) => {
+      let dateStr = task.projectDueDate;
 
-    const utcDate = new Date(dateStr);
+      const utcDate = new Date(dateStr);
 
-    // Get UTC time in milliseconds
-    const utcMilliseconds = utcDate.getTime();
+      // Get UTC time in milliseconds
+      const utcMilliseconds = utcDate.getTime();
 
-    // Define IST offset in milliseconds (+5 hours 30 minutes)
-    const istOffsetMilliseconds = 5.5 * 60 * 60 * 1000;
+      // Define IST offset in milliseconds (+5 hours 30 minutes)
+      const istOffsetMilliseconds = 5.5 * 60 * 60 * 1000;
 
-    // Calculate IST time in milliseconds
-    const istMilliseconds = utcMilliseconds + istOffsetMilliseconds;
+      // Calculate IST time in milliseconds
+      const istMilliseconds = utcMilliseconds + istOffsetMilliseconds;
 
-    // Create a new Date object for IST time
-    const istDate = new Date(istMilliseconds);
+      // Create a new Date object for IST time
+      const istDate = new Date(istMilliseconds);
 
-    // Format IST date as "YYYY-MM-DD"
-    const formattedDateStr = istDate.toISOString().split("T")[0];
+      // Format IST date as "YYYY-MM-DD"
+      const formattedDateStr = istDate.toISOString().split("T")[0];
 
-    return {
-      id: task.id,
-      title: task.task,
-      start: formattedDateStr,
-      className: "bg-primary-subtle",
-      projectDueDate: task.projectDueDate,
-      projectStatus: task.projectStatus,
-      projectGenre: task.projectGenre,
-      youtubeLink: task.youtubeLink,
-    };
-  });
+      return {
+        id: task.id,
+        title: task.task,
+        start: formattedDateStr,
+        className: "bg-primary-subtle",
+        projectDueDate: task.projectDueDate,
+        projectStatus: task.projectStatus,
+        projectGenre: task.projectGenre,
+        youtubeLink: task.youtubeLink,
+      };
+    });
 
   // const calendarArray = [
   //   {

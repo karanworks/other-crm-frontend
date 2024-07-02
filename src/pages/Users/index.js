@@ -18,6 +18,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import UserFormModal from "./UserFormModal";
 import UserRemoveModal from "./UserRemoveModal";
+import Loader from "../../Components/Common/Loader";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -45,6 +46,8 @@ const Users = () => {
   const [listUserId, setListUserId] = useState(null);
   // fetching all the roles
   const [roles, setRoles] = useState([]);
+
+  const [loading, setLoading] = useState(false);
 
   const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
   const { branchDropdowns } = useSelector((state) => state.BranchDropdowns);
@@ -85,8 +88,10 @@ const Users = () => {
   }, [alreadyRegisteredError]);
 
   useEffect(() => {
-    dispatch(getUsers());
-    dispatch(getBranchDropdowns());
+    setLoading(true);
+
+    dispatch(getUsers()).finally(() => setLoading(false));
+    dispatch(getBranchDropdowns()).finally(() => setLoading(false));
   }, [dispatch]);
 
   // formik setup
@@ -256,58 +261,76 @@ const Users = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {users?.map((user) => (
-                            <tr key={user?.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
-                              <td className="id">
-                                <Link to="#" className="fw-medium link-primary">
-                                  {user?.id}
-                                </Link>
-                              </td>
-                              <td className="name">{user?.username}</td>
-                              <td className="email">{user?.email}</td>
-                              <td className="branch">{user?.branch}</td>
-
-                              <td>
-                                <div className="d-flex gap-2">
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        handleEditUser(user);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
-                                  </div>
-                                  <div className="remove">
-                                    <button
-                                      className="btn btn-sm btn-danger remove-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#deleteRecordModal"
-                                      onClick={() => {
-                                        setListUserId(user.id);
-                                        setmodal_delete(true);
-                                      }}
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
+                          {loading ? (
+                            <tr>
+                              <td
+                                colSpan={7}
+                                style={{
+                                  border: "none",
+                                  textAlign: "center",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <Loader />
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            users?.map((user) => (
+                              <tr key={user?.id}>
+                                <th scope="row">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      name="checkAll"
+                                      value="option1"
+                                    />
+                                  </div>
+                                </th>
+                                <td className="id">
+                                  <Link
+                                    to="#"
+                                    className="fw-medium link-primary"
+                                  >
+                                    {user?.id}
+                                  </Link>
+                                </td>
+                                <td className="name">{user?.username}</td>
+                                <td className="email">{user?.email}</td>
+                                <td className="branch">{user?.branch}</td>
+
+                                <td>
+                                  <div className="d-flex gap-2">
+                                    <div className="edit">
+                                      <button
+                                        className="btn btn-sm btn-primary edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          handleEditUser(user);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                    </div>
+                                    <div className="remove">
+                                      <button
+                                        className="btn btn-sm btn-danger remove-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteRecordModal"
+                                        onClick={() => {
+                                          setListUserId(user.id);
+                                          setmodal_delete(true);
+                                        }}
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                       <div className="noresult" style={{ display: "none" }}>

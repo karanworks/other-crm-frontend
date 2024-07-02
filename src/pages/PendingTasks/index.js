@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,25 +8,21 @@ import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-// import { getLeads } from "../../slices/AddLead/thunk";
-import { getClients } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 import { getPendingTasks } from "../../slices/PendingTasks/thunk";
+import Loader from "../../Components/Common/Loader";
 
 const PendingTasks = () => {
-  const { clients } = useSelector((state) => state.AddClient);
   const { pendingTasks } = useSelector((state) => state.PendingTasks);
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
-  console.log("PENDING TASKS ->", pendingTasks);
-
-  const pastLeads = clients;
-
   useEffect(() => {
-    dispatch(getClients());
-    dispatch(getPendingTasks());
+    setLoading(true);
+    dispatch(getPendingTasks()).finally(() => setLoading(false));
   }, [dispatch]);
 
   function utcToIstDateFormatter(dateString) {
@@ -102,63 +98,80 @@ const PendingTasks = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {pendingTasks?.map((task) => (
-                            <tr key={task.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
-                              <td className="task-name">{task.task}</td>
-                              <td className="client-name">{task.clientName}</td>
-                              <td className="project_genre">
-                                {task.projectGenre}
-                              </td>
-                              <td className="project_status">
-                                {task.projectStatus}
-                              </td>
-                              <td className="project_due_date">
-                                {utcToIstDateFormatter(task.projectDueDate)}
-                              </td>
-                              <td className="youtube_link">
-                                <a href={task.youtubeLink} target="blank">
-                                  {/* Youtube Link */}
-
-                                  <img
-                                    src={YoutubeLogo}
-                                    height="50px"
-                                    width="50px"
-                                  />
-                                </a>
-                              </td>
-                              <td className="address">{task.description}</td>
-                              <td className="added_by">
-                                <div>
-                                  <div
-                                    style={{ borderBottom: "1px solid gray" }}
-                                  >
-                                    <span> {task.addedBy.username}</span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      className="text-muted"
-                                      style={{ fontSize: "12px" }}
-                                    >
-                                      {" "}
-                                      {task.addedBy.branch
-                                        ? task.addedBy.branch
-                                        : "Admin"}
-                                    </span>
-                                  </div>
-                                </div>
+                          {loading ? (
+                            <tr>
+                              <td
+                                colSpan={7}
+                                style={{
+                                  border: "none",
+                                  textAlign: "center",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <Loader />
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            pendingTasks?.map((task) => (
+                              <tr key={task.id}>
+                                <th scope="row">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      name="checkAll"
+                                      value="option1"
+                                    />
+                                  </div>
+                                </th>
+                                <td className="task-name">{task.task}</td>
+                                <td className="client-name">
+                                  {task.clientName}
+                                </td>
+                                <td className="project_genre">
+                                  {task.projectGenre}
+                                </td>
+                                <td className="project_status">
+                                  {task.projectStatus}
+                                </td>
+                                <td className="project_due_date">
+                                  {utcToIstDateFormatter(task.projectDueDate)}
+                                </td>
+                                <td className="youtube_link">
+                                  <a href={task.youtubeLink} target="blank">
+                                    {/* Youtube Link */}
+
+                                    <img
+                                      src={YoutubeLogo}
+                                      height="50px"
+                                      width="50px"
+                                    />
+                                  </a>
+                                </td>
+                                <td className="address">{task.description}</td>
+                                <td className="added_by">
+                                  <div>
+                                    <div
+                                      style={{ borderBottom: "1px solid gray" }}
+                                    >
+                                      <span> {task.addedBy.username}</span>
+                                    </div>
+                                    <div>
+                                      <span
+                                        className="text-muted"
+                                        style={{ fontSize: "12px" }}
+                                      >
+                                        {" "}
+                                        {task.addedBy.branch
+                                          ? task.addedBy.branch
+                                          : "Admin"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>

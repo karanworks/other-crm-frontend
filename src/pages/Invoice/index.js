@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import PaymentsViewModal from "./PaymentsViewModal";
 import AddPaymentModal from "./AddPaymentModal";
 import PaymentRemoveModal from "./PaymentRemoveModal";
+import Loader from "../../Components/Common/Loader";
 
 const Invoice = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -62,6 +63,8 @@ const Invoice = () => {
   const [selectedSingleStatus, setSelectedSingleStatus] = useState(null);
 
   const [selectedSingleTask, setSelectedSingleTask] = useState(null);
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -91,7 +94,8 @@ const Invoice = () => {
   }
 
   useEffect(() => {
-    dispatch(getInvoices());
+    setLoading(true);
+    dispatch(getInvoices()).finally(() => setLoading(false));
     dispatch(getClients());
   }, [dispatch]);
 
@@ -253,84 +257,101 @@ const Invoice = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {invoices?.map((invoice) => (
-                            <tr key={invoice?.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
-                              <td className="amount">{invoice.clientName}</td>
-                              <td className="amount">{invoice.taskName}</td>
-                              <td className="amount">
-                                <span className="fs-13 badge border border-secondary text-secondary">
-                                  ₹{invoice.totalAmount}
-                                </span>
-                              </td>
-
-                              <td className="balance">
-                                <span className="fs-13 badge border border-secondary text-secondary">
-                                  ₹{invoice.balance}
-                                </span>
-                              </td>
-                              <td className="dueDate">
-                                <span className="fs-13 badge border border-secondary text-secondary">
-                                  {invoice.paymentDueDate}
-                                </span>
-                              </td>
-                              <td>
-                                <div className="d-flex gap-2">
-                                  <div>
-                                    <button
-                                      className="btn btn-sm btn-success edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        payements_view_tog_list();
-                                        setListInvoiceId(invoice.id);
-                                        dispatch(
-                                          getPayments({ invoiceId: invoice.id })
-                                        );
-                                      }}
-                                    >
-                                      View Payments
-                                    </button>
-                                  </div>
-
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        handleEditInvoice(invoice);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
-                                  </div>
-                                  <div className="remove">
-                                    <button
-                                      className="btn btn-sm btn-danger remove-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#deleteRecordModal"
-                                      onClick={() => {
-                                        setListInvoiceId(invoice.id);
-                                        setmodal_delete(true);
-                                      }}
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
+                          {loading ? (
+                            <tr>
+                              <td
+                                colSpan={7}
+                                style={{
+                                  border: "none",
+                                  textAlign: "center",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <Loader />
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            invoices?.map((invoice) => (
+                              <tr key={invoice?.id}>
+                                <th scope="row">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      name="checkAll"
+                                      value="option1"
+                                    />
+                                  </div>
+                                </th>
+                                <td className="amount">{invoice.clientName}</td>
+                                <td className="amount">{invoice.taskName}</td>
+                                <td className="amount">
+                                  <span className="fs-13 badge border border-secondary text-secondary">
+                                    ₹{invoice.totalAmount}
+                                  </span>
+                                </td>
+
+                                <td className="balance">
+                                  <span className="fs-13 badge border border-secondary text-secondary">
+                                    ₹{invoice.balance}
+                                  </span>
+                                </td>
+                                <td className="dueDate">
+                                  <span className="fs-13 badge border border-secondary text-secondary">
+                                    {invoice.paymentDueDate}
+                                  </span>
+                                </td>
+                                <td>
+                                  <div className="d-flex gap-2">
+                                    <div>
+                                      <button
+                                        className="btn btn-sm btn-success edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          payements_view_tog_list();
+                                          setListInvoiceId(invoice.id);
+                                          dispatch(
+                                            getPayments({
+                                              invoiceId: invoice.id,
+                                            })
+                                          );
+                                        }}
+                                      >
+                                        View Payments
+                                      </button>
+                                    </div>
+
+                                    <div className="edit">
+                                      <button
+                                        className="btn btn-sm btn-primary edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          handleEditInvoice(invoice);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                    </div>
+                                    <div className="remove">
+                                      <button
+                                        className="btn btn-sm btn-danger remove-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteRecordModal"
+                                        onClick={() => {
+                                          setListInvoiceId(invoice.id);
+                                          setmodal_delete(true);
+                                        }}
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>

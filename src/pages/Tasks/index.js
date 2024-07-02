@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import AddTaskModal from "./AddTaskModal";
 import TaskRemoveModal from "./TaskRemoveModal";
 import { useDispatch } from "react-redux";
-import { getClients, updateClient } from "../../slices/AddClient/thunk";
+// import { getClients, updateClient } from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
 import EventsViewModal from "./EventsViewModal";
@@ -17,6 +17,7 @@ import AddEventModal from "./AddEventModal";
 import { createEvent, getEvents, updateEvent } from "../../slices/Event/thunk";
 import EventRemoveModal from "./EventRemoveModal";
 import { getTasks, updateTask } from "../../slices/Task/thunk";
+import Loader from "../../Components/Common/Loader";
 
 const Tasks = () => {
   const [events_view_modal, setEvents_view_modal] = useState(false);
@@ -41,9 +42,11 @@ const Tasks = () => {
 
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
 
-  const { leads, dropdowns, error } = useSelector((state) => state.AddClient);
+  const { dropdowns } = useSelector((state) => state.AddClient);
   const { leadEvents } = useSelector((state) => state.Event);
   const { tasks } = useSelector((state) => state.Task);
 
@@ -90,8 +93,9 @@ const Tasks = () => {
   }
 
   useEffect(() => {
-    dispatch(getClients());
-    dispatch(getTasks());
+    setLoading(true);
+    // dispatch(getClients()).finally(() => setLoading(false));
+    dispatch(getTasks()).finally(() => setLoading(false));
   }, [dispatch]);
 
   // formik setup
@@ -245,109 +249,128 @@ const Tasks = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {tasks?.map((task) => (
-                            <tr key={task.id}>
-                              <th scope="row">
-                                <div className="form-check">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    name="checkAll"
-                                    value="option1"
-                                  />
-                                </div>
-                              </th>
-                              <td className="task-name">{task.task}</td>
-                              <td className="client-name">{task.clientName}</td>
-                              <td className="project_genre">
-                                {task.projectGenre}
-                              </td>
-                              <td className="project_status">
-                                {task.projectStatus}
-                              </td>
-                              <td className="project_due_date">
-                                {utcToIstDateFormatter(task.projectDueDate)}
-                              </td>
-                              <td className="youtube_link">
-                                <a href={task.youtubeLink} target="blank">
-                                  {/* Youtube Link */}
-
-                                  <img
-                                    src={YoutubeLogo}
-                                    height="50px"
-                                    width="50px"
-                                  />
-                                </a>
-                              </td>
-                              <td className="address">{task.description}</td>
-                              <td className="added_by">
-                                <div>
-                                  <div
-                                    style={{ borderBottom: "1px solid gray" }}
-                                  >
-                                    <span> {task.addedBy.username}</span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      className="text-muted"
-                                      style={{ fontSize: "12px" }}
-                                    >
-                                      {" "}
-                                      {task.addedBy.branch
-                                        ? task.addedBy.branch
-                                        : "Admin"}
-                                    </span>
-                                  </div>
-                                </div>
-                              </td>
-
-                              <td>
-                                <div className="d-flex gap-2">
-                                  <div className="viewEvents">
-                                    <button
-                                      className="btn btn-sm btn-success e"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        events_view_tog_list();
-                                        dispatch(getEvents(task.id));
-                                        setSelectedTaskClientId(task.clientId);
-                                        setSelectedTaskId(task.id);
-                                      }}
-                                    >
-                                      View Events
-                                    </button>
-                                  </div>
-
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => {
-                                        handleEditTask(task);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
-                                  </div>
-                                  <div className="remove">
-                                    <button
-                                      className="btn btn-sm btn-danger remove-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#deleteRecordModal"
-                                      onClick={() => {
-                                        setListTaskId(task.id);
-                                        setmodal_delete(true);
-                                      }}
-                                    >
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
+                          {loading ? (
+                            <tr>
+                              <td
+                                colSpan={7}
+                                style={{
+                                  border: "none",
+                                  textAlign: "center",
+                                  verticalAlign: "middle",
+                                }}
+                              >
+                                <Loader />
                               </td>
                             </tr>
-                          ))}
+                          ) : (
+                            tasks?.map((task) => (
+                              <tr key={task.id}>
+                                <th scope="row">
+                                  <div className="form-check">
+                                    <input
+                                      className="form-check-input"
+                                      type="checkbox"
+                                      name="checkAll"
+                                      value="option1"
+                                    />
+                                  </div>
+                                </th>
+                                <td className="task-name">{task.task}</td>
+                                <td className="client-name">
+                                  {task.clientName}
+                                </td>
+                                <td className="project_genre">
+                                  {task.projectGenre}
+                                </td>
+                                <td className="project_status">
+                                  {task.projectStatus}
+                                </td>
+                                <td className="project_due_date">
+                                  {utcToIstDateFormatter(task.projectDueDate)}
+                                </td>
+                                <td className="youtube_link">
+                                  <a href={task.youtubeLink} target="blank">
+                                    {/* Youtube Link */}
+
+                                    <img
+                                      src={YoutubeLogo}
+                                      height="50px"
+                                      width="50px"
+                                    />
+                                  </a>
+                                </td>
+                                <td className="address">{task.description}</td>
+                                <td className="added_by">
+                                  <div>
+                                    <div
+                                      style={{ borderBottom: "1px solid gray" }}
+                                    >
+                                      <span> {task.addedBy.username}</span>
+                                    </div>
+                                    <div>
+                                      <span
+                                        className="text-muted"
+                                        style={{ fontSize: "12px" }}
+                                      >
+                                        {" "}
+                                        {task.addedBy.branch
+                                          ? task.addedBy.branch
+                                          : "Admin"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </td>
+
+                                <td>
+                                  <div className="d-flex gap-2">
+                                    <div className="viewEvents">
+                                      <button
+                                        className="btn btn-sm btn-success e"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          events_view_tog_list();
+                                          dispatch(getEvents(task.id));
+                                          setSelectedTaskClientId(
+                                            task.clientId
+                                          );
+                                          setSelectedTaskId(task.id);
+                                        }}
+                                      >
+                                        View Events
+                                      </button>
+                                    </div>
+
+                                    <div className="edit">
+                                      <button
+                                        className="btn btn-sm btn-primary edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() => {
+                                          handleEditTask(task);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                    </div>
+                                    <div className="remove">
+                                      <button
+                                        className="btn btn-sm btn-danger remove-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteRecordModal"
+                                        onClick={() => {
+                                          setListTaskId(task.id);
+                                          setmodal_delete(true);
+                                        }}
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          )}
                         </tbody>
                       </table>
                     </div>
