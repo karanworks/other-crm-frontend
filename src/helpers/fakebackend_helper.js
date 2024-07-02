@@ -522,7 +522,7 @@ export const removeEvent = (eventId) => {
 // *****************************************************************
 
 export const getBranchDropdowns = () => {
-  return api.get(`${process.env.REACT_APP_SERVER_URL}/branch-dropdown/`);
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/branch-dropdown`);
 };
 export const createBranchDropdown = (branchName) => {
   return api.create(

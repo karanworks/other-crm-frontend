@@ -147,11 +147,11 @@ const Login = (props) => {
                         </div>
 
                         <div className="mb-3">
-                          <div className="float-end">
+                          {/* <div className="float-end">
                             <Link to="/forgot-password" className="text-muted">
                               Forgot password?
                             </Link>
-                          </div>
+                          </div> */}
                           <Label
                             className="form-label"
                             htmlFor="password-input"
@@ -191,7 +191,7 @@ const Login = (props) => {
                           </div>
                         </div>
 
-                        <div className="form-check">
+                        {/* <div className="form-check">
                           <Input
                             className="form-check-input"
                             type="checkbox"
@@ -204,7 +204,7 @@ const Login = (props) => {
                           >
                             Remember me
                           </Label>
-                        </div>
+                        </div> */}
 
                         <div className="mt-4">
                           <Button
