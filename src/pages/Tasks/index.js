@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Input,
+  Row,
+} from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
@@ -202,6 +211,27 @@ const Tasks = () => {
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
                     <div className="table-responsive table-card mt-3 mb-1">
+                      <Row className="g-2 mb-3 d-flex justify-content-between">
+                        <Col className="col-sm-auto ">
+                          <div className="d-flex align-items-center gap-2">
+                            <Input
+                              id="searchKeyword"
+                              name="searchKeyword"
+                              className="form-control"
+                              type="text"
+                              placeholder="Search Keyword"
+                            />
+
+                            <Button
+                              color="primary"
+                              className="add-btn me-1"
+                              id="create-btn"
+                            >
+                              <i className="ri-search-line align-bottom me-1"></i>{" "}
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
                       <table
                         className="table align-middle table-nowrap"
                         id="customerTable"

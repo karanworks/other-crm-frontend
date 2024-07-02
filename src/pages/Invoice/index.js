@@ -8,6 +8,7 @@ import {
   CardHeader,
   Col,
   Container,
+  Input,
   Row,
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
@@ -200,7 +201,7 @@ const Invoice = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
-                    <Row className="g-4 mb-3">
+                    <Row className="g-2 mb-3 d-flex justify-content-between">
                       <Col className="col-sm-auto">
                         <div>
                           <Button
@@ -211,6 +212,26 @@ const Invoice = () => {
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             Add Invoice
+                          </Button>
+                        </div>
+                      </Col>
+
+                      <Col className="col-sm-auto ">
+                        <div className="d-flex align-items-center gap-2">
+                          <Input
+                            id="searchKeyword"
+                            name="searchKeyword"
+                            className="form-control"
+                            type="text"
+                            placeholder="Search Keyword"
+                          />
+
+                          <Button
+                            color="primary"
+                            className="add-btn me-1"
+                            id="create-btn"
+                          >
+                            <i className="ri-search-line align-bottom me-1"></i>{" "}
                           </Button>
                         </div>
                       </Col>

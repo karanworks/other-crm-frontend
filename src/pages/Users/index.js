@@ -9,6 +9,7 @@ import {
   CardHeader,
   Col,
   Container,
+  Input,
   Row,
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
@@ -196,8 +197,8 @@ const Users = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="userList">
-                    <Row className="g-2 mb-3">
-                      <Col className="col-sm-auto">
+                    <Row className="g-2 mb-3 d-flex justify-content-between">
+                      <Col className="col-sm-auto d-flex">
                         <div>
                           <Button
                             color="primary"
@@ -209,8 +210,7 @@ const Users = () => {
                             Add User
                           </Button>
                         </div>
-                      </Col>
-                      <Col className="col-sm-auto">
+
                         <div>
                           <Button
                             color="primary"
@@ -220,6 +220,26 @@ const Users = () => {
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             Add Branch
+                          </Button>
+                        </div>
+                      </Col>
+
+                      <Col className="col-sm-auto">
+                        <div className="d-flex align-items-center gap-2">
+                          <Input
+                            id="searchKeyword"
+                            name="searchKeyword"
+                            className="form-control"
+                            type="text"
+                            placeholder="Search Keyword"
+                          />
+
+                          <Button
+                            color="primary"
+                            className="add-btn me-1"
+                            id="create-btn"
+                          >
+                            <i className="ri-search-line align-bottom me-1"></i>{" "}
                           </Button>
                         </div>
                       </Col>
