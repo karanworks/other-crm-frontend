@@ -5,6 +5,7 @@ import {
   updateClient,
   createDropdown,
   clientAlreadyExist,
+  searchClient,
 } from "./thunk";
 
 import { toast } from "react-toastify";
@@ -12,6 +13,7 @@ import { toast } from "react-toastify";
 export const initialState = {
   userData: null,
   clients: [],
+  searchedClients: [],
   tasks: [], // tasks are being used in invoice page
   dropdowns: [],
   error: "",
@@ -38,14 +40,21 @@ const clientSlice = createSlice({
       }
     });
     builder.addCase(getClients.fulfilled, (state, action) => {
-      console.log("CLIENTS HERE ->", action.payload);
-
       if (action.payload.status === "failure") {
         state.error = action.payload.message;
       } else {
         state.userData = action.payload.data;
         state.clients = action.payload?.data.clients;
         state.dropdowns = action.payload.data.dropdowns;
+        state.error = "";
+      }
+    });
+
+    builder.addCase(searchClient.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.searchedClients = action.payload?.data.clients;
         state.error = "";
       }
     });

@@ -20,12 +20,17 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import Loader from "../../Components/Common/Loader";
 
-import { getClients, updateClient } from "../../slices/AddClient/thunk";
+import {
+  getClients,
+  updateClient,
+  searchClient,
+} from "../../slices/AddClient/thunk";
 import { useSelector } from "react-redux";
 import AddTaskModal from "./AddTaskModal";
 import EditClientModal from "./EditClientModal";
 import { createTask } from "../../slices/Task/thunk";
 import ClientRemoveModal from "./ClientRemoveModal";
+import debounceSearch from "../../utils/debounceSearch";
 
 const Clients = () => {
   const [add_task_modal, setAdd_task_modal] = useState(false);
@@ -46,7 +51,14 @@ const Clients = () => {
 
   const dispatch = useDispatch();
 
-  const { clients, dropdowns, error } = useSelector((state) => state.AddClient);
+  const { clients, dropdowns, error, searchedClients } = useSelector(
+    (state) => state.AddClient
+  );
+
+  const handleSearch = debounceSearch((e) => {
+    console.log("CLIENT SEARCH QUERY ->", e.target.value);
+    dispatch(searchClient(e.target.value));
+  });
 
   // toggles register / edit lead modal
   function edit_client_tog_list() {
@@ -156,7 +168,7 @@ const Clients = () => {
                 </CardHeader>
 
                 <CardBody>
-                  <div className="listjs-table" id="campaignList">
+                  <div className="listjs-table">
                     <Row className="g-2 mb-3 d-flex justify-content-between">
                       <Col className="col-sm-auto ">
                         <div className="d-flex align-items-center gap-2">
@@ -165,16 +177,9 @@ const Clients = () => {
                             name="searchKeyword"
                             className="form-control"
                             type="text"
-                            placeholder="Search Keyword"
+                            placeholder="Search Name or Mobile"
+                            onChange={handleSearch}
                           />
-
-                          <Button
-                            color="primary"
-                            className="add-btn me-1"
-                            id="create-btn"
-                          >
-                            <i className="ri-search-line align-bottom me-1"></i>{" "}
-                          </Button>
                         </div>
                       </Col>
                     </Row>
@@ -185,16 +190,6 @@ const Clients = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
                             <th className="sort" data-sort="client_name">
                               Client Name
                             </th>
@@ -229,18 +224,11 @@ const Clients = () => {
                               </td>
                             </tr>
                           ) : (
-                            clients?.map((client) => (
+                            (searchedClients.length !== 0
+                              ? searchedClients
+                              : clients
+                            )?.map((client) => (
                               <tr key={client?.id}>
-                                <th scope="row">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="checkbox"
-                                      name="checkAll"
-                                      value="option1"
-                                    />
-                                  </div>
-                                </th>
                                 <td className="client-name">
                                   {client.clientName}
                                 </td>

@@ -2,8 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getUsers as getUsersApi,
   createUser as createUserApi,
-  removeUser as removeUserApi,
+  // removeUser as removeUserApi,
   updateUser as updateUserApi,
+  searchUsers as searchUsersApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getUsers = createAsyncThunk("users/getUsers", async () => {
@@ -30,9 +31,9 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "users/updateUser",
-  async ({ userId, values }) => {
+  async ({ userId, values, status }) => {
     try {
-      const response = await updateUserApi(userId, values);
+      const response = await updateUserApi(userId, values, status);
       return response;
     } catch (error) {
       console.log("error inside remove user thunk", error);
@@ -40,15 +41,27 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const removeUser = createAsyncThunk(
-  "users/removeUser",
-  async ({ userId }) => {
+export const searchUsers = createAsyncThunk(
+  "users/searchUsers",
+  async (searchQuery) => {
     try {
-      const response = await removeUserApi(userId);
-
-      return response.data.deletedUser;
+      const response = await searchUsersApi(searchQuery);
+      return response;
     } catch (error) {
-      console.log("error inside remove user thunk", error);
+      console.log("error inside search users thunk", error);
     }
   }
 );
+
+// export const removeUser = createAsyncThunk(
+//   "users/removeUser",
+//   async ({ userId }) => {
+//     try {
+//       const response = await removeUserApi(userId);
+
+//       return response.data.deletedUser;
+//     } catch (error) {
+//       console.log("error inside remove user thunk", error);
+//     }
+//   }
+// );

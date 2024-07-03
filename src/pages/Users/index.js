@@ -14,7 +14,6 @@ import {
 } from "reactstrap";
 import BreadCrumb from "../../Components/Common/BreadCrumb";
 import { Link } from "react-router-dom";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import UserFormModal from "./UserFormModal";
@@ -27,47 +26,37 @@ import {
   createUser,
   removeUser,
   updateUser,
+  searchUsers,
 } from "../../slices/Users/thunk";
 import {
   createBranchDropdown,
   getBranchDropdowns,
 } from "../../slices/BranchDropdown/thunk";
 import AddBranchModal from "./AddBranchModal";
+import debounceSearch from "../../utils/debounceSearch";
 
 const Users = () => {
-  // register / edit user modal state whether modal is open or not
   const [modal_list, setmodal_list] = useState(false);
-  // branch modal
+
   const [branch_modal_list, set_branch_modal_list] = useState(false);
-  // this state triggers when editing the user
+
   const [isEditingUser, setIsEditingUser] = useState(false);
-  // delete user confirmation modal state
+
   const [modal_delete, setmodal_delete] = useState(false);
-  // when we click on edit / delete user button this state stores that user's id, had to make this state because I needed to have that user's id to make changes to it
+
   const [listUserId, setListUserId] = useState(null);
-  // fetching all the roles
+
   const [roles, setRoles] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
-  const { users, alreadyRegisteredError } = useSelector((state) => state.Users);
+  const { users, alreadyRegisteredError, searchedUsers } = useSelector(
+    (state) => state.Users
+  );
+
   const { branchDropdowns } = useSelector((state) => state.BranchDropdowns);
 
   const dispatch = useDispatch();
-
-  // toggles register / edit user modal
-  function tog_list() {
-    setmodal_list(!modal_list);
-    setIsEditingUser(false);
-  }
-  function branch_tog_list() {
-    set_branch_modal_list(!branch_modal_list);
-  }
-
-  // toggles delete user confirmation modal
-  function tog_delete() {
-    setmodal_delete(!modal_delete);
-  }
 
   useEffect(() => {
     axios
@@ -90,10 +79,27 @@ const Users = () => {
 
   useEffect(() => {
     setLoading(true);
-
     dispatch(getUsers()).finally(() => setLoading(false));
     dispatch(getBranchDropdowns()).finally(() => setLoading(false));
   }, [dispatch]);
+
+  const handleSearch = debounceSearch((e) => {
+    dispatch(searchUsers(e.target.value));
+  });
+
+  // toggles register / edit user modal
+  function tog_list() {
+    setmodal_list(!modal_list);
+    setIsEditingUser(false);
+  }
+  function branch_tog_list() {
+    set_branch_modal_list(!branch_modal_list);
+  }
+
+  // toggles delete user confirmation modal
+  function tog_delete() {
+    setmodal_delete(!modal_delete);
+  }
 
   // formik setup
   const validation = useFormik({
@@ -229,18 +235,12 @@ const Users = () => {
                           <Input
                             id="searchKeyword"
                             name="searchKeyword"
+                            // value={searchQuery}
                             className="form-control"
                             type="text"
                             placeholder="Search Keyword"
+                            onChange={handleSearch}
                           />
-
-                          <Button
-                            color="primary"
-                            className="add-btn me-1"
-                            id="create-btn"
-                          >
-                            <i className="ri-search-line align-bottom me-1"></i>{" "}
-                          </Button>
                         </div>
                       </Col>
                     </Row>
@@ -252,16 +252,6 @@ const Users = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
                             <th className="sort" data-sort="user_id">
                               User ID
                             </th>
@@ -295,18 +285,11 @@ const Users = () => {
                               </td>
                             </tr>
                           ) : (
-                            users?.map((user) => (
+                            (searchedUsers.length !== 0
+                              ? searchedUsers
+                              : users
+                            )?.map((user) => (
                               <tr key={user?.id}>
-                                <th scope="row">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="checkbox"
-                                      name="checkAll"
-                                      value="option1"
-                                    />
-                                  </div>
-                                </th>
                                 <td className="id">
                                   <Link
                                     to="#"
@@ -413,7 +396,8 @@ const Users = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteUser={() => {
-          dispatch(removeUser({ userId: listUserId }));
+          // dispatch(removeUser({ userId: listUserId }));
+          dispatch(updateUser({ userId: listUserId, status: 0 }));
           setmodal_delete(false);
         }}
       />

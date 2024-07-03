@@ -23,6 +23,7 @@ import {
   createInvoice,
   removeInvoice,
   updateInvoice,
+  searchInvoice,
 } from "../../slices/Invoice/thunk";
 
 import {
@@ -40,6 +41,7 @@ import PaymentsViewModal from "./PaymentsViewModal";
 import AddPaymentModal from "./AddPaymentModal";
 import PaymentRemoveModal from "./PaymentRemoveModal";
 import Loader from "../../Components/Common/Loader";
+import debounceSearch from "../../utils/debounceSearch";
 
 const Invoice = () => {
   const [modal_list, setmodal_list] = useState(false);
@@ -69,9 +71,15 @@ const Invoice = () => {
 
   const dispatch = useDispatch();
 
-  const { invoices, error } = useSelector((state) => state.Invoice);
+  const { invoices, error, searchedInvoices } = useSelector(
+    (state) => state.Invoice
+  );
   const { clients, tasks } = useSelector((state) => state.AddClient);
   const { payments } = useSelector((state) => state.Payment);
+
+  const handleSearch = debounceSearch((e) => {
+    dispatch(searchInvoice(e.target.value));
+  });
 
   function tog_list() {
     setmodal_list(!modal_list);
@@ -216,23 +224,16 @@ const Invoice = () => {
                         </div>
                       </Col>
 
-                      <Col className="col-sm-auto ">
+                      <Col className="col-sm-auto" style={{ width: "25%" }}>
                         <div className="d-flex align-items-center gap-2">
                           <Input
                             id="searchKeyword"
                             name="searchKeyword"
                             className="form-control"
                             type="text"
-                            placeholder="Search Keyword"
+                            placeholder="Search Client Name Or Task Name"
+                            onChange={handleSearch}
                           />
-
-                          <Button
-                            color="primary"
-                            className="add-btn me-1"
-                            id="create-btn"
-                          >
-                            <i className="ri-search-line align-bottom me-1"></i>{" "}
-                          </Button>
                         </div>
                       </Col>
                     </Row>
@@ -244,16 +245,6 @@ const Invoice = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
                             <th className="sort" data-sort="client_name">
                               Client Name
                             </th>
@@ -292,18 +283,11 @@ const Invoice = () => {
                               </td>
                             </tr>
                           ) : (
-                            invoices?.map((invoice) => (
+                            (searchedInvoices.length !== 0
+                              ? searchedInvoices
+                              : invoices
+                            )?.map((invoice) => (
                               <tr key={invoice?.id}>
-                                <th scope="row">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="checkbox"
-                                      name="checkAll"
-                                      value="option1"
-                                    />
-                                  </div>
-                                </th>
                                 <td className="amount">{invoice.clientName}</td>
                                 <td className="amount">{invoice.taskName}</td>
                                 <td className="amount">

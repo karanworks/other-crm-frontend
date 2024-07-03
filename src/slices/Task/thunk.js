@@ -4,6 +4,7 @@ import {
   getTasks as getTasksApi,
   createTask as createTaskApi,
   updateTask as updateTaskApi,
+  searchTask as searchTaskApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getTasks = createAsyncThunk("tasks/getTasks", async (mobileNo) => {
@@ -27,8 +28,6 @@ export const createTask = createAsyncThunk("tasks/createTask", async (data) => {
 
 export const updateTask = createAsyncThunk("tasks/updateTask", async (data) => {
   try {
-    console.log("UPDATED TASK THUNK ->", data);
-
     const response = await updateTaskApi(
       data.listTaskId,
       data.values,
@@ -40,3 +39,15 @@ export const updateTask = createAsyncThunk("tasks/updateTask", async (data) => {
     console.log("error inside update task thunk", error);
   }
 });
+
+export const searchTask = createAsyncThunk(
+  "tasks/searchTask",
+  async (searchQuery) => {
+    try {
+      const response = await searchTaskApi(searchQuery);
+      return response;
+    } catch (error) {
+      console.log("error inside search tasks thunk", error);
+    }
+  }
+);

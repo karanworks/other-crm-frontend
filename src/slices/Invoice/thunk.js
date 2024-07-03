@@ -4,6 +4,7 @@ import {
   createInvoice as createInvoiceApi,
   removeInvoice as removeInvoiceApi,
   updateInvoice as updateInvoiceApi,
+  searchInvoices as searchInvoicesApi,
 } from "../../helpers/fakebackend_helper";
 
 export const getInvoices = createAsyncThunk("invoice/getInvoices", async () => {
@@ -35,6 +36,18 @@ export const updateInvoice = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside update invoice thunk", error);
+    }
+  }
+);
+
+export const searchInvoice = createAsyncThunk(
+  "invoice/searchInvoice",
+  async (searchQuery) => {
+    try {
+      const response = await searchInvoicesApi(searchQuery);
+      return response;
+    } catch (error) {
+      console.log("error inside search users thunk", error);
     }
   }
 );

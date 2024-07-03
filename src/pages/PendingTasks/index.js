@@ -19,13 +19,19 @@ import { useDispatch } from "react-redux";
 
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
-import { getPendingTasks } from "../../slices/PendingTasks/thunk";
+import {
+  getPendingTasks,
+  searchPendingTask,
+} from "../../slices/PendingTasks/thunk";
 import Loader from "../../Components/Common/Loader";
+import debounceSearch from "../../utils/debounceSearch";
 
 const PendingTasks = () => {
-  const { pendingTasks } = useSelector((state) => state.PendingTasks);
-
   const [loading, setLoading] = useState(false);
+
+  const { pendingTasks, searchedPendingTasks } = useSelector(
+    (state) => state.PendingTasks
+  );
 
   const dispatch = useDispatch();
 
@@ -33,6 +39,10 @@ const PendingTasks = () => {
     setLoading(true);
     dispatch(getPendingTasks()).finally(() => setLoading(false));
   }, [dispatch]);
+
+  const handleSearch = debounceSearch((e) => {
+    dispatch(searchPendingTask(e.target.value));
+  });
 
   function utcToIstDateFormatter(dateString) {
     const tempDate = dateString;
@@ -63,44 +73,27 @@ const PendingTasks = () => {
 
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
+                    <Row className="g-2 mb-3 d-flex justify-content-between">
+                      <Col className="col-sm-auto" style={{ width: "25%" }}>
+                        <div className="d-flex align-items-center gap-2">
+                          <Input
+                            id="searchKeyword"
+                            name="searchKeyword"
+                            className="form-control"
+                            type="text"
+                            placeholder="Search Task Name, Client Name, Genre"
+                            onChange={handleSearch}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
                     <div className="table-responsive table-card mt-3 mb-1">
-                      <Row className="g-2 mb-3 d-flex justify-content-between">
-                        <Col className="col-sm-auto ">
-                          <div className="d-flex align-items-center gap-2">
-                            <Input
-                              id="searchKeyword"
-                              name="searchKeyword"
-                              className="form-control"
-                              type="text"
-                              placeholder="Search Keyword"
-                            />
-
-                            <Button
-                              color="primary"
-                              className="add-btn me-1"
-                              id="create-btn"
-                            >
-                              <i className="ri-search-line align-bottom me-1"></i>{" "}
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
                       <table
                         className="table align-middle table-nowrap"
                         id="customerTable"
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
                             <th className="sort" data-sort="task_name">
                               Task Name
                             </th>
@@ -142,18 +135,11 @@ const PendingTasks = () => {
                               </td>
                             </tr>
                           ) : (
-                            pendingTasks?.map((task) => (
+                            (searchedPendingTasks.length !== 0
+                              ? searchedPendingTasks
+                              : pendingTasks
+                            )?.map((task) => (
                               <tr key={task.id}>
-                                <th scope="row">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="checkbox"
-                                      name="checkAll"
-                                      value="option1"
-                                    />
-                                  </div>
-                                </th>
                                 <td className="task-name">{task.task}</td>
                                 <td className="client-name">
                                   {task.clientName}

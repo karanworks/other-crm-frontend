@@ -6,6 +6,7 @@ import {
   updateClient as updateClientApi,
   createDropdown as createDropdownApi,
   clientAlreadyExist as clientAlreadyExistApi,
+  searchClient as searchClientApi,
 } from "../../helpers/fakebackend_helper";
 
 export const clientAlreadyExist = createAsyncThunk(
@@ -55,6 +56,18 @@ export const updateClient = createAsyncThunk(
       return response;
     } catch (error) {
       console.log("error inside update client thunk", error);
+    }
+  }
+);
+
+export const searchClient = createAsyncThunk(
+  "clients/searchClient",
+  async (searchQuery) => {
+    try {
+      const response = await searchClientApi(searchQuery);
+      return response;
+    } catch (error) {
+      console.log("error inside search client thunk", error);
     }
   }
 );

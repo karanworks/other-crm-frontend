@@ -4,13 +4,14 @@ import {
   createInvoice,
   removeInvoice,
   updateInvoice,
+  searchInvoice,
 } from "./thunk";
 
 import { toast } from "react-toastify";
 
 export const initialState = {
   invoices: [],
-
+  searchedInvoices: [],
   error: "",
 };
 
@@ -66,6 +67,14 @@ const invoiceSlice = createSlice({
         state.error = action.payload.message;
       } else {
         state.invoices = action.payload?.data.invoices;
+        state.error = "";
+      }
+    });
+    builder.addCase(searchInvoice.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.searchedInvoices = action.payload?.data.invoices;
         state.error = "";
       }
     });

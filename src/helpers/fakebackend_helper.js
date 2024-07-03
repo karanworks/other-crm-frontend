@@ -37,18 +37,23 @@ export const getUsers = () => {
 export const createUser = (data) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/user/register`, data);
 };
-export const removeUser = (userId) => {
-  return api.delete(
-    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/delete`
-  );
+export const updateUser = (userId, data, status) => {
+  return api.update(`${process.env.REACT_APP_SERVER_URL}/user/${userId}/edit`, {
+    ...data,
+    status,
+  });
 };
 
-export const updateUser = (userId, data) => {
-  return api.update(
-    `${process.env.REACT_APP_SERVER_URL}/user/${userId}/edit`,
-    data
-  );
+export const searchUsers = (searchQuery) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/users/${searchQuery}`);
 };
+
+// now user gets removed from update api
+// export const removeUser = (userId) => {
+//   return api.delete(
+//     `${process.env.REACT_APP_SERVER_URL}/user/${userId}/delete`
+//   );
+// };
 
 // *****************************************************************
 // **************************** MAPPING ****************************
@@ -288,6 +293,11 @@ export const updateClient = (clientId, data, status) => {
     }
   );
 };
+
+export const searchClient = (searchQuery) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/clients/${searchQuery}`);
+};
+
 // *****************************************************************
 // ***************************** TASKS *****************************
 // *****************************************************************
@@ -300,12 +310,14 @@ export const createTask = (data) => {
 };
 
 export const updateTask = (taskId, data, status) => {
-  console.log("TASK UDPATED BACKEND HELPER ->", taskId, data, status);
-
   return api.update(`${process.env.REACT_APP_SERVER_URL}/task/${taskId}/edit`, {
     ...data,
     status,
   });
+};
+
+export const searchTask = (searchQuery) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/tasks/${searchQuery}`);
 };
 
 // *****************************************************************
@@ -324,6 +336,10 @@ export const createDropdown = (data) => {
 // *****************************************************************
 export const getInvoices = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/invoices`);
+};
+
+export const searchInvoices = (searchQuery) => {
+  return api.get(`${process.env.REACT_APP_SERVER_URL}/invoices/${searchQuery}`);
 };
 
 export const createInvoice = (data) => {
@@ -441,12 +457,24 @@ export const getPendingTasks = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/pending-tasks`);
 };
 
+export const searchPendingTask = (searchQuery) => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/pending-tasks/${searchQuery}`
+  );
+};
+
 // *****************************************************************
 // ************************ COMPLETED TASKS ************************
 // *****************************************************************
 
 export const getCompletedTasks = () => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/completed-tasks`);
+};
+
+export const searchCompletedTask = (searchQuery) => {
+  return api.get(
+    `${process.env.REACT_APP_SERVER_URL}/completed-tasks/${searchQuery}`
+  );
 };
 
 // *****************************************************************

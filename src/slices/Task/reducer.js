@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getTasks, createTask, updateTask } from "./thunk";
+import { getTasks, createTask, updateTask, searchTask } from "./thunk";
 
 import { toast } from "react-toastify";
 
 export const initialState = {
   userData: null,
   tasks: [],
+  searchedTasks: [],
   error: "",
 };
 
@@ -21,6 +22,15 @@ const taskSlice = createSlice({
       } else {
         state.userData = action.payload.data;
         state.tasks = action.payload?.data.tasks;
+        state.error = "";
+      }
+    });
+
+    builder.addCase(searchTask.fulfilled, (state, action) => {
+      if (action.payload.status === "failure") {
+        state.error = action.payload.message;
+      } else {
+        state.searchedTasks = action.payload?.data.tasks;
         state.error = "";
       }
     });

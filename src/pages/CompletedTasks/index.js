@@ -19,12 +19,19 @@ import { useDispatch } from "react-redux";
 
 import { useSelector } from "react-redux";
 import YoutubeLogo from "./youtube_logo.webp";
-import { getCompletedTasks } from "../../slices/CompletedTasks/thunk";
+import {
+  getCompletedTasks,
+  searchCompletedTask,
+} from "../../slices/CompletedTasks/thunk";
 import Loader from "../../Components/Common/Loader";
+import debounceSearch from "../../utils/debounceSearch";
 
 const CompletedTasks = () => {
-  const { completedTasks } = useSelector((state) => state.CompletedTasks);
   const [loading, setLoading] = useState(false);
+
+  const { completedTasks, searchedCompletedTasks } = useSelector(
+    (state) => state.CompletedTasks
+  );
 
   const dispatch = useDispatch();
 
@@ -32,6 +39,10 @@ const CompletedTasks = () => {
     setLoading(true);
     dispatch(getCompletedTasks()).finally(() => setLoading(false));
   }, [dispatch]);
+
+  const handleSearch = debounceSearch((e) => {
+    dispatch(searchCompletedTask(e.target.value));
+  });
 
   function utcToIstDateFormatter(dateString) {
     const tempDate = dateString;
@@ -63,23 +74,16 @@ const CompletedTasks = () => {
                 <CardBody>
                   <div className="listjs-table" id="campaignList">
                     <Row className="g-2 mb-3 d-flex justify-content-between">
-                      <Col className="col-sm-auto ">
+                      <Col className="col-sm-auto" style={{ width: "25%" }}>
                         <div className="d-flex align-items-center gap-2">
                           <Input
                             id="searchKeyword"
                             name="searchKeyword"
                             className="form-control"
                             type="text"
-                            placeholder="Search Keyword"
+                            placeholder="Search Task Name, Client Name, Genre"
+                            onChange={handleSearch}
                           />
-
-                          <Button
-                            color="primary"
-                            className="add-btn me-1"
-                            id="create-btn"
-                          >
-                            <i className="ri-search-line align-bottom me-1"></i>{" "}
-                          </Button>
                         </div>
                       </Col>
                     </Row>
@@ -91,16 +95,6 @@ const CompletedTasks = () => {
                       >
                         <thead className="table-light">
                           <tr>
-                            <th scope="col" style={{ width: "50px" }}>
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="checkbox"
-                                  id="checkAll"
-                                  value="option"
-                                />
-                              </div>
-                            </th>
                             <th className="sort" data-sort="task_name">
                               Task Name
                             </th>
@@ -142,18 +136,11 @@ const CompletedTasks = () => {
                               </td>
                             </tr>
                           ) : (
-                            completedTasks?.map((task) => (
+                            (searchedCompletedTasks.length !== 0
+                              ? searchedCompletedTasks
+                              : completedTasks
+                            )?.map((task) => (
                               <tr key={task.id}>
-                                <th scope="row">
-                                  <div className="form-check">
-                                    <input
-                                      className="form-check-input"
-                                      type="checkbox"
-                                      name="checkAll"
-                                      value="option1"
-                                    />
-                                  </div>
-                                </th>
                                 <td className="task-name">{task.task}</td>
                                 <td className="client-name">
                                   {task.clientName}
