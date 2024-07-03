@@ -32,7 +32,11 @@ export const updateInvoice = createAsyncThunk(
   "invoice/updateInvoice",
   async (data) => {
     try {
-      const response = await updateInvoiceApi(data.listInvoiceId, data.values);
+      const response = await updateInvoiceApi(
+        data.listInvoiceId,
+        data.values,
+        data.status
+      );
       return response;
     } catch (error) {
       console.log("error inside update invoice thunk", error);

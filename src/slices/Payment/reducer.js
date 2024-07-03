@@ -53,37 +53,50 @@ const paymentSlice = createSlice({
       } else {
         const updatedPaymentId = action.payload.data?.updatedPayment.id;
 
-        state.payments = state.payments.map((payment) => {
-          if (payment.id == updatedPaymentId) {
-            payment = action.payload.data.updatedPayment;
-            return payment;
-          } else {
-            return payment;
-          }
-        });
+        if (action.payload.data?.updatedPayment.status === 0) {
+          state.payments = state.payments.filter(
+            (payment) => payment.id !== updatedPaymentId
+          );
+          state.error = "";
 
-        state.error = "";
-        toast.success("Payment details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          toast.error("Payment has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.payments = state.payments.map((payment) => {
+            if (payment.id == updatedPaymentId) {
+              payment = action.payload.data.updatedPayment;
+              return payment;
+            } else {
+              return payment;
+            }
+          });
+
+          state.error = "";
+          toast.success("Payment details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removePayment.fulfilled, (state, action) => {
-      const deletedPaymentId = action.payload.data.deletedPayment.id;
-      state.payments = state.payments.filter(
-        (payment) => payment.id !== deletedPaymentId
-      );
-      state.error = "";
+    // builder.addCase(removePayment.fulfilled, (state, action) => {
+    //   const deletedPaymentId = action.payload.data.deletedPayment.id;
+    //   state.payments = state.payments.filter(
+    //     (payment) => payment.id !== deletedPaymentId
+    //   );
+    //   state.error = "";
 
-      toast.error("Payment has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    //   toast.error("Payment has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 

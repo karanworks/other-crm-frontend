@@ -58,10 +58,10 @@ const usersSlice = createSlice({
         state.alreadyRegisteredError = action.payload.message;
         state.error = "";
       } else {
-        const deletedUserId = action.payload.data?.deletedUser.id;
+        const updatedUserId = action.payload.data?.updatedUser.id;
 
-        if (action.payload.data?.deletedUser.status === 0) {
-          state.users = state.users.filter((user) => user.id !== deletedUserId);
+        if (action.payload.data?.updatedUser.status === 0) {
+          state.users = state.users.filter((user) => user.id !== updatedUserId);
           state.error = "";
 
           toast.error("User has been removed !", {

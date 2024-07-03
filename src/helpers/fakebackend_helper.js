@@ -346,10 +346,13 @@ export const createInvoice = (data) => {
   return api.create(`${process.env.REACT_APP_SERVER_URL}/invoice/create`, data);
 };
 
-export const updateInvoice = (invoiceId, data) => {
+export const updateInvoice = (invoiceId, data, status) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/edit`,
-    data
+    {
+      ...data,
+      status,
+    }
   );
 };
 
@@ -385,12 +388,14 @@ export const updatePayment = ({
   paymentDate,
   listInvoiceId: invoiceId,
   listPaymentId: paymentId,
+  status,
 }) => {
   return api.update(
     `${process.env.REACT_APP_SERVER_URL}/invoice/${invoiceId}/payment/${paymentId}/edit`,
     {
       paymentAmount,
       paymentDate,
+      status,
     }
   );
 };

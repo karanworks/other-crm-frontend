@@ -46,7 +46,7 @@ export const createPayment = createAsyncThunk(
 export const updatePayment = createAsyncThunk(
   "payment/updatePayment",
   async (
-    { paymentDate, paymentAmount, listPaymentId, listInvoiceId },
+    { paymentDate, paymentAmount, listPaymentId, listInvoiceId, status },
     { dispatch }
   ) => {
     try {
@@ -55,6 +55,7 @@ export const updatePayment = createAsyncThunk(
         paymentAmount,
         listPaymentId,
         listInvoiceId,
+        status,
       });
 
       if (response.status === "success") {

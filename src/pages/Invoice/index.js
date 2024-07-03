@@ -406,7 +406,8 @@ const Invoice = () => {
         tog_delete={tog_delete}
         setmodal_delete={setmodal_delete}
         handleDeleteCampaign={() => {
-          dispatch(removeInvoice(listInvoiceId));
+          // dispatch(removeInvoice(listInvoiceId));
+          dispatch(updateInvoice({ listInvoiceId, status: 0 }));
           setmodal_delete(false);
         }}
       />
@@ -433,7 +434,8 @@ const Invoice = () => {
         payement_modal_delete={payement_modal_delete}
         payment_tog_delete={payment_tog_delete}
         handleDeletePayment={() => {
-          dispatch(removePayment({ listInvoiceId, listPaymentId }));
+          // dispatch(removePayment({ listInvoiceId, listPaymentId }));
+          dispatch(updatePayment({ listInvoiceId, listPaymentId, status: 0 }));
           setPayment_modal_delete(false);
         }}
       />

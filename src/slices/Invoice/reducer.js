@@ -100,38 +100,52 @@ const invoiceSlice = createSlice({
       } else {
         const updatedInvoiceId = action.payload.data?.updatedInvoice?.id;
 
-        state.invoices = state.invoices.map((invoice) => {
-          if (invoice.id == updatedInvoiceId) {
-            invoice = action.payload.data.updatedInvoice;
-            return invoice;
-          } else {
-            return invoice;
-          }
-        });
+        if (action.payload.data?.updatedInvoice.status === 0) {
+          state.invoices = state.invoices.filter(
+            (invoice) => invoice.id !== updatedInvoiceId
+          );
 
-        state.error = "";
-        toast.success("Invoice details updated !", {
-          position: "bottom-center",
-          autoClose: 3000,
-          theme: "colored",
-        });
+          state.error = "";
+
+          toast.error("Invoice has been removed !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        } else {
+          state.invoices = state.invoices.map((invoice) => {
+            if (invoice.id == updatedInvoiceId) {
+              invoice = action.payload.data.updatedInvoice;
+              return invoice;
+            } else {
+              return invoice;
+            }
+          });
+
+          state.error = "";
+          toast.success("Invoice details updated !", {
+            position: "bottom-center",
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
       }
     });
 
-    builder.addCase(removeInvoice.fulfilled, (state, action) => {
-      const deletedInvoiceId = action.payload.data.deletedInvoice.id;
-      state.invoices = state.invoices.filter(
-        (invoice) => invoice.id !== deletedInvoiceId
-      );
+    // builder.addCase(removeInvoice.fulfilled, (state, action) => {
+    //   const deletedInvoiceId = action.payload.data.deletedInvoice.id;
+    //   state.invoices = state.invoices.filter(
+    //     (invoice) => invoice.id !== deletedInvoiceId
+    //   );
 
-      state.error = "";
+    //   state.error = "";
 
-      toast.error("Invoice has been removed !", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "colored",
-      });
-    });
+    //   toast.error("Invoice has been removed !", {
+    //     position: "bottom-center",
+    //     autoClose: 3000,
+    //     theme: "colored",
+    //   });
+    // });
   },
 });
 

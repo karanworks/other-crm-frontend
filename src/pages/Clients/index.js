@@ -51,7 +51,7 @@ const Clients = () => {
 
   const dispatch = useDispatch();
 
-  const { clients, dropdowns, error, searchedClients } = useSelector(
+  const { userData, clients, dropdowns, error, searchedClients } = useSelector(
     (state) => state.AddClient
   );
 
@@ -292,19 +292,22 @@ const Clients = () => {
                                         Edit
                                       </button>
                                     </div>
-                                    <div className="remove">
-                                      <button
-                                        className="btn btn-sm btn-danger remove-item-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteRecordModal"
-                                        onClick={() => {
-                                          setListClientId(client.id);
-                                          setmodal_delete(true);
-                                        }}
-                                      >
-                                        Remove
-                                      </button>
-                                    </div>
+
+                                    {userData.roleId === 1 && (
+                                      <div className="remove">
+                                        <button
+                                          className="btn btn-sm btn-danger remove-item-btn"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#deleteRecordModal"
+                                          onClick={() => {
+                                            setListClientId(client.id);
+                                            setmodal_delete(true);
+                                          }}
+                                        >
+                                          Remove
+                                        </button>
+                                      </div>
+                                    )}
                                   </div>
                                 </td>
                               </tr>
