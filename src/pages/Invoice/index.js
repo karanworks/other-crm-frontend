@@ -224,7 +224,7 @@ const Invoice = () => {
                         </div>
                       </Col>
 
-                      <Col className="col-sm-auto" style={{ width: "25%" }}>
+                      <Col className="col-sm-auto" style={{ width: "350px" }}>
                         <div className="d-flex align-items-center gap-2">
                           <Input
                             id="searchKeyword"

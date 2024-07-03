@@ -170,14 +170,14 @@ const Clients = () => {
                 <CardBody>
                   <div className="listjs-table">
                     <Row className="g-2 mb-3 d-flex justify-content-between">
-                      <Col className="col-sm-auto ">
+                      <Col className="col-sm-auto" style={{ width: "350px" }}>
                         <div className="d-flex align-items-center gap-2">
                           <Input
                             id="searchKeyword"
                             name="searchKeyword"
                             className="form-control"
                             type="text"
-                            placeholder="Search Name or Mobile"
+                            placeholder="Search Client Name or Mobile No"
                             onChange={handleSearch}
                           />
                         </div>

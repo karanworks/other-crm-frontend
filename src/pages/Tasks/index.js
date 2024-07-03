@@ -216,7 +216,7 @@ const Tasks = () => {
                 <CardBody>
                   <div className="listjs-table">
                     <Row className="g-2 mb-3 d-flex justify-content-between">
-                      <Col className="col-lg-auto" style={{ width: "25%" }}>
+                      <Col className="col-lg-auto" style={{ width: "350px" }}>
                         <div className="d-flex align-items-center gap-2">
                           <Input
                             id="searchKeyword"
