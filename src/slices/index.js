@@ -15,11 +15,11 @@ import BranchDropdownsReducer from "./BranchDropdown/reducer";
 import TaskReducer from "./Task/reducer";
 import PendingTasksReducer from "./PendingTasks/reducer";
 import CompletedTasksReducer from "./CompletedTasks/reducer";
+import ProfileReducer from "./Profile/reducer";
 
 // SEPARATER
 import AccountReducer from "./auth/register/reducer";
 import ForgetPasswordReducer from "./auth/forgetpwd/reducer";
-import ProfileReducer from "./auth/profile/reducer";
 
 const rootReducer = combineReducers({
   Layout: LayoutReducer,

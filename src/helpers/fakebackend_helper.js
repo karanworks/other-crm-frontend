@@ -48,6 +48,13 @@ export const searchUsers = (searchQuery) => {
   return api.get(`${process.env.REACT_APP_SERVER_URL}/users/${searchQuery}`);
 };
 
+export const changePassword = (data) => {
+  return api.update(
+    `${process.env.REACT_APP_SERVER_URL}/change-password`,
+    data
+  );
+};
+
 // now user gets removed from update api
 // export const removeUser = (userId) => {
 //   return api.delete(

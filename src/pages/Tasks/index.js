@@ -316,10 +316,6 @@ const Tasks = () => {
                                     <div
                                       style={{ borderBottom: "1px solid gray" }}
                                     >
-                                      {console.log(
-                                        "ADDED BY USERNAME ERROR ->",
-                                        task
-                                      )}
                                       <span> {task.addedBy.username}</span>
                                     </div>
                                     <div>

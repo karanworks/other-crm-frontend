@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Navigate, Route } from "react-router-dom";
 import { setAuthorization } from "../helpers/api_helper";
 import { useDispatch } from "react-redux";
+import { getLoggedinUser } from "../helpers/api_helper";
 
 import { useProfile } from "../Components/Hooks/UserHooks";
 
@@ -11,17 +12,29 @@ const AuthProtected = (props) => {
   const dispatch = useDispatch();
   const { userProfile, loading, token } = useProfile();
 
-  // it was causing to logout but we wanted a feature that would not allow to login if the user was logged out accidentally previously
+  const loggedInUser = getLoggedinUser();
 
-  // useEffect(() => {
-  //   if (userProfile && !loading && token) {
-  //     setAuthorization(token);
-  //   } else if (!userProfile && loading && !token) {
-  //     console.log("auth protected error called");
+  const allAllowedRoutes = loggedInUser?.data.menus
+    .map((menu) => {
+      return menu?.subItems.map((submenu) => {
+        return submenu;
+      });
+    })
+    .flat();
 
-  //     dispatch(logoutUser());
-  //   }
-  // }, [token, userProfile, loading, dispatch]);
+  const allowedRoutesPaths = allAllowedRoutes?.map((route) => {
+    return route.link;
+  });
+
+  const currentPath = location.pathname;
+
+  if (!allowedRoutesPaths.includes(currentPath)) {
+    return (
+      <Navigate
+        to={{ pathname: "/dashboard", state: { from: props.location } }}
+      />
+    );
+  }
 
   /*
     Navigate is un-auth access protected routes via url
